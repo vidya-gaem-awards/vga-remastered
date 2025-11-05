@@ -1,0 +1,31 @@
+name: vga-remastered
+recipe: laravel
+config:
+  webroot: public
+  php: '8.4'
+  xdebug: 'develop,debug'
+
+services:
+  appserver:
+    overrides:
+      environment:
+        PHP_IDE_CONFIG: "serverName=lando"
+        XDEBUG_SESSION_START: lando
+
+  phpmyadmin:
+    type: phpmyadmin
+
+  adminer:
+    type: compose
+    services:
+      image: dehy/adminer
+      command: /bin/s6-svscan /etc/services.d
+    portforward: true
+
+proxy:
+  appserver:
+    - vga-remastered.lndo.site
+  phpmyadmin:
+    - pma.vga-remastered.lndo.site
+  adminer:
+    - adminer.vga-remastered.lndo.site
