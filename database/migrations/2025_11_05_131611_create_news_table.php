@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Award;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,13 +8,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('nominees', function (Blueprint $table) {
+        Schema::create('news', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('subtitle');
-            $table->string('slug');
-            $table->text('flavor_text');
-            $table->foreignIdFor(Award::class)->constrained();
+            $table->string('headline')->nullable();
+            $table->text('text');
+            $table->boolean('visible');
+            $table->foreignIdFor(User::class)->constrained();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -22,6 +21,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('nominees');
+        Schema::dropIfExists('news');
     }
 };

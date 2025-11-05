@@ -11,8 +11,8 @@ return new class extends Migration {
     {
         Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Award::class)->constrained('awards');
-            $table->foreignIdFor(User::class)->nullable();
+            $table->foreignIdFor(Award::class)->constrained();
+            $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->string('cookie_id');
             $table->json('preferences');
             $table->dateTime('timestamp');

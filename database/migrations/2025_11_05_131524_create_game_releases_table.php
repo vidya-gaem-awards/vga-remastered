@@ -7,15 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('awards', function (Blueprint $table) {
+        Schema::create('game_releases', function (Blueprint $table) {
             $table->id();
+            $table->string('list');
             $table->string('name');
-            $table->string('subtitle');
-            $table->string('slug');
-            $table->integer('order');
-            $table->text('comments')->nullable();
-            $table->boolean('nominations_enabled');
-            $table->boolean('secret');
+            $table->json('platforms');
+            $table->string('url')->nullable();
+            $table->string('source');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,6 +21,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('awards');
+        Schema::dropIfExists('game_releases');
     }
 };

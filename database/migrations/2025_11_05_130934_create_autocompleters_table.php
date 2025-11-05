@@ -7,15 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('awards', function (Blueprint $table) {
+        Schema::create('autocompleters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('subtitle');
-            $table->string('slug');
-            $table->integer('order');
-            $table->text('comments')->nullable();
-            $table->boolean('nominations_enabled');
-            $table->boolean('secret');
+            $table->json('strings');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -23,6 +18,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('awards');
+        Schema::dropIfExists('autocompleters');
     }
 };

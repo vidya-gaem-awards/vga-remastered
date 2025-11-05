@@ -8,20 +8,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('nominees', function (Blueprint $table) {
+        Schema::create('award_suggestions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('subtitle');
-            $table->string('slug');
-            $table->text('flavor_text');
-            $table->foreignIdFor(Award::class)->constrained();
+            $table->string('fuzzy_user_id');
+            $table->string('suggestion');
+            $table->foreignIdFor(Award::class)->nullable()->constrained();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('nominees');
+        Schema::dropIfExists('award_suggestions');
     }
 };
