@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->string('cookie_id');
             $table->json('preferences');
-            $table->dateTime('timestamp');
             $table->string('ip');
             $table->string('voting_code')->nullable();
             $table->integer('voting_group')->nullable();

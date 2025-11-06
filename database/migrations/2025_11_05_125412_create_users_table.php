@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->string('name');
             $table->string('steam_id')->unique();
             $table->boolean('team_member');
-            $table->dateTime('first_login')->nullable();
-            $table->dateTime('last_login')->nullable();
+            $table->timestamp('first_login')->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->string('primary_role')->nullable();
             $table->string('email')->nullable();
             $table->text('notes')->nullable();

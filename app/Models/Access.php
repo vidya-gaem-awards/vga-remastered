@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Vote extends Model
+class Access extends Model
 {
-    public function award(): BelongsTo
-    {
-        return $this->belongsTo(Award::class);
-    }
+    protected $table = 'access';
+
+    const UPDATED_AT = null;
 
     public function user(): BelongsTo
     {
@@ -20,7 +19,7 @@ class Vote extends Model
     protected function casts(): array
     {
         return [
-            'preferences' => 'array',
+            'headers' => 'array',
         ];
     }
 }

@@ -14,8 +14,8 @@ class User extends Authenticatable
     {
         return [
             'team_member' => 'boolean',
-            'first_login' => 'datetime',
-            'last_login'  => 'datetime',
+            'first_login' => 'timestamp',
+            'last_login'  => 'timestamp',
         ];
     }
 }
