@@ -9,6 +9,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('results', function (Blueprint $table) {
+            $table->id();
             $table->foreignIdFor(Award::class)->constrained('awards');
             $table->string('filter');
             $table->string('algorithm');

@@ -8,19 +8,18 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('voting_code_logs', function (Blueprint $table) {
+        Schema::create('table_history', function (Blueprint $table) {
             $table->id();
-            $table->string('cookie_id');
+            $table->string('table');
+            $table->string('entry');
+            $table->json('values');
+            $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->timestamp('created_at');
-            $table->string('ip');
-            $table->string('code');
-            $table->string('referer')->nullable();
-            $table->foreignIdFor(User::class)->nullable();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('voting_code_logs');
+        Schema::dropIfExists('table_history');
     }
 };

@@ -8,6 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('ip_addresses', function (Blueprint $table) {
+            $table->id();
             $table->boolean('whitelisted')->nullable();
             $table->integer('abuse_score');
             $table->string('country_code')->nullable();

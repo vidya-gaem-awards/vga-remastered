@@ -9,6 +9,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('access', function (Blueprint $table) {
+
+            $table->id();
             $table->timestamp('created_at')->useCurrent();
             $table->string('cookie_id');
             $table->string('route');
