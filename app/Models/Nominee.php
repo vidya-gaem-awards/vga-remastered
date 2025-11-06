@@ -14,4 +14,9 @@ class Nominee extends Model
     {
         return $this->belongsTo(Award::class);
     }
+
+    public function file(): BelongsTo
+    {
+        return $this->belongsTo(File::class);
+    }
 }
