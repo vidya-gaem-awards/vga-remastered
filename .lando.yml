@@ -3,6 +3,8 @@ recipe: laravel
 config:
   webroot: public
   php: '8.4'
+  database: mariadb:11.4
+  cache: redis
   xdebug: 'develop,debug'
 
 services:
