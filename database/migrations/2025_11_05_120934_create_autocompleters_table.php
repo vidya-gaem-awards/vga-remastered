@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('autocompleters', function (Blueprint $table) {
             $table->id();
+            $table->string('slug');
             $table->string('name');
             $table->json('strings');
             $table->timestamps();

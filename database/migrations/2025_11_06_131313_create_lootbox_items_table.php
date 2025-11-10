@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->string('series');
             $table->decimal('drop_chance', 10, 5)->nullable();
             $table->decimal('absolute_drop_chance', 10, 5)->nullable();
-            $table->decimal('cached_drop_chance_start', 10, 5)->nullable();
-            $table->decimal('cached_drop_chance_end', 10, 5)->nullable();
+            $table->decimal('cached_drop_value_start', 10, 5)->nullable();
+            $table->decimal('cached_drop_value_end', 10, 5)->nullable();
             $table->string('extra')->nullable();
             $table->foreignIdFor(File::class, 'image_id')->nullable()->constrained();
             $table->foreignIdFor(File::class, 'music_file_id')->nullable()->constrained();

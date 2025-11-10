@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Nominee extends Model
@@ -15,8 +16,13 @@ class Nominee extends Model
         return $this->belongsTo(Award::class);
     }
 
-    public function file(): BelongsTo
+    public function image(): BelongsTo
     {
-        return $this->belongsTo(File::class);
+        return $this->belongsTo(File::class, 'image_id');
+    }
+
+    public function userNominationGroups(): HasMany
+    {
+        return $this->hasMany(UserNominationGroup::class);
     }
 }

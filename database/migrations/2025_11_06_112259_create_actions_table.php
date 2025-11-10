@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('ip');
             $table->string('page');
             $table->string('action');
-            $table->string('data1');
-            $table->string('data2');
+            $table->string('data1')->nullable();
+            $table->string('data2')->nullable();
             $table->foreignIdFor(TableHistory::class)->nullable()->constrained();
             $table->foreignIdFor(User::class)->nullable()->constrained();
             $table->timestamp('created_at');

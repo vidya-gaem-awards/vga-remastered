@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Autocompleter;
 use App\Models\File;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +18,8 @@ return new class extends Migration {
             $table->text('comments')->nullable();
             $table->boolean('nominations_enabled');
             $table->boolean('secret');
-            $table->foreignIdFor(File::class)->nullable()->constrained();
+            $table->foreignIdFor(File::class, 'winner_image_id')->nullable()->constrained();
+            $table->foreignIdFor(Autocompleter::class)->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('filename');
             $table->string('name');
-            $table->text('details');
+            $table->text('details')->nullable();
             $table->longText('source');
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('slug');
             $table->text('flavor_text');
             $table->foreignIdFor(Award::class)->constrained();
-            $table->foreignIdFor(File::class)->nullable()->constrained();
+            $table->foreignIdFor(File::class, 'image_id')->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

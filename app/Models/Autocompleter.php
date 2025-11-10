@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Autocompleter extends Model
@@ -14,5 +15,10 @@ class Autocompleter extends Model
         return [
             'strings' => 'array',
         ];
+    }
+
+    public function awards(): HasMany
+    {
+        return $this->hasMany(Award::class);
     }
 }
