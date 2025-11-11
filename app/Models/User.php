@@ -12,12 +12,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $authPasswordName = null;
+
     protected function casts(): array
     {
         return [
             'team_member' => 'boolean',
-            'first_login' => 'timestamp',
-            'last_login'  => 'timestamp',
+            'first_login' => 'datetime',
+            'last_login'  => 'datetime',
         ];
     }
 

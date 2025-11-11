@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'steam' => [
+        'client_id' => null,
+        'client_secret' => env('STEAM_API_KEY'),
+        'redirect' => env('STEAM_REDIRECT_URI', '/login/return'),
+        'allowed_hosts' => [
+            'vidyagaemawards.com',
+            'beta.vidyagaemawards.com',
+            'vga-nextgen.lndo.site',
+            'vga-remastered.lndo.site',
+            '2025.vidyagaemawards.com',
+        ]
+    ],
 ];
