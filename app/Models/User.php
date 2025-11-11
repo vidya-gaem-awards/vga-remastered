@@ -42,4 +42,13 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Permission::class, 'user_permissions');
     }
+
+    public function canDo(string $ability): bool
+    {
+        // @TODO: Cache this somehow to avoid the database hits
+        return $this->permissions()
+            ->with('children')
+            ->get()
+            ->contains(fn (Permission $permission) => $permission->hasAbility($ability));
+    }
 }

@@ -13,7 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Vidya Gaem Awards'),
+    'year' => env('APP_YEAR', '2025'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +53,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://vga-remastered.lndo.site'),
 
     /*
     |--------------------------------------------------------------------------
