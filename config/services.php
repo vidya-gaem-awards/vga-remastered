@@ -35,6 +35,20 @@ return [
         ],
     ],
 
+    'abuse_ipdb' => [
+        'api_key' => env('ABUSE_IPDB_API_KEY'),
+    ],
+
+    'igdb' => [
+        'client_id' => env('TWITCH_CLIENT_ID'),
+        'client_secret' => env('TWITCH_CLIENT_SECRET'),
+    ],
+
+    'cloudflare' => [
+        'api_key' => env('CLOUDFLARE_API_KEY'),
+        'zone_id' => env('CLOUDFLARE_ZONE_ID'),
+    ],
+
     'steam' => [
         'client_id' => null,
         'client_secret' => env('STEAM_API_KEY'),

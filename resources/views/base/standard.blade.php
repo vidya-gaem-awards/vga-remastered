@@ -40,6 +40,30 @@
     </nav>
 
     <div class="@yield('containerClass', 'container')" role="main" id="mainContainer">
+        @if(Session::has('error'))
+            <div class="alert alert-dismissible alert-danger" role="alert">
+                @if(is_string(Session::get('error')))
+                    {{ Session::get('error') }}
+                @elseif(is_array(Session::get('error')) && count(Session::get('error')) === 1)
+                    {{ Session::get('error')[0] }}
+                @else
+                    <ul class="mb-0">
+                        @foreach(Session::get('error') as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(Session::has('success'))
+            <div class="alert alert-dismissible alert-success" role="alert">
+                {{ Session::get('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         @yield('content')
     </div>
 

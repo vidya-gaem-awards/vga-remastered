@@ -26,7 +26,9 @@ use App\Models\UserNomination;
 use App\Models\UserNominationGroup;
 use App\Models\Vote;
 use App\Models\VotingCodeLog;
+use App\Settings\AppSettings;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use RuntimeException;
@@ -43,13 +45,66 @@ class Vga2024 extends Importer
 
     public function database(): void
     {
-        foreach ($this->getTableMapping() as $class => $mapping) {
-            $this->processTable($class);
+//        foreach ($this->getTableMapping() as $class => $mapping) {
+//            $this->processTable($class);
+//        }
+//
+//        foreach (array_keys($this->getJoinTables()) as $table) {
+//            $this->processJoinTable($table);
+//        }
+
+        $this->processSettings();
+    }
+
+    private function processSettings()
+    {
+        echo "config\n";
+
+        $config = $this->db->table('config')->get()->first();
+
+        if (!$config) {
+            echo "  settings: 0\n";
+            return;
         }
 
-        foreach (array_keys($this->getJoinTables()) as $table) {
-            $this->processJoinTable($table);
+        $configKeyValue = $this->db->table('config_key_value')->get();
+
+        foreach ($configKeyValue as $row) {
+            $key = str_replace('-', '_', $row->name);
+            $config->{$key} = $row->value;
         }
+
+        $settings = app(AppSettings::class);
+
+        $count = 0;
+
+        foreach ($config as $key => $value) {
+            // Set the config value
+            if (!property_exists($settings, $key)) {
+                continue;
+            }
+
+            // Use reflection to get the property type
+            $reflection = new \ReflectionProperty($settings, $key);
+            $type = $reflection->getType()?->getName();
+
+            if ($value === null) {
+                $value = null;
+            } elseif ($type === 'bool') {
+                $value = (bool)$value;
+            } elseif (str_contains($type, 'Carbon')) {
+                $value = Date::make($value)->shiftTimezone('America/New_York');
+            } elseif ($type === 'array') {
+                $value = json_decode($value, true);
+            }
+
+            $settings->$key = $value;
+            $count++;
+        }
+
+        $settings->save();
+
+        echo "  settings: $count\n";
     }
 
     private function processTable(string $class, bool $force = false)

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Settings\AppSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,6 +12,9 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Steam\Provider;
@@ -52,7 +56,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::directive('year', fn () => '<?php echo year(); ?>');
-
+        View::share('config', app(AppSettings::class));
+        View::share('can', fn ($ability) => Gate::allows($ability));
         Date::use(CarbonImmutable::class);
         Model::shouldBeStrict();
     }

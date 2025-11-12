@@ -159,11 +159,13 @@ Route::get('/voting/results', [StaticController::class, 'resultRedirect'])->name
 # CONFIG
 #
 
-Route::get('/config', [ConfigController::class, 'index'])->name('config');
-Route::post('/config', [ConfigController::class, 'post'])->name('config.post'); # configPost
-Route::post('/config/purge-cache', [ConfigController::class, 'purgeCache'])->name('config.purge-cache'); # configPurgeCache
-Route::get('/config/cron', [ConfigController::class, 'cron'])->name('config.cron'); # cron
-Route::post('/config/cron', [ConfigController::class, 'cronPost'])->name('config.cron.post'); # cronPost
+Route::can('edit_config')->group(function () {
+    Route::get('/config', [ConfigController::class, 'index'])->name('config');
+    Route::post('/config', [ConfigController::class, 'post'])->name('config.post'); # configPost
+    Route::post('/config/purge-cache', [ConfigController::class, 'purgeCache'])->name('config.purge-cache'); # configPurgeCache
+    Route::get('/config/cron', [ConfigController::class, 'cron'])->name('config.cron'); # cron
+//    Route::post('/config/cron', [ConfigController::class, 'cronPost'])->name('config.cron.post'); # cronPost
+});
 
 #
 # PAGE EDITOR
