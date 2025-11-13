@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @mixin IdeHelperLootboxTier
+ */
 class LootboxTier extends Model
 {
     public function lootboxItems(): HasMany
