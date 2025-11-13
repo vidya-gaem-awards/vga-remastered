@@ -404,6 +404,7 @@ class Vga2024 extends Importer
                 'columns' => [
                     'special' => 'team_member',
                     'avatar' => 'avatar_url',
+                    'notes' => null,
                 ],
             ],
             Vote::class => [

@@ -111,7 +111,7 @@
                 @endforeach
             </ul>
 
-            @if($can('news_manage') && !$config->read_only)
+            @if($can('news_manage') && !$settings->read_only)
                 <p>
                     <a href="{{ route('news') }}">Add news post</a>
                 </p>

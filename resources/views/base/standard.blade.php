@@ -9,6 +9,28 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarCollapsed">
+
+                <ul class="navbar-nav me-auto">
+                    @foreach($navbar->getItems() as $item)
+                        @if($item->isDropdown() && $item->children)
+                            <li class="nav-item dropdown">
+                                <a class="nav-link text-primary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ $item->title }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @foreach($item->children as $child)
+                                    <a class="dropdown-item" href="{{ route($child->route) }}">{{ $child->title }}</a>
+                                    @endforeach
+                                </div>
+                            </li>
+                        @elseif(!$item->isDropdown())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route($item->route) }}">{{ $item->title }}</a>
+                            </li>
+                       @endif
+                    @endforeach
+                </ul>
+
 {{--                <ul class="navbar-nav me-auto">--}}
 {{--                    <li class="nav-item {{ Route::current()->getName() == 'winners' ? 'active' : '' }}">--}}
 {{--                        <a class="nav-link" href="{{ route('winners', ['show' => $selectedShow]) }}">Winners</a>--}}

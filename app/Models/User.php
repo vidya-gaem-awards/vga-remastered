@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin IdeHelperUser
@@ -15,7 +16,14 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $fillable = [
+        'steam_id',
+        'name',
+        'avatar_url',
+    ];
+
     protected $authPasswordName = null;
+    private ?Collection $permissionCache = null;
 
     protected function casts(): array
     {
@@ -48,10 +56,36 @@ class User extends Authenticatable
 
     public function canDo(string $ability): bool
     {
-        // @TODO: Cache this somehow to avoid the database hits
-        return $this->permissions()
+        return $this->allPermissions()->pluck('id')->contains($ability);
+    }
+
+    public function allPermissions(): Collection
+    {
+        if ($this->permissionCache === null) {
+            $this->populatePermissionCache();
+        }
+        return $this->permissionCache;
+    }
+
+    private function populatePermissionCache(): void
+    {
+        /** @var Collection<array-key, Permission> $permissions */
+        $permissions = collect();
+
+        $userPermissions = $this->permissions()
             ->with('children')
-            ->get()
-            ->contains(fn (Permission $permission) => $permission->hasAbility($ability));
+            ->with('parents')
+            ->get();
+
+        foreach ($userPermissions as $permission) {
+            $permissions->add($permission);
+            foreach ($permission->getChildrenRecursive() as $child) {
+                if (!str_starts_with($child->id, 'LEVEL')) {
+                    $permissions->add($child);
+                }
+            }
+        }
+
+        $this->permissionCache = $permissions;
     }
 }

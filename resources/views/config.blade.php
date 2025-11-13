@@ -54,13 +54,13 @@
                 <label for="votingStart" class="h5">Voting times</label>
                 <div class="input-group voting-time">
                     <input type="text" class="form-control" id="votingStart" name="voting_start"
-                           value="{{ $config->voting_start?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
+                           value="{{ $settings->voting_start?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
                            placeholder="yyyy-mm-dd hh:mm">
 
                     <span class="input-group-text" id="inputGroupPrepend2">to</span>
 
                     <input type="text" class="form-control" id="votingEnd" name="voting_end"
-                           value="{{ $config->voting_end?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
+                           value="{{ $settings->voting_end?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
                            placeholder="yyyy-mm-dd hh:mm">
                 </div>
                 <small class="form-text text-muted">Leaving the end date blank will leave voting open indefinitely.</small>
@@ -68,15 +68,15 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <label for="streamTime" class="h5">Stream time</label>
                 <input type="text" class="form-control" id="streamTime" name="stream_time"
-                       value="{{ $config->stream_time?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
+                       value="{{ $settings->stream_time?->setTimezone('America/New_York')->format('Y-m-d H:i') }}"
                        placeholder="yyyy-mm-dd hh:mm">
                 <small class="form-text text-muted">This is shown on the countdown page.</small>
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
                 <label for="defaultPage" class="h5">Default page</label>
                 <select class="form-select" id="defaultPage" name="defaultPage">
-                    @foreach($config::ALLOWED_DEFAULT_PAGES as $page => $title)
-                    <option @selected($config->default_page === $page)
+                    @foreach($settings::ALLOWED_DEFAULT_PAGES as $page => $title)
+                    <option @selected($settings->default_page === $page)
                             value="{{ $page }}">{{ $page }} &ndash; {{ $title }}</option>
                     @endforeach
                 </select>
@@ -118,7 +118,7 @@
                            class="form-check-input"
                            id="public-videoGames"
                            name="publicPages[video-games]"
-                           @checked($config->isPagePublic('video-games'))
+                           @checked($settings->isPagePublic('video-games'))
                     >
                     <label class="form-check-label" for="public-videoGames">
                         <a href="{{ route('video-games') }}" target="_blank">Video games list</a>
@@ -129,7 +129,7 @@
                            class="form-check-input"
                            id="public-awards"
                            name="publicPages[awards]"
-                           @checked($config->isPagePublic('awards'))
+                           @checked($settings->isPagePublic('awards'))
                     >
                     <label class="form-check-label" for="public-awards">
                         <a href="{{ route('awards') }}" target="_blank">Awards and Nominations</a>
@@ -140,7 +140,7 @@
                            class="form-check-input"
                            id="public-videos"
                            name="publicPages[videos]"
-                           @checked($config->isPagePublic('videos'))
+                           @checked($settings->isPagePublic('videos'))
                     >
                     <label class="form-check-label" for="public-videos">
                         <a href="{{ route('videos') }}" target="_blank">Videos page</a>
@@ -151,7 +151,7 @@
                            class="form-check-input"
                            id="public-voting"
                            name="publicPages[voting]"
-                           @checked($config->isPagePublic('voting'))
+                           @checked($settings->isPagePublic('voting'))
                     >
                     <label class="form-check-label" for="public-voting">
                         <a href="{{ route('voting') }}" target="_blank">Voting page</a>
@@ -165,7 +165,7 @@
                            class="form-check-input"
                            id="public-countdown"
                            name="publicPages[countdown]"
-                           @checked($config->isPagePublic('countdown'))
+                           @checked($settings->isPagePublic('countdown'))
                     >
                     <label class="form-check-label" for="public-countdown">
                         <a href="{{ route('countdown') }}" target="_blank">Stream countdown</a>
@@ -179,7 +179,7 @@
                            class="form-check-input"
                            id="public-stream"
                            name="publicPages[stream]"
-                           @checked($config->isPagePublic('stream'))
+                           @checked($settings->isPagePublic('stream'))
                     >
                     <label class="form-check-label" for="public-stream">
                         <a href="{{ route('stream') }}" target="_blank">Stream page</a>
@@ -190,7 +190,7 @@
                            class="form-check-input"
                            id="public-finished"
                            name="publicPages[finished]"
-                           @checked($config->isPagePublic('finished'))
+                           @checked($settings->isPagePublic('finished'))
                     >
                     <label class="form-check-label" for="public-finished">
                         <a href="{{ route('finished') }}" target="_blank">Post-stream "thank you" page</a>
@@ -201,7 +201,7 @@
                            class="form-check-input"
                            id="public-credits"
                            name="publicPages[credits]"
-                           @checked($config->isPagePublic('credits'))
+                           @checked($settings->isPagePublic('credits'))
                     >
                     <label class="form-check-label" for="public-credits">
                         <a href="{{ route('credits') }}" target="_blank">Credits</a>
@@ -212,7 +212,7 @@
                            class="form-check-input"
                            id="public-soundtrack"
                            name="publicPages[soundtrack]"
-                           @checked($config->isPagePublic('soundtrack'))
+                           @checked($settings->isPagePublic('soundtrack'))
                     >
                     <label class="form-check-label" for="public-soundtrack">
                         <a href="{{ route('soundtrack') }}" target="_blank">Soundtrack</a>
@@ -223,7 +223,7 @@
                            class="form-check-input"
                            id="public-results"
                            name="publicPages[results]"
-                           @checked($config->isPagePublic('results'))
+                           @checked($settings->isPagePublic('results'))
                     >
                     <label class="form-check-label dangerous" for="public-results">
                         <a href="{{ route('results') }}" target="_blank">Voting results</a>
@@ -239,7 +239,7 @@
                            class="form-check-input"
                            id="other-awardSuggestions"
                            name="awardSuggestions"
-                           @checked($config->award_suggestions)
+                           @checked($settings->award_suggestions)
                     >
                     <label class="form-check-label" for="other-awardSuggestions">
                         Allow suggestions for new awards and award names
@@ -249,7 +249,7 @@
         </div>
         <div class="row mt-5">
             <div class="col">
-                <button type="submit" class="btn btn-primary btn-lg w-100 d-block p-3" @disabled($config->read_only)>Save configuration</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100 d-block p-3" @disabled($settings->read_only)>Save configuration</button>
             </div>
         </div>
     </form>
@@ -263,7 +263,7 @@
                 <h5 class="card-header">Result generator</h5>
                 <div class="card-body">
                     <p>
-                        The result generation process is currently <span @class(['text-success' => $config->isVotingOpen()])>{{ $config->isVotingOpen() ? 'active' : 'disabled' }}</span>.
+                        The result generation process is currently <span @class(['text-success' => $settings->isVotingOpen()])>{{ $settings->isVotingOpen() ? 'active' : 'disabled' }}</span>.
                     </p>
                     <a href="{{ route('config.cron') }}">More information</a>
                 </div>
@@ -293,10 +293,10 @@
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="card {{ $config->read_only ? '' : 'border-danger' }}">
+            <div class="card {{ $settings->read_only ? '' : 'border-danger' }}">
                 <h5 class="card-header">Read-only mode</h5>
-                <div class="card-body {{ $config->read_only ? '' : 'text-danger' }}">
-                    @if(!$config->read_only)
+                <div class="card-body {{ $settings->read_only ? '' : 'text-danger' }}">
+                    @if(!$settings->read_only)
                     <form action="{{ route('config.post') }}" method="post">
                         @csrf
                         <p>

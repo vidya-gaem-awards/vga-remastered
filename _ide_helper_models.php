@@ -586,7 +586,6 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $last_login
  * @property string|null $primary_role
  * @property string|null $email
- * @property string|null $notes
  * @property string|null $website
  * @property string|null $avatar_url
  * @property string|null $remember_token
@@ -610,7 +609,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastLogin($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereNotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePrimaryRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereSteamId($value)
@@ -765,4 +763,3 @@ namespace App\Models{
 	#[\AllowDynamicProperties]
 	class IdeHelperVotingCodeLog {}
 }
-

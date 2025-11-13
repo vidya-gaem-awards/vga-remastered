@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 
 /**
  * @mixin IdeHelperPermission
@@ -25,22 +26,29 @@ class Permission extends Model
     }
 
     /**
-     * Checks if the current permission or any of its children provides the given ability.
+     * @TODO: this function is bad and doesn't do eager loading properly
      */
-    public function hasAbility(string $ability): bool
+    public function getChildrenRecursive(): Collection
     {
-        if ($this->id === $ability) {
-            return true;
-        }
-
-        // To avoid unnecessary database calls, we assume a permission can only have children if it's a LEVEL permission.
         if (!str_starts_with($this->id, 'LEVEL')) {
-            return false;
+            return collect();
         }
 
-        return $this->children()
+        /** @var Collection<array-key, Permission> $permissions */
+        $permissions = collect();
+
+        $childPermissions = $this->children()
+            ->with('parents')
             ->with('children')
-            ->get()
-            ->contains(fn (Permission $child) => $child->hasAbility($ability));
+            ->get();
+
+        foreach ($childPermissions as $child) {
+            foreach ($child->getChildrenRecursive() as $grandchild) {
+                $permissions->add($grandchild);
+            }
+            $permissions->add($child);
+        }
+
+        return $permissions;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Services\NavbarService;
 use App\Settings\AppSettings;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
@@ -56,9 +57,16 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Blade::directive('year', fn () => '<?php echo year(); ?>');
-        View::share('config', app(AppSettings::class));
+        View::share('settings', app(AppSettings::class));
+        View::share('navbar', app(NavbarService::class));
         View::share('can', fn ($ability) => Gate::allows($ability));
+        Session::macro('addFlash', function (string $key, string $message) {
+            $messages = $this->get($key, []);
+            $messages[] = $message;
+            $this->put($key, $messages);
+        });
         Date::use(CarbonImmutable::class);
         Model::shouldBeStrict();
+        Http::throw();
     }
 }

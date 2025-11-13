@@ -11,12 +11,11 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('steam_id')->unique();
-            $table->boolean('team_member');
+            $table->boolean('team_member')->default(false);
             $table->timestamp('first_login')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->string('primary_role')->nullable();
             $table->string('email')->nullable();
-            $table->text('notes')->nullable();
             $table->string('website')->nullable();
             $table->string('avatar_url')->nullable();
             $table->rememberToken();

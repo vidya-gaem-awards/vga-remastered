@@ -61,16 +61,13 @@ Route::post('/vidya/reload/igdb', [VideoGamesController::class, 'reloadIgdb'])->
 # CREW
 #
 
-Route::get('/team', [PeopleController::class, 'index'])->name('people');
-Route::get('/team/permissions', [PeopleController::class, 'permissions'])->name('people.permissions'); # permissions
-Route::get('/team/add', [PeopleController::class, 'add'])->name('people.add'); # addPerson
-Route::post('/team/add/search', [PeopleController::class, 'search'])->name('people.add.search'); #userSearch
-Route::get('/team/{id}', [PeopleController::class, 'view'])->name('people.view') # viewPerson
-    ->where('id', '[0-9]+');
-Route::get('/team/{id}/edit', [PeopleController::class, 'edit'])->name('people.edit') # editPerson
-    ->where('id', '[0-9]+');
-Route::post('/team/{id}/edit', [PeopleController::class, 'post'])->name('people.edit.post') # editPersonPost
-    ->where('id', '[0-9]+');
+Route::get('/team', [PeopleController::class, 'index'])->name('people')->can('profile_view');
+Route::get('/team/permissions', [PeopleController::class, 'permissions'])->name('people.permissions')->can('profile_view'); # permissions
+Route::get('/team/add', [PeopleController::class, 'add'])->name('people.add')->can('add_user'); # addPerson
+Route::post('/team/add/search', [PeopleController::class, 'search'])->name('people.add.search')->can('add_user'); #userSearch
+Route::get('/team/{user}', [PeopleController::class, 'view'])->name('people.view')->can('profile_view'); # viewPerson
+Route::get('/team/{user}/edit', [PeopleController::class, 'edit'])->name('people.edit')->can('profile_edit_details'); # editPerson
+Route::post('/team/{user}/edit', [PeopleController::class, 'post'])->name('people.edit.post')->can('profile_edit_details'); # editPersonPost
 
 #
 # AWARDS

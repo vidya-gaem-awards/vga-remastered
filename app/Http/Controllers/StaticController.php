@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Settings\AppSettings;
+
 class StaticController extends Controller
 {
-    public function index()
+    /*
+     * @TODO: Need to see if this can be set up to do internal forwarding rather than redirecting
+     */
+    public function index(AppSettings $settings)
     {
-        abort(501);
+        return redirect()->route($settings->default_page);
     }
 
     public function privacy()
