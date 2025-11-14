@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use Illuminate\Contracts\View\View;
 
 class IndexController extends Controller
 {
@@ -20,8 +21,8 @@ class IndexController extends Controller
         ]);
     }
 
-    public function promo()
+    public function promo(): View
     {
-        abort(501);
+        return view('promo');
     }
 }
