@@ -35,7 +35,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 # FRONT PAGE
 #
 
-Route::get('/home', [IndexController::class, 'index'])->name('home');
+Route::get('/home', [IndexController::class, 'home'])->name('home');
 Route::get('/promo', [IndexController::class, 'promo'])->name('promo');
 
 #
@@ -51,11 +51,11 @@ Route::delete('/news/delete/{id}', [NewsController::class, 'delete'])->name('new
 # VIDEO GAMES
 #
 
-Route::get('/vidya', [VideoGamesController::class, 'index'])->name('video-games'); # videoGames
-Route::post('/vidya/add', [VideoGamesController::class, 'add'])->name('video-games.add'); # addVideoGame
-Route::post('/vidya/remove', [VideoGamesController::class, 'remove'])->name('video-games.remove'); # removeVideoGame
-Route::post('/vidya/reload', [VideoGamesController::class, 'reloadWikipedia'])->name('video-games.reload.wikipedia'); # reloadVideoGamesWikipedia
-Route::post('/vidya/reload/igdb', [VideoGamesController::class, 'reloadIgdb'])->name('video-games.reload.igdb'); # reloadVideoGamesIgdb
+Route::get('/vidya', [VideoGamesController::class, 'index'])->name('video-games')->can('conditionally_public|add_video_game'); # videoGames
+Route::post('/vidya/add', [VideoGamesController::class, 'add'])->name('video-games.add')->can('add_video_game'); # addVideoGame
+Route::post('/vidya/remove', [VideoGamesController::class, 'remove'])->name('video-games.remove')->can('add_video_game'); # removeVideoGame
+Route::post('/vidya/reload', [VideoGamesController::class, 'reloadWikipedia'])->name('video-games.reload.wikipedia')->can('add_video_game'); # reloadVideoGamesWikipedia
+Route::post('/vidya/reload/igdb', [VideoGamesController::class, 'reloadIgdb'])->name('video-games.reload.igdb')->can('add_video_game'); # reloadVideoGamesIgdb
 
 #
 # CREW

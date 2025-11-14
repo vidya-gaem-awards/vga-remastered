@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\NavbarItem;
 use App\Settings\AppSettings;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -52,9 +53,6 @@ readonly class NavbarService
         return $navbar;
     }
 
-    /**
-     * @TODO: does not handle conditionally public routes
-     */
     public function canAccessRoute($routeName): bool
     {
         $route = Route::getRoutes()->getByName($routeName);
@@ -62,13 +60,32 @@ readonly class NavbarService
             return false;
         }
 
-        $can = $route->action['can'] ?? [];
+        $ability = collect($route->middleware())
+            ->filter(fn ($m) => str_starts_with($m, 'can:'))
+            ->map(fn ($m) => explode(':', $m, 2)[1])
+            ->first();
 
-        // If the 'can' array is empty, there are no access restrictions.
-        if (empty($can)) {
+        // If there's no 'can' middleware, there are no access restrictions.
+        if (!$ability) {
             return true;
         }
 
-        return Gate::any($can);
+        /**
+         * @TODO: This is derived from the same nastiness as the Gate check in AppServiceProvider.
+         */
+        if (str_starts_with($ability, 'conditionally_public')) {
+            if (!$routeName) {
+                return false;
+            }
+
+            if ($this->settings->isPagePublic($routeName)) {
+                return true;
+            }
+
+            [, $actualAbility] = explode('|', $ability, 2);
+            return Auth::user()?->canDo($actualAbility) ?? false;
+        }
+
+        return Gate::any($ability);
     }
 }

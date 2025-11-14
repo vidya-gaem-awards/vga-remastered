@@ -1,5 +1,9 @@
 @extends('base.standard')
 
+@section('title')
+    Home
+@endsection
+
 @pushonce('css')
     <style>
         .jumbotron {

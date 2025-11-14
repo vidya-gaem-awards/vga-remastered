@@ -48,12 +48,25 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Gate::before(function (?User $user, $ability) {
-            // TODO: this will be adjusted once anonymous users are properly supported
-            if (!$user) {
-                return false;
+            /**
+             * @TODO: this feels so incredibly nasty. There must be a better way
+             */
+            if (str_starts_with($ability, 'conditionally_public')) {
+                [, $actualAbility] = explode('|', $ability, 2);
+                $settings = app(AppSettings::class);
+                $routeName = request()->route()?->getName();
+                if (!$routeName) {
+                    return false;
+                }
+
+                if ($settings->isPagePublic($routeName)) {
+                    return true;
+                }
+
+                return $user?->canDo($actualAbility);
             }
 
-            return $user->canDo($ability);
+            return $user?->canDo($ability);
         });
 
         Blade::directive('year', fn () => '<?php echo year(); ?>');

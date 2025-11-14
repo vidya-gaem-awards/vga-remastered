@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function home(): View
     {
         $news = News::where('visible', true)
             ->with('user')
@@ -15,7 +15,7 @@ class IndexController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('index', [
+        return view('home', [
             'title' => 'Home',
             'news' => $news,
         ]);
