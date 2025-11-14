@@ -72,8 +72,8 @@
                     {{ Session::get('error')[0] }}
                 @else
                     <ul class="mb-0">
-                        @foreach(Session::get('error') as $error)
-                            <li>{{ $error }}</li>
+                        @foreach(Session::get('error') as $message)
+                            <li>{{ $message }}</li>
                         @endforeach
                     </ul>
                 @endif
@@ -83,7 +83,17 @@
 
         @if(Session::has('success'))
             <div class="alert alert-dismissible alert-success" role="alert">
-                {{ Session::get('success') }}
+                @if(is_string(Session::get('success')))
+                    {{ Session::get('success') }}
+                @elseif(is_array(Session::get('success')) && count(Session::get('success')) === 1)
+                    {{ Session::get('success')[0] }}
+                @else
+                    <ul class="mb-0">
+                        @foreach(Session::get('success') as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                @endif
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif

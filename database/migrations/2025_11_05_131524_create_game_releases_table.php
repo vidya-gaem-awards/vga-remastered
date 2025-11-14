@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->string('list');
             $table->string('name');
-            $table->boolean('notable');
+            $table->boolean('notable')->default(false);
             $table->json('platforms');
             $table->string('url')->nullable();
             $table->string('source');
