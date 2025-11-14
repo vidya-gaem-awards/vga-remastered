@@ -117,8 +117,9 @@ namespace App\Models{
  * @property string $subtitle
  * @property string $slug
  * @property int $order
- * @property string|null $comments
+ * @property bool $enabled
  * @property bool $nominations_enabled
+ * @property string|null $comments
  * @property bool $secret
  * @property int|null $winner_image_id
  * @property int|null $autocompleter_id
@@ -143,12 +144,14 @@ namespace App\Models{
  * @property-read \App\Models\File|null $winnerImage
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Award notSecret()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereAutocompleterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereComments($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereEnabled($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereNominationsEnabled($value)
@@ -763,3 +766,4 @@ namespace App\Models{
 	#[\AllowDynamicProperties]
 	class IdeHelperVotingCodeLog {}
 }
+

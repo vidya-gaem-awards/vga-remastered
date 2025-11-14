@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('slug');
             $table->integer('order');
             $table->text('comments')->nullable();
+            $table->boolean('enabled');
             $table->boolean('nominations_enabled');
             $table->boolean('secret');
             $table->foreignIdFor(File::class, 'winner_image_id')->nullable()->constrained();

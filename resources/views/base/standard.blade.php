@@ -61,6 +61,8 @@
         </div>
     </nav>
 
+    @yield('beforeContainer')
+
     <div class="@yield('containerClass', 'container')" role="main" id="mainContainer">
         @if(Session::has('error'))
             <div class="alert alert-dismissible alert-danger" role="alert">

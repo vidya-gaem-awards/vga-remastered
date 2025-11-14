@@ -338,11 +338,7 @@ class Vga2024 extends Importer
                 ],
                 'columns' => [
                     'id' => 'slug',
-                    'enabled' => null,
                     'autocompleteID' => 'autocompleter_id',
-                ],
-                'custom' => fn ($newRecord, $oldRecord) => [
-                    'deleted_at' => $oldRecord->enabled ? null : now(),
                 ],
             ],
             LootboxItem::class => [

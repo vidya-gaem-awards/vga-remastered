@@ -76,9 +76,9 @@ Route::post('/team/{user}/edit', [PeopleController::class, 'post'])->name('peopl
 Route::get('/awards', [AwardController::class, 'index'])->name('awards');
 Route::post('/awards', [AwardController::class, 'post'])->name('awards.post'); # awardFrontendPost
 
-Route::get('/awards/manage', [AwardAdminController::class, 'managerList'])->name('awards.manage'); # awardManager
-Route::post('/awards/manage', [AwardAdminController::class, 'managerPost'])->name('awards.manage.post'); # awardManagerPost
-Route::post('/awards/manage/ajax', [AwardAdminController::class, 'managerPostAjax'])->name('awards.manage.post.ajax'); # awardManagerPostAjax
+Route::get('/awards/manage', [AwardAdminController::class, 'managerList'])->name('awards.manage')->can('awards_feedback'); # awardManager
+Route::post('/awards/manage', [AwardAdminController::class, 'managerPost'])->name('awards.manage.post')->can('awards_edit'); # awardManagerPost
+Route::post('/awards/manage/ajax', [AwardAdminController::class, 'managerPostAjax'])->name('awards.manage.post.ajax')->can('awards_edit'); # awardManagerPostAjax
 
 Route::get('/nominees/export', [NomineeController::class, 'exportNominees'])->name('nominees.export'); # nomineeExport
 Route::get('/nominees/export/user-nominations', [NomineeController::class, 'exportUserNominations'])->name('nominees.export.user-nominations'); #nomineeUserNominationExport
