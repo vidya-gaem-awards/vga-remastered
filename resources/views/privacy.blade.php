@@ -1,0 +1,38 @@
+@extends('base.standard')
+
+@section('title')
+    Privacy Policy
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-md-12">
+        <h1>Privacy Policy</h1>
+        <p>
+            This site utilises the <a href="https://steamcommunity.com/dev">Steam Web API</a>. When you sign into this site
+            using Steam, the only information we receive from Valve is your unique Steam ID. This Steam ID will be used as
+            your "account" for this site and will be stored in our database. We may also cache publicly available
+            information (such as the Display Name on your Steam account) that is available from the Steam Web APIs. None of
+            this information will be shared with third parties.
+        </p>
+        <p>
+            (There is no need to sign in unless you are working behind the scenes on the show.)
+        </p>
+    </div>
+</div>
+<br/><br/>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Affiliation</h2>
+        <p>This is an independent site that is not affiliated with Steam, Valve or 4chan in any official capacity.</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p class="implying">&gt;they're contributors to a shitty online video game award show</p>
+        <p class="implying">&gt;they take their "jobs" very seriously</p>
+        <p class="implying">&gt;they do it for free</p>
+        <img src="{{ asset('img/for-free.jpg') }}" style="width: 200px">
+    </div>
+</div>
+@endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Settings\AppSettings;
+use Illuminate\Contracts\View\View;
 
 class StaticController extends Controller
 {
@@ -14,9 +15,9 @@ class StaticController extends Controller
         return redirect()->route($settings->default_page);
     }
 
-    public function privacy()
+    public function privacy(): View
     {
-        abort(501);
+        return view('privacy');
     }
 
     public function videos()
