@@ -1,0 +1,11 @@
+.env
+.git
+vendor
+storage/app/private/*
+storage/app/public/*
+storage/clockwork
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*

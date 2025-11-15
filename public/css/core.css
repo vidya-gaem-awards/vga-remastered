@@ -345,3 +345,19 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 small, .small {
     font-weight: 400;
 }
+
+html.env-local .navbar.bg-yotsuba,
+html.env-staging .navbar.bg-yotsuba {
+    background: repeating-linear-gradient(
+        45deg,
+        #FDDAB5,
+        #FDDAB5 10px,
+        #FEFFEF 10px,
+        #FEFFEF 20px
+    );
+}
+
+html.env-local body,
+html.env-staging body {
+    background-color: #FEFFEF;
+}

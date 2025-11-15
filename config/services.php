@@ -59,6 +59,7 @@ return [
             'vga-nextgen.lndo.site',
             'vga-remastered.lndo.site',
             '2025.vidyagaemawards.com',
+            preg_replace('{https?://}', '', env('APP_URL', 'vga-remastered.lndo.site')),
         ]
     ],
 ];

@@ -76,4 +76,30 @@ class AppSettings extends Settings
 
         return true;
     }
+
+    public function setDefaultNavbarItems(): void
+    {
+        $items = [
+            'config' => 'Config',
+            'people' => 'Team',
+            'awards' => 'Awards',
+            'voting' => 'Vote',
+            'winners' => 'Winners',
+            'referrers' => 'Referrers',
+            'lootbox.items' => 'Lootboxes',
+            'results' => 'Results',
+            'credits' => 'Credits',
+        ];
+
+        $count = 0;
+        foreach ($items as $id => $label) {
+            $items[$id] = [
+                'label' => $label,
+                'order' => $count,
+            ];
+            $count++;
+        }
+        $this->navbar_items = $items;
+        $this->save();
+    }
 }

@@ -13,6 +13,7 @@
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAccess
  * @property int $id
  * @property \Carbon\CarbonImmutable $created_at
  * @property string $cookie_id
@@ -43,14 +44,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereRoute($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereUserAgent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAccess {}
+	class Access extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAction
  * @property int $id
  * @property string $ip
  * @property string $page
@@ -74,14 +74,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Action wherePage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Action whereTableHistoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Action whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAction {}
+	class Action extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAutocompleter
  * @property int $id
  * @property string $slug
  * @property string $name
@@ -104,22 +103,21 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Autocompleter whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Autocompleter withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Autocompleter withoutTrashed()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAutocompleter {}
+	class Autocompleter extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAward
  * @property int $id
  * @property string $name
  * @property string $subtitle
  * @property string $slug
  * @property int $order
+ * @property string|null $comments
  * @property bool $enabled
  * @property bool $nominations_enabled
- * @property string|null $comments
  * @property bool $secret
  * @property int|null $winner_image_id
  * @property int|null $autocompleter_id
@@ -163,14 +161,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereWinnerImageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award withoutTrashed()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAward {}
+	class Award extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAwardFeedback
  * @property int $id
  * @property int $award_id
  * @property string $opinion
@@ -187,14 +184,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardFeedback whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardFeedback whereOpinion($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardFeedback whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAwardFeedback {}
+	class AwardFeedback extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperAwardSuggestion
  * @property int $id
  * @property string $fuzzy_user_id
  * @property string $suggestion
@@ -211,14 +207,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardSuggestion whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardSuggestion whereSuggestion($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AwardSuggestion whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperAwardSuggestion {}
+	class AwardSuggestion extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperFile
  * @property int $id
  * @property string $subdirectory
  * @property string $filename
@@ -236,14 +231,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereSubdirectory($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|File whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperFile {}
+	class File extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperGameRelease
  * @property int $id
  * @property string $list
  * @property string $name
@@ -254,6 +248,12 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
+ * @property-read mixed $mobile
+ * @property-read mixed $nintendo
+ * @property-read mixed $pc
+ * @property-read mixed $playstation
+ * @property-read mixed $vr
+ * @property-read mixed $xbox
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease onlyTrashed()
@@ -270,14 +270,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease whereUrl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|GameRelease withoutTrashed()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperGameRelease {}
+	class GameRelease extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperIpAddress
  * @property int $id
  * @property string $ip
  * @property bool|null $whitelisted
@@ -303,14 +302,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress whereUsageType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress whereWhitelisted($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperIpAddress {}
+	class IpAddress extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperLogin
  * @property int $id
  * @property int $user_id
  * @property \Carbon\CarbonImmutable $created_at
@@ -321,14 +319,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Login whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Login whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Login whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperLogin {}
+	class Login extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperLootboxItem
  * @property int $id
  * @property string $name
  * @property string $slug
@@ -375,14 +372,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxItem whereSeries($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxItem whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxItem whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperLootboxItem {}
+	class LootboxItem extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperLootboxTier
  * @property int $id
  * @property string $name
  * @property string|null $color
@@ -400,14 +396,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxTier whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxTier whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|LootboxTier whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperLootboxTier {}
+	class LootboxTier extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperNews
  * @property int $id
  * @property string|null $headline
  * @property string $text
@@ -432,14 +427,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereVisible($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News withoutTrashed()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperNews {}
+	class News extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperNominee
  * @property int $id
  * @property string $name
  * @property string $subtitle
@@ -470,14 +464,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee withoutTrashed()
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperNominee {}
+	class Nominee extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperPermission
  * @property string $id
  * @property string $description
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Permission> $children
@@ -489,14 +482,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Permission whereId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperPermission {}
+	class Permission extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperResult
  * @property int $id
  * @property int $award_id
  * @property string $filter
@@ -523,14 +515,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result whereVotes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result whereWarnings($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperResult {}
+	class Result extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperTableHistory
  * @property int $id
  * @property string $table
  * @property string $entry
@@ -548,14 +539,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TableHistory whereTable($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TableHistory whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|TableHistory whereValues($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperTableHistory {}
+	class TableHistory extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperTemplate
  * @property int $id
  * @property string $filename
  * @property string $name
@@ -573,14 +563,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Template whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Template whereSource($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Template whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperTemplate {}
+	class Template extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperUser
  * @property int $id
  * @property string $name
  * @property string $steam_id
@@ -618,14 +607,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereTeamMember($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereWebsite($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperUser {}
+	class User extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperUserInventoryItem
  * @property int $id
  * @property string $fuzzy_user_id
  * @property int $lootbox_item_id
@@ -638,14 +626,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserInventoryItem whereFuzzyUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserInventoryItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserInventoryItem whereLootboxItemId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperUserInventoryItem {}
+	class UserInventoryItem extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperUserNomination
  * @property int $id
  * @property int|null $award_id
  * @property string $fuzzy_user_id
@@ -668,14 +655,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNomination whereOriginalGroupId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNomination whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNomination whereUserNominationGroupId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperUserNomination {}
+	class UserNomination extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperUserNominationGroup
  * @property int $id
  * @property int $award_id
  * @property string $name
@@ -702,14 +688,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNominationGroup whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNominationGroup whereNomineeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserNominationGroup whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperUserNominationGroup {}
+	class UserNominationGroup extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperVote
  * @property int $id
  * @property int $award_id
  * @property int|null $user_id
@@ -735,14 +720,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vote whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vote whereVotingCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vote whereVotingGroup($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperVote {}
+	class Vote extends \Eloquent {}
 }
 
 namespace App\Models{
 /**
+ * @mixin IdeHelperVotingCodeLog
  * @property int $id
  * @property string $cookie_id
  * @property \Carbon\CarbonImmutable $created_at
@@ -761,9 +745,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VotingCodeLog whereIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VotingCodeLog whereReferer($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|VotingCodeLog whereUserId($value)
- * @mixin \Eloquent
  */
-	#[\AllowDynamicProperties]
-	class IdeHelperVotingCodeLog {}
+	class VotingCodeLog extends \Eloquent {}
 }
 

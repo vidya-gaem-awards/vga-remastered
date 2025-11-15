@@ -3,7 +3,9 @@
 @section('body')
     <nav class="navbar fixed-top navbar-expand-md navbar-light bg-yotsuba">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('index') }}">@year() /v/GAs</a>
+            <a class="navbar-brand" href="{{ route('index') }}">
+                @year() /v/GAs @if(config('app.env') !== 'production')<strong class="text-uppercase">Beta</strong>@endif
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapsed" aria-controls="navbarCollapsed" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -103,6 +105,10 @@
 
     <nav class="navbar fixed-bottom navbar-expand-md navbar-light bg-yotsuba">
         <div class="container">
+
+            <span class="navbar-text text-uppercase fw-bold text-black pe-3">
+                <span class="bg-dark text-bg-dark px-2">{{ config('app.env') }}</span>
+            </span>
 
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBottomCollapsed" aria-controls="navbarBottomCollapsed" aria-expanded="false" aria-label="Toggle bottom menu">
                 <span class="navbar-toggler-icon"></span>

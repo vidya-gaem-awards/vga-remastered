@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="env-{{ config('app.env') }}">
 
 <head>
     <meta charset="UTF-8">

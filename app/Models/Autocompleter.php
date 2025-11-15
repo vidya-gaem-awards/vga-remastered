@@ -13,6 +13,12 @@ class Autocompleter extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'slug',
+        'name',
+        'strings',
+    ];
+
     protected function casts(): array
     {
         return [
