@@ -90,7 +90,7 @@ class ConfigController extends Controller
             }
         }
 
-        $this->settings->default_page = $request->input('default_page', 'home');
+        $this->settings->default_page = $request->input('defaultPage', 'home');
         $this->settings->public_pages = array_keys($request->input('publicPages') ?: []);
 
         $navbarItems = explode("\n", $request->input('navigationMenu'));
