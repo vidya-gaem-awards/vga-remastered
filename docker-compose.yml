@@ -1,28 +1,20 @@
+name: vga-beta
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
       target: production
-    ports:
-      - "80:8080"
-      - "443:8443"
     environment:
       SSL_MODE: "mixed"
       AUTORUN_ENABLED: true
-    env_file: .env.production
-
-  database:
-    image: mariadb:11.4
-    environment:
-      MARIADB_USER: vga
-      MARIADB_PASSWORD: $VGA_DB_PASSWORD
-      MARIADB_DATABASE: vga
-    volumes:
-      - db_data:/var/lib/mysql
+    env_file: .env.deployment
 
   cache:
     image: redis:7
 
-volumes:
-  db_data:
+networks:
+  default:
+    name: caddy_net
+    external: true

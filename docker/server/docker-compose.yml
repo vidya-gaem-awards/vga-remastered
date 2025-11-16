@@ -1,0 +1,44 @@
+services:
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    hostname: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - /var/vga/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /var/vga/caddy/caddy_config:/config
+      - /var/vga/caddy/caddy_data:/data
+
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    hostname: whoami
+
+  database:
+    image: mariadb:11.4
+    container_name: database
+    hostname: database
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
+    volumes:
+      - /var/vga/mariadb:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: phpmyadmin
+    hostname: phpmyadmin
+    environment:
+      PMA_HOST: database
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    hostname: adminer
+
+networks:
+  default:
+    name: caddy_net
+    external: true

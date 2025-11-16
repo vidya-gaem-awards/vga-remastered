@@ -1,6 +1,8 @@
-.env
+.env*
 .git
 vendor
+database/database.sqlite
+docker
 storage/app/private/*
 storage/app/public/*
 storage/clockwork
