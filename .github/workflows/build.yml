@@ -1,4 +1,4 @@
-name: Docker Build
+name: Build application
 
 on:
   workflow_dispatch:
