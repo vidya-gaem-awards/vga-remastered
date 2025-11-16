@@ -72,8 +72,8 @@ Route::post('/team/{user}/edit', [PeopleController::class, 'post'])->name('peopl
 # AWARDS
 #
 
-Route::get('/awards', [AwardController::class, 'index'])->name('awards');
-Route::post('/awards', [AwardController::class, 'post'])->name('awards.post'); # awardFrontendPost
+Route::get('/awards', [AwardController::class, 'index'])->name('awards')->can('conditionally_public|awards_edit');
+Route::post('/awards', [AwardController::class, 'post'])->name('awards.post')->can('conditionally_public|awards_edit'); # awardFrontendPost
 
 Route::get('/awards/manage', [AwardAdminController::class, 'managerList'])->name('awards.manage')->can('awards_feedback'); # awardManager
 Route::post('/awards/manage', [AwardAdminController::class, 'managerPost'])->name('awards.manage.post')->can('awards_edit'); # awardManagerPost
@@ -97,58 +97,60 @@ Route::get('/awards/autocompleters/ajax/igdb', [AutocompleterController::class, 
 # TASKS
 #
 
-Route::get('/tasks', [TasksController::class, 'index'])->name('tasks');
-Route::get('/tasks/check-images', [TasksController::class, 'imageCheck'])->name('tasks.check-images'); # tasksImageCheck
-Route::post('/tasks', [TasksController::class, 'post'])->name('tasks.post'); # tasksPost
+Route::can('tasks_view')->group(function () {
+    Route::get('/tasks', [TasksController::class, 'index'])->name('tasks');
+    Route::get('/tasks/check-images', [TasksController::class, 'imageCheck'])->name('tasks.check-images'); # tasksImageCheck
+    Route::post('/tasks', [TasksController::class, 'post'])->name('tasks.post'); # tasksPost
+});
 
 #
 # VOTING
 #
 
-Route::get('/vote/code', [VotingController::class, 'codeViewer'])->name('voting.code-viewer'); # viewVotingCode
-Route::get('/vote/{id?}', [VotingController::class, 'index'])->name('voting');
-Route::post('/vote/{id}', [VotingController::class, 'post'])->name('voting.post'); # votingPost
-Route::get('/vote/v/{code}', [VotingController::class, 'codeEntry'])->name('voting.code-entry'); # voteWithCode
+Route::get('/vote/code', [VotingController::class, 'codeViewer'])->name('voting.code-viewer')->can('voting_view'); # viewVotingCode
+Route::get('/vote/{id?}', [VotingController::class, 'index'])->name('voting')->can('conditionally_public|voting_view');
+Route::post('/vote/{id}', [VotingController::class, 'post'])->name('voting.post')->can('conditionally_public|voting_view'); # votingPost
+Route::get('/vote/v/{code}', [VotingController::class, 'codeEntry'])->name('voting.code-entry')->can('conditionally_public|voting_view'); # voteWithCode
 
 #
 # RESULTS
 #
 
-Route::get('/winners', [ResultController::class, 'simple'])->name('winners');
-Route::post('/winners', [ResultController::class, 'winnerImageUpload'])->name('winners.image-upload'); # winnerImageUpload
-Route::get('/results', [ResultController::class, 'detailed'])->name('results');
-Route::get('/results/pairwise', [ResultController::class, 'pairwise'])->name('results.pairwise'); # pairwiseResults
-Route::get('/results/{id}', [ResultController::class, 'awardResults'])->name('results.award'); # resultsAward
+Route::get('/winners', [ResultController::class, 'simple'])->name('winners')->can('conditionally_public|voting_results');
+Route::post('/winners', [ResultController::class, 'winnerImageUpload'])->name('winners.image-upload')->can('awards_edit'); # winnerImageUpload
+Route::get('/results', [ResultController::class, 'detailed'])->name('results')->can('conditionally_public|voting_results');
+Route::get('/results/pairwise', [ResultController::class, 'pairwise'])->name('results.pairwise')->can('conditionally_public|voting_results'); # pairwiseResults
+Route::get('/results/{id}', [ResultController::class, 'awardResults'])->name('results.award')->can('voting_results'); # resultsAward
 
 #
 # REFERRERS
 #
 
-Route::get('/referrers', [ReferrerController::class, 'index'])->name('referrers');
+Route::get('/referrers', [ReferrerController::class, 'index'])->name('referrers')->can('referrers_view');
 
 #
 # AUDIT LOG
 #
 
-Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log'); # auditLog
+Route::get('/audit-log', [AuditLogController::class, 'index'])->name('audit-log')->can('audit_log_view'); # auditLog
 
 #
 # LAUNCHER
 #
 
-Route::get('/countdown', [LauncherController::class, 'countdown'])->name('countdown');
-Route::get('/stream', [LauncherController::class, 'stream'])->name('stream');
-Route::get('/finished', [LauncherController::class, 'finished'])->name('finished');
+Route::get('/countdown', [LauncherController::class, 'countdown'])->name('countdown')->can('conditionally_public|view_unfinished_pages');
+Route::get('/stream', [LauncherController::class, 'stream'])->name('stream')->can('conditionally_public|view_unfinished_pages');;
+Route::get('/finished', [LauncherController::class, 'finished'])->name('finished')->can('conditionally_public|view_unfinished_pages');;
 
 #
 # STATIC PAGES
 #
 
 Route::get('/privacy', [StaticController::class, 'privacy'])->name('privacy');
-Route::get('/videos', [StaticController::class, 'videos'])->name('videos');
-Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack');
-Route::get('/credits', [StaticController::class, 'credits'])->name('credits');
-Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers');
+Route::get('/videos', [StaticController::class, 'videos'])->name('videos')->can('conditionally_public|view_unfinished_pages');;
+Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack')->can('conditionally_public|view_unfinished_pages');;
+Route::get('/credits', [StaticController::class, 'credits'])->name('credits')->can('conditionally_public|view_unfinished_pages');;
+Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers')->can('conditionally_public|view_unfinished_pages');;
 Route::get('/voting/results', [StaticController::class, 'resultRedirect'])->name('result-redirect'); # resultRedirect
 
 #
@@ -167,23 +169,27 @@ Route::can('edit_config')->group(function () {
 # PAGE EDITOR
 #
 
-Route::get('/config/editor', [EditorController::class, 'index'])->name('editor');
-Route::post('/config/editor', [EditorController::class, 'post'])->name('editor.post'); # editorPost
+Route::can('template_edit')->group(function () {
+    Route::get('/config/editor', [EditorController::class, 'index'])->name('editor');
+    Route::post('/config/editor', [EditorController::class, 'post'])->name('editor.post'); # editorPost
+});
 
 #
 # LOOTBOXES (ADMIN SECTION)
 #
 
-Route::get('/lootboxes', [LootboxController::class, 'lootboxRedirect'])->name('lootbox.redirect'); # lootboxRedirect
-Route::get('/lootboxes/items', [LootboxController::class, 'items'])->name('lootbox.items'); # lootboxItems
-Route::post('/lootboxes/items', [LootboxController::class, 'itemPost'])->name('lootbox.items.post'); # lootboxItemPost
-Route::post('/lootboxes/items/css', [LootboxController::class, 'itemUpdateCss'])->name('lootbox.items.css'); # lootboxItemUpdateCss
-Route::post('/lootboxes/items/calculation', [LootboxController::class, 'itemCalculation'])->name('lootbox.items.calculation'); # lootboxItemCalculation
-Route::get('/lootboxes/tiers', [LootboxController::class, 'tiers'])->name('lootbox.tiers'); # lootboxTiers
-Route::post('/lootboxes/tiers', [LootboxController::class, 'tierPost'])->name('lootbox.tiers.post'); # lootboxTierPost
-Route::post('/lootboxes/tiers/calculation', [LootboxController::class, 'tierCalculation'])->name('lootbox.tiers.calculation'); # lootboxTierCalculation
-Route::get('/lootboxes/settings', [LootboxController::class, 'settings'])->name('lootbox.settings'); # lootboxSettings
-Route::post('/lootboxes/settings', [LootboxController::class, 'settingsSave'])->name('lootbox.settings.save'); # lootboxSettingsSave
+Route::can('items_manage')->group(function () {
+    Route::get('/lootboxes', [LootboxController::class, 'lootboxRedirect'])->name('lootbox.redirect'); # lootboxRedirect
+    Route::get('/lootboxes/items', [LootboxController::class, 'items'])->name('lootbox.items'); # lootboxItems
+    Route::post('/lootboxes/items', [LootboxController::class, 'itemPost'])->name('lootbox.items.post'); # lootboxItemPost
+    Route::post('/lootboxes/items/css', [LootboxController::class, 'itemUpdateCss'])->name('lootbox.items.css'); # lootboxItemUpdateCss
+    Route::post('/lootboxes/items/calculation', [LootboxController::class, 'itemCalculation'])->name('lootbox.items.calculation'); # lootboxItemCalculation
+    Route::get('/lootboxes/tiers', [LootboxController::class, 'tiers'])->name('lootbox.tiers'); # lootboxTiers
+    Route::post('/lootboxes/tiers', [LootboxController::class, 'tierPost'])->name('lootbox.tiers.post'); # lootboxTierPost
+    Route::post('/lootboxes/tiers/calculation', [LootboxController::class, 'tierCalculation'])->name('lootbox.tiers.calculation'); # lootboxTierCalculation
+    Route::get('/lootboxes/settings', [LootboxController::class, 'settings'])->name('lootbox.settings'); # lootboxSettings
+    Route::post('/lootboxes/settings', [LootboxController::class, 'settingsSave'])->name('lootbox.settings.save'); # lootboxSettingsSave
+});
 
 #
 # INVENTORY (VOTING PAGE)
