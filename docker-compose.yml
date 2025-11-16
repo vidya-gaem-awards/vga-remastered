@@ -2,10 +2,7 @@ name: vga-beta
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: production
+    image: "ghcr.io/vidya-gaem-awards/vga-remastered:main"
     environment:
       SSL_MODE: "mixed"
       AUTORUN_ENABLED: true
