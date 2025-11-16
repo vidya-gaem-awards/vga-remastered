@@ -4,7 +4,12 @@
     <nav class="navbar fixed-top navbar-expand-md navbar-light bg-yotsuba">
         <div class="container">
             <a class="navbar-brand" href="{{ route('index') }}">
-                @year() /v/GAs @if(config('app.env') !== 'production')<strong class="text-uppercase">Beta</strong>@endif
+                @year() /v/GAs
+                @if(config('app.env') === 'staging')
+                    <strong class="text-uppercase">Beta</strong>
+                @elseif(config('app.env') === 'local')
+                    <strong class="text-uppercase">Dev</strong>
+                @endif
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapsed" aria-controls="navbarCollapsed" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

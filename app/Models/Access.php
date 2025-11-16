@@ -14,15 +14,17 @@ class Access extends Model
 
     const UPDATED_AT = null;
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $guarded = ['id'];
 
     protected function casts(): array
     {
         return [
             'headers' => 'array',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
