@@ -1,5 +1,6 @@
 .env*
 .git
+.idea
 vendor
 database/database.sqlite
 docker

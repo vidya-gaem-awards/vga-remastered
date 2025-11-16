@@ -7,7 +7,7 @@
 FROM serversideup/php:8.4-fpm-nginx AS base
 
 USER root
-RUN apt update && apt install -y less vim mariadb-client
+RUN apt update && apt install -y less vim
 
 ## Uncomment if you need to install additional PHP extensions
 # RUN install-php-extensions bcmath gd
@@ -21,3 +21,7 @@ COPY --chown=www-data:www-data . /var/www/html
 USER www-data
 
 RUN composer install
+
+# Populated by GitHub Actions
+ARG GIT_VERSION_HASH=unknown
+ENV GIT_VERSION_HASH=${GIT_VERSION_HASH}
