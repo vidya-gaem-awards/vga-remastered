@@ -34,10 +34,8 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          cat << EOF >> ~/.ssh/id_ed25519
-          ${{ secrets.SERVER_PRIVATE_KEY }}
-          EOF
-          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SERVER_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
         shell: bash
@@ -52,6 +50,7 @@ jobs:
           ${{ secrets.ENV_FILE_CONTENTS }}
           EOF
 
-      - name: Perform Docker Composer deployment
+      - name: Perform Docker Compose deployment
         run: |
-            docker --context server compose --file docker-compose.yml --project-name ${{ inputs.environment }} up --detach --remove-orphans
+            docker --context server compose --file docker-compose.yml --project-name ${{ inputs.environment }} pull
+            docker --context server compose --file docker-compose.yml --project-name ${{ inputs.environment }} up --detach --remove-orphans --force-recreate
