@@ -82,7 +82,7 @@ class ConfigController extends Controller
                 $this->settings->$date = null;
             } else {
                 try {
-                    $this->settings->$date = Date::parse($request->input($date));
+                    $this->settings->$date = Date::parse($request->input($date))->shiftTimezone('America/New_York');
                 } catch (Exception) {
                     $this->addFlash('error', "Invalid date provided for " . Str::of($date)->headline()->lower() . ".");
                     $error = true;

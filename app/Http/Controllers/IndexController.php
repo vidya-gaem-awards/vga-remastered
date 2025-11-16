@@ -9,10 +9,10 @@ class IndexController extends Controller
 {
     public function home(): View
     {
-        $news = News::where('visible', true)
+        $news = News::query()
             ->with('user')
-            ->where('created_at', '<', now())
-            ->orderBy('created_at', 'desc')
+            ->where('show_at', '<', now())
+            ->orderBy('show_at', 'desc')
             ->get();
 
         return view('home', [

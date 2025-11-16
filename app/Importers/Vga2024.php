@@ -45,13 +45,13 @@ class Vga2024 extends Importer
 
     public function database(): void
     {
-//        foreach ($this->getTableMapping() as $class => $mapping) {
-//            $this->processTable($class);
-//        }
-//
-//        foreach (array_keys($this->getJoinTables()) as $table) {
-//            $this->processJoinTable($table);
-//        }
+        foreach ($this->getTableMapping() as $class => $mapping) {
+            $this->processTable($class);
+        }
+
+        foreach (array_keys($this->getJoinTables()) as $table) {
+            $this->processJoinTable($table);
+        }
 
         $this->processSettings();
     }
@@ -117,7 +117,7 @@ class Vga2024 extends Importer
 
         $time = $mapping['time'] ?? 0;
 
-        if ($time > -1 && !$force && empty($mapping['yes'])) {
+        if ($time > 60 && !$force && empty($mapping['yes'])) {
             return;
         }
 
@@ -422,10 +422,12 @@ class Vga2024 extends Importer
                     User::class,
                 ],
                 'columns' => [
-                    'timestamp' => 'created_at',
+                    'visible' => null,
+                    'timestamp' => 'show_at',
                     'deletedBy' => null,
                 ],
                 'custom' => fn ($newRecord, $oldRecord) => [
+                    'created_at' => $oldRecord->timestamp,
                     'updated_at' => $oldRecord->timestamp,
                     'deleted_at' => $oldRecord->deletedBy ? now() : null,
                 ],

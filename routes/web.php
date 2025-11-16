@@ -43,9 +43,8 @@ Route::get('/promo', [IndexController::class, 'promo'])->name('promo');
 #
 
 Route::get('/news', [NewsController::class, 'index'])->name('news');
-Route::post('/news/add', [NewsController::class, 'add'])->name('news.add'); # newsAdd
-Route::delete('/news/delete/{id}', [NewsController::class, 'delete'])->name('news.delete') # newsDelete
-    ->where('id', '[0-9]+');
+Route::post('/news/add', [NewsController::class, 'add'])->name('news.add')->can('news_manage'); # newsAdd
+Route::post('/news/delete/{news}', [NewsController::class, 'delete'])->name('news.delete')->can('news_manage'); # newsDelete
 
 #
 # VIDEO GAMES

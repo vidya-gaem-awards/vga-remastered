@@ -406,8 +406,8 @@ namespace App\Models{
  * @property int $id
  * @property string|null $headline
  * @property string $text
- * @property bool $visible
  * @property int $user_id
+ * @property \Carbon\CarbonImmutable $show_at
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
@@ -421,10 +421,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereHeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereShowAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereVisible($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News withTrashed(bool $withTrashed = true)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News withoutTrashed()
  */
