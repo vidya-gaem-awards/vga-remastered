@@ -1,24 +1,35 @@
+beta.vidyagaemawards.com {
+    reverse_proxy vga-beta-app-1:8443 {
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+}
+
+2025.vidyagaemawards.com {
+    reverse_proxy vga-2025-app-1:8443 {
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+}
+
 gex.vgas.xyz {
     reverse_proxy whoami:80
 }
 
-beta.vidyagaemawards.com {
-    reverse_proxy vga-beta-app-1:8080
-}
-
 adminer-gex.vgas.xyz {
     basic_auth {
+        vga # replace this comment with hash
     }
     reverse_proxy adminer:8080
 }
 
 pma-gex.vgas.xyz {
     basic_auth {
+        vga # replace this comment with hash
     }
     reverse_proxy phpmyadmin:80
-}
-
-
-2025.vidyagaemawards.com {
-    reverse_proxy vga-2025-app-1:8080
 }

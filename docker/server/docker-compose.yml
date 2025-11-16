@@ -37,6 +37,8 @@ services:
     image: adminer
     container_name: adminer
     hostname: adminer
+    environment:
+      ADMINER_DESIGN: 'nette'
 
 networks:
   default:
