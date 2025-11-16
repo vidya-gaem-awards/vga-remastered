@@ -35,7 +35,7 @@ class NewsController extends Controller
 
         $news = $news->get();
 
-        return view('news.index', [
+        return view('news', [
             'news' => $news,
             'now' => now()->setTimezone('America/New_York'),
         ]);

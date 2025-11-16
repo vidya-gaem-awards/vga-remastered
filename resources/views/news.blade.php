@@ -53,7 +53,6 @@
             @foreach($news as $item)
             <h3>{{ $item->show_at->setTimezone('America/New_York')->format('M j, Y, g:ia') }}</h3>
             <form action="{{ route('news.delete', $item) }}" method="post">
-                @csrf
                 <p>
                     {!! $item->text !!}
                     @can('news_view_user')
