@@ -7,14 +7,6 @@ use Illuminate\Contracts\View\View;
 
 class StaticController extends Controller
 {
-    /*
-     * @TODO: Need to see if this can be set up to do internal forwarding rather than redirecting
-     */
-    public function index(AppSettings $settings)
-    {
-        return redirect()->route($settings->default_page);
-    }
-
     public function privacy(): View
     {
         return view('privacy');
@@ -43,5 +35,10 @@ class StaticController extends Controller
     public function resultRedirect()
     {
         abort(501);
+    }
+
+    public function promo(): View
+    {
+        return view('promo');
     }
 }

@@ -88,8 +88,11 @@ class LogRequest
 
     private function shouldLogRequest(Request $request): bool
     {
-        // @TODO: this was all Symfony-specific stuff, so we don't need it yet
-        //        (although there may be Laravel-specific stuff that presents itself)
+        // This is the sub-request that occurs when you load the index page
+        if ($request->server('SUB_REQUEST')) {
+            return false;
+        }
+
         return true;
     }
 }

@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 # INTERNAL SYSTEM STUFF
 #
 
-Route::get('/', [StaticController::class, 'index'])->name('index');
+Route::get('/', [IndexController::class, 'index'])->name('index');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/login/return', [AuthController::class, 'loginReturn'])->name('login.return');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -36,7 +36,6 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 #
 
 Route::get('/home', [IndexController::class, 'home'])->name('home');
-Route::get('/promo', [IndexController::class, 'promo'])->name('promo');
 
 #
 # NEWS
@@ -146,11 +145,12 @@ Route::get('/finished', [LauncherController::class, 'finished'])->name('finished
 # STATIC PAGES
 #
 
+Route::get('/promo', [StaticController::class, 'promo'])->name('promo');
 Route::get('/privacy', [StaticController::class, 'privacy'])->name('privacy');
-Route::get('/videos', [StaticController::class, 'videos'])->name('videos')->can('conditionally_public|view_unfinished_pages');;
-Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack')->can('conditionally_public|view_unfinished_pages');;
-Route::get('/credits', [StaticController::class, 'credits'])->name('credits')->can('conditionally_public|view_unfinished_pages');;
-Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers')->can('conditionally_public|view_unfinished_pages');;
+Route::get('/videos', [StaticController::class, 'videos'])->name('videos')->can('conditionally_public|view_unfinished_pages');
+Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack')->can('conditionally_public|view_unfinished_pages');
+Route::get('/credits', [StaticController::class, 'credits'])->name('credits')->can('conditionally_public|view_unfinished_pages');
+Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers')->can('conditionally_public|view_unfinished_pages');
 Route::get('/voting/results', [StaticController::class, 'resultRedirect'])->name('result-redirect'); # resultRedirect
 
 #
