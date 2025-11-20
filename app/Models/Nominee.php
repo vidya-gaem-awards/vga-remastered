@@ -38,9 +38,7 @@ class Nominee extends Model
             'name' => $this->name,
             'subtitle' => $this->subtitle,
             'flavorText' => $this->flavor_text,
-            // @TODO: not implemented yet
-            'image' => null,
-//            'image' => $this->getImage()
+            'image' => $this->image,
         ];
     }
 }

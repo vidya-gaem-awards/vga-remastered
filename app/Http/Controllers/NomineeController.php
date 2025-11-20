@@ -9,6 +9,7 @@ use App\Models\TableHistory;
 use App\Models\UserNomination;
 use App\Models\UserNominationGroup;
 use App\Services\AuditService;
+use App\Services\FileService;
 use App\Settings\AppSettings;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -26,6 +27,7 @@ class NomineeController extends Controller
     public function __construct(
         private readonly AppSettings $settings,
         private readonly AuditService $auditService,
+        private readonly FileService $fileService,
     ) {
     }
 
@@ -52,8 +54,10 @@ class NomineeController extends Controller
 
         $alphabeticalSort = $request->query('sort') === 'alphabetical';
 
-        $nomineesArray = $award->nominees->keyBy('id');
-        $nomineeNames = $nomineesArray->pluck('name');
+        $nomineesArray = $award->nominees()
+            ->with('image')
+            ->get()
+            ->keyBy('id');
 
         // Get all userNominationGroups for the Award, sorted by number of nominations that the group has
         $userNominationGroups = $award->userNominationGroups()
@@ -152,25 +156,28 @@ class NomineeController extends Controller
             $group->save();
         }
 
-        // @TODO: file machine broke
-//        if ($request->files->get('image')) {
-//            try {
-//                $file = $fileService->handleUploadedFile(
-//                    $request->files->get('image'),
-//                    'Nominee.image',
-//                    'nominees',
-//                    $award->getId() . '--' . $nominee->getShortName()
-//                );
-//            } catch (Exception $e) {
-//                return response()->json(['error' => $e->getMessage()]);
-//            }
-//
-//            if ($nominee->getImage()) {
-//                $fileService->deleteFile($nominee->getImage());
-//            }
-//
-//            $nominee->setImage($file);
-//        }
+        if ($request->file('image')) {
+            try {
+                $file = $this->fileService->handleUploadedFile(
+                    $request->file('image'),
+                    'Nominee.image',
+                    'nominees',
+                    $award->slug . '--' . $nominee->slug,
+                );
+            } catch (Exception $e) {
+                return response()->json(['error' => $e->getMessage()]);
+            }
+
+            if ($nominee->image) {
+                $image = $nominee->image;
+                $nominee->image()->dissociate();
+                $nominee->save();
+                $this->fileService->deleteFile($image);
+            }
+
+            $nominee->image()->associate($file);
+            $nominee->save();
+        }
 
         $this->auditService->add(
             Action::makeWith('nominee-' . $action, $award->id, $nominee->id),

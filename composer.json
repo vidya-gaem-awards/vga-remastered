@@ -9,6 +9,7 @@
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.10.1",
         "league/csv": "^9.27",
+        "league/flysystem-aws-s3-v3": "^3.30",
         "phpunit/php-timer": "^7.0",
         "sentry/sentry-laravel": "^4.19",
         "socialiteproviders/steam": "^4.3",

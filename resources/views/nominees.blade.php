@@ -363,7 +363,7 @@
                                         </div>
                                         <div id="nominee-container" class="inaccurate">
                                             @foreach($award->nominees()->with('image')->get() as $nominee)
-                                            <div class="nominee" style="background-size: cover; background-image: url('{{ $nominee->image?->url ?? asset('img/no-image-available.png') }}')"
+                                            <div class="nominee" style="background-size: cover; background-image: url('{{ $nominee->image?->getUrl() ?? asset('img/no-image-available.png') }}')"
                                                  data-nominee="{{ $nominee->id }}">
                                                 @if($can('nominations_edit') && !$settings->read_only)
                                                     <div class="hoverOverlay">
