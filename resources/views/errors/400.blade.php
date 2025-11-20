@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    400
-@endsection
+@section('title', '400')
 
 @section('content')
     <h1 class="page-header board-header mb-4">/400/ - Bad Request</h1>

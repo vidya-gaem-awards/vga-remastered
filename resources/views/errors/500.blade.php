@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    501
-@endsection
+@section('title', '501')
 
 @section('content')
     <h1 class="page-header board-header mb-4">/500/ - Internal Server Error</h1>

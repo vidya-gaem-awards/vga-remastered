@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Home
-@endsection
+@section('title', 'Home')
 
 @pushonce('css')
     <style>

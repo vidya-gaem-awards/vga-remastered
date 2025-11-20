@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Permissions
-@endsection
+@section('title', 'Permissions')
 
 @section('content')
 <h1 class="display-4">Permissions</h1>

@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Config
-@endsection
+@section('title', 'Config')
 
 @pushonce('js')
     <script src="https://moment.github.io/luxon/global/luxon.min.js"></script>

@@ -1,9 +1,7 @@
 @extends('base.standard')
 
-@section('title')
-    {{ $user->name }}
-@endsection
-
+@section('title', $user->name)
+    
 @pushonce('css')
 <style>
     h1 {

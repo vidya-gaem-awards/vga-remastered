@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Vidya in @year()
-@endsection
+@section('title', 'Vidya in ' . year())
 
 @pushonce('css')
     <style>

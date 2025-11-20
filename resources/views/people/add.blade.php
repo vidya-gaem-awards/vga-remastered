@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Add team member
-@endsection
+@section('title', 'Add team member')
 
 @pushonce('js')
 <script type="text/javascript">

@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    501
-@endsection
+@section('title', '501')
 
 @section('content')
     <h1 class="page-header board-header mb-4">/501/ - Not Implemented</h1>

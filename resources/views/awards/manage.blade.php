@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Award Manager
-@endsection
+@section('title', 'Award Manager')
 
 @pushonce('css')
 <style>

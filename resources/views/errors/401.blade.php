@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    401
-@endsection
+@section('title', '401')
 
 @section('content')
 <h1 class="page-header board-header mb-4">/401/ - Authentication Required</h1>

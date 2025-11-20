@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    405
-@endsection
+@section('title', '405')
 
 @section('content')
     <h1 class="page-header board-header mb-4">/405/ - Method Not Allowed</h1>

@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    News
-@endsection
+@section('title', 'News')
 
 @section('content')
     <div class="row">

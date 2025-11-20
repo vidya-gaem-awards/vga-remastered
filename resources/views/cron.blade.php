@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-Result Generator &ndash; Config
-@endsection
+@section('title', 'Result Generator – Config')
 
 @section('content')
     <h1 class="display-4">Result generator</h1>

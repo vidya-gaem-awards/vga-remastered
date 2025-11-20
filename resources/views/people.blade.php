@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Production team
-@endsection
+@section('title', 'Production team')
 
 @pushonce('js')
     <script type="text/javascript">

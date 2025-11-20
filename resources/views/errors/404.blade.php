@@ -1,8 +1,6 @@
 @extends('base.standard', ['errorPage' => true])
 
-@section('title')
-    404
-@endsection
+@section('title', '404')
 
 @section('content')
     <h1 class="page-header board-header mb-4">/404/ - Page Not Found</h1>

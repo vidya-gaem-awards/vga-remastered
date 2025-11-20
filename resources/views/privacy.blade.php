@@ -1,8 +1,6 @@
 @extends('base.standard')
 
-@section('title')
-    Privacy Policy
-@endsection
+@section('title', 'Privacy Policy')
 
 @section('content')
 <div class="row">
