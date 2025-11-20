@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * @mixin IdeHelperAward
@@ -37,10 +38,30 @@ class Award extends Model
         ];
     }
 
-    #[Scope]
-    protected function notSecret(Builder $query): void
+    protected static function booted(): void
     {
-        $query->where('secret', false);
+        static::addGlobalScope('enabled', function (Builder $builder) {
+            $builder->where('enabled', true);
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * @TODO: I wonder if this should be a global scope? Could go either way
+     */
+    #[Scope]
+    protected function hideSecret(Builder $query): Builder
+    {
+        // I don't know if this is considered a good idea?
+        // I'm going to do it anyway, because it's very convenient.
+        if (Gate::allows('awards_secret')) {
+            return $query;
+        }
+        return $query->where('secret', false);
     }
 
     public function winnerImage(): BelongsTo
@@ -55,7 +76,7 @@ class Award extends Model
 
     public function nominees(): HasMany
     {
-        return $this->hasMany(Nominee::class);
+        return $this->hasMany(Nominee::class)->orderBy('name');
     }
 
     public function userNominationGroups(): HasMany
@@ -119,6 +140,37 @@ class Award extends Model
             'positive' => $feedback['positive'] / $feedback['total'] * 100,
             'negative' => $feedback['negative'] / $feedback['total'] * 100
         ];
+    }
+
+    public function getNameSuggestions(bool $sortAlphabetically = false): array
+    {
+        $suggestions = [];
+
+        foreach ($this->awardSuggestions as $suggestion) {
+            $normalised = strtolower(trim($suggestion->suggestion));
+            if (!isset($suggestions[$normalised])) {
+                $suggestions[$normalised] = [
+                    'count' => 0,
+                    'title' => $suggestion->suggestion,
+                ];
+            }
+            $suggestions[$normalised]['count']++;
+        }
+
+        if ($sortAlphabetically) {
+            usort($suggestions, function ($a, $b) {
+                return strtolower($a['title']) <=> strtolower($b['title']);
+            });
+        } else {
+            usort($suggestions, function ($a, $b) {
+                if ($b['count'] === $a['count']) {
+                    return strtolower($a['title']) <=> strtolower($b['title']);
+                }
+                return $b['count'] <=> $a['count'];
+            });
+        }
+
+        return $suggestions;
     }
 
     public function jsonSerialize(): array

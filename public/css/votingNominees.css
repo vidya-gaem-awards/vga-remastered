@@ -1,0 +1,176 @@
+/** Inner elements */
+.nominee {
+  position: relative;
+  /*border: 1px solid #f29823;*/
+  /*width: 350px;*/
+  /*height: 150px;*/
+  transition: 0.3s linear all;
+  background-color: #2C2B31;
+  background-position: center;
+
+  font-family: "Western Body";
+}
+
+.flavorText {
+  display: none;
+  background-color: #F0961F;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 10px 15px 10px 15px;
+  width: calc(100% - 0px);
+  height: auto;
+  font-size: 1.08em;
+  line-height: 15px;
+  color: black;
+  z-index: 40;
+  user-select: all;
+  text-align: center;
+}
+
+.flavorText.shortFlavorText{
+    font-size: 1.1em;
+    line-height: 1em;
+}
+
+.flavorText.mediumFlavorText{
+    font-size: 0.9em;
+    line-height: 0.9em;
+}
+
+.flavorText.longFlavorText{
+    font-size: 0.82em;
+    line-height: 0.9em;
+}
+
+.flavorText.extraLongFlavorText{
+    font-size: 0.75em;
+    line-height: 0.9em;
+}
+
+.aNominee .flavorText {
+  padding: 5px;
+}
+
+@media (max-width: 768px) {
+  .voteGroup {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .flavorText {
+    width: calc(100% - 25px);
+  }
+}
+
+.nominee:hover .flavorText, .voteBox:hover .flavorText {
+  display: block;
+}
+
+.nominee img.locked {
+  display: none;
+}
+
+.nominee.locked img.locked {
+  display: block;
+}
+
+.nomineeInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 300;
+  background: rgba(50, 50, 50, 0.5);
+  padding: 0 3px 5px 3px;
+  /*border-top: 1px dotted #c2c5b5;*/
+  text-shadow: 1px 1px black;
+}
+
+.nomineeName {
+  /*font-family: 'X-Files', sans-serif;*/
+  text-align: center;
+  font-weight: normal;
+  color: white;
+  font-size: 1.1em;
+  line-height: 1.1;
+}
+.nomineeSubtitle {
+  /*font-family: 'Dot Matrix', sans-serif;*/
+  text-align: center;
+  margin-top: 0px;
+  font-size: 0.7em;
+  line-height: 1.1;
+  color: white;
+}
+
+.nomineeSubtitle a {
+  color: #93a7f5;
+  text-decoration: underline;
+}
+
+.nomineeSubtitle a:hover {
+  color: #fec544;
+  text-decoration: underline;
+}
+
+.fakeElement {
+  /* This line is magic CSS which keeps the voting box at a fixed aspect ratio, even when the width changes. */
+  /* This works because the percentage for the padding-top is a percentage of width. */
+  padding-top: calc(300 / 548 * 100%);
+  box-shadow: inset 0 0 15px rgb(11, 9, 9);
+}
+
+
+/* Changes when in YOUR VOTES box */
+#voteDropAreaBottom .nominee{
+  /*border: 1px solid #f81317;*/
+}
+
+#voteDropAreaBottom .fakeElement{
+  /*background: url("/2019images/nom_corner_locked.png") no-repeat bottom left;*/
+  box-shadow: 0 0 8px rgb(11, 9, 9);
+}
+
+#voteDropAreaBottom .nomineeName, #voteDropAreaBottom .nomineeSubtitle{
+  /*color: #f81317;*/
+  /*border: 1px solid #f81317;*/
+  /*text-shadow: #f81317 0px 0px 3px;*/
+}
+#voteDropAreaBottom .nomineeName{
+  /*background: url("/2019images/nom_namebg_locked.png") repeat-x bottom left, black;*/
+}
+
+
+
+
+/** Other */
+.flexContainer .voteBox {
+  transition: 0.3s linear all;
+  width: 100%;
+  /*box-shadow: 2px 2px 5px rgba(0,0,0,0.8);*/
+}
+
+.voteGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  margin-left: 6px;
+  margin-right: 6px;
+  justify-content: center;
+  width: calc(25% - 12px);
+  position: relative;
+  user-select: none;
+  letter-spacing: 0.25px;
+}
+
+@media screen and (max-width: 1000px) {
+  .voteGroup {
+    width: calc(33% - 10px);
+  }
+}
+
+.voteGroup label {
+  margin-bottom: auto;
+  font-weight: inherit;
+}

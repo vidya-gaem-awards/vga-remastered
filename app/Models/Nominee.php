@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -24,8 +25,22 @@ class Nominee extends Model
         return $this->belongsTo(File::class, 'image_id');
     }
 
-    public function userNominationGroups(): HasMany
+    public function userNominationGroup(): HasOne
     {
-        return $this->hasMany(UserNominationGroup::class);
+        return $this->hasOne(UserNominationGroup::class);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'name' => $this->name,
+            'subtitle' => $this->subtitle,
+            'flavorText' => $this->flavor_text,
+            // @TODO: not implemented yet
+            'image' => null,
+//            'image' => $this->getImage()
+        ];
     }
 }

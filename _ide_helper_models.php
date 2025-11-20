@@ -142,7 +142,7 @@ namespace App\Models{
  * @property-read \App\Models\File|null $winnerImage
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Award notSecret()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Award hideSecret()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereAutocompleterId($value)
@@ -748,4 +748,3 @@ namespace App\Models{
  */
 	class VotingCodeLog extends \Eloquent {}
 }
-

@@ -26,14 +26,12 @@ class AwardAdminController extends Controller
     public function managerList(Request $request)
     {
         $query = Award::query()
+            ->withoutGlobalScope('enabled')
+            ->hideSecret()
             ->with('autocompleter')
             ->with('awardFeedback')
-            ->orderByRaw('deleted_at IS NOT NULL')
+            ->orderByDesc('enabled')
             ->orderBy('order');
-
-        if (!Gate::allows('awards_secret')) {
-            $query->notSecret();
-        }
 
         $awards = $query->get()->keyBy('id');
 
@@ -65,8 +63,12 @@ class AwardAdminController extends Controller
 
         // Open / close all awards
         if ($request->post('action') === 'massChangeNominations') {
+            $awards = Award::query()
+                ->withoutGlobalScope('enabled')
+                ->where('secret', false)
+                ->get();
+
             if ($request->post('todo') === 'open') {
-                $awards = Award::notSecret()->get();
                 foreach ($awards as $award) {
                     $award->nominations_enabled = true;
                     $award->save();
@@ -78,7 +80,6 @@ class AwardAdminController extends Controller
 
                 $this->addFlash('formSuccess', 'Nominations for all awards are now open.');
             } elseif ($request->post('todo') === 'close') {
-                $awards = Award::notSecret()->get();
                 foreach ($awards as $award) {
                     $award->nominations_enabled = false;
                     $award->save();
@@ -109,8 +110,8 @@ class AwardAdminController extends Controller
                 return response()->json(['error' => 'An ID is required.']);
             }
 
-            $award = Award::find($id);
-            if (!$award || ($award->secret && !Gate::allows('awards_secret'))) {
+            $award = Award::withoutGlobalScope('enabled')->hideSecret()->find($id);
+            if (!$award) {
                 return response()->json(['error' => 'Couldn\'t find an award with that ID.']);
             }
         }
@@ -137,6 +138,7 @@ class AwardAdminController extends Controller
             }
 
             $awardBySlug = Award::query()
+                ->withoutGlobalScope('enabled')
                 ->where('slug', $request->post('slug'))
                 ->where('id', '!=', $award->id ?? 0)
                 ->first();

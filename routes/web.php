@@ -80,12 +80,12 @@ Route::post('/awards/manage/ajax', [AwardAdminController::class, 'managerPostAja
 
 Route::get('/nominees/export', [NomineeController::class, 'exportNominees'])->name('nominees.export'); # nomineeExport
 Route::get('/nominees/export/user-nominations', [NomineeController::class, 'exportUserNominations'])->name('nominees.export.user-nominations'); #nomineeUserNominationExport
-Route::get('/nominees/{id?}', [NomineeController::class, 'index'])->name('nominees.manage'); # nomineeManager
-Route::post('/nominees/{id}', [NomineeController::class, 'post'])->name('nominees.manage.post'); # nomineePost
-Route::post('/nominees/{id}/group/ignore', [NomineeController::class, 'nominationGroupIgnore'])->name('nominations.group.ignore'); # nominationsIgnoreGroup
-Route::post('/nominees/{id}/group/merge', [NomineeController::class, 'nominationGroupMerge'])->name('nominations.group.merge'); # nominationsMergeGroup
-Route::post('/nominees/{id}/group/demerge', [NomineeController::class, 'nominationGroupDemerge'])->name('nominations.group.demerge'); # nominationsDemergeGroup
-Route::post('/nominees/{id}/group/unlink', [NomineeController::class, 'nominationGroupUnlink'])->name('nominations.group.unlink'); # nominationsUnlinkGroup
+Route::get('/nominees/{award?}', [NomineeController::class, 'index'])->name('nominees.manage'); # nomineeManager
+Route::post('/nominees/{award}', [NomineeController::class, 'post'])->name('nominees.manage.post'); # nomineePost
+Route::post('/nominees/{award}/group/ignore', [NomineeController::class, 'nominationGroupIgnore'])->name('nominations.group.ignore'); # nominationsIgnoreGroup
+Route::post('/nominees/{award}/group/merge', [NomineeController::class, 'nominationGroupMerge'])->name('nominations.group.merge'); # nominationsMergeGroup
+Route::post('/nominees/{award}/group/demerge', [NomineeController::class, 'nominationGroupDemerge'])->name('nominations.group.demerge'); # nominationsDemergeGroup
+Route::post('/nominees/{award}/group/unlink', [NomineeController::class, 'nominationGroupUnlink'])->name('nominations.group.unlink'); # nominationsUnlinkGroup
 
 Route::get('/awards/autocompleters', [AutocompleterController::class, 'index'])->name('autocompleters');
 Route::post('/awards/autocompleters/ajax', [AutocompleterController::class, 'ajax'])->name('autocompleters.ajax'); # autocompleterAjax
@@ -107,8 +107,8 @@ Route::can('tasks_view')->group(function () {
 #
 
 Route::get('/vote/code', [VotingController::class, 'codeViewer'])->name('voting.code-viewer')->can('voting_view'); # viewVotingCode
-Route::get('/vote/{id?}', [VotingController::class, 'index'])->name('voting')->can('conditionally_public|voting_view');
-Route::post('/vote/{id}', [VotingController::class, 'post'])->name('voting.post')->can('conditionally_public|voting_view'); # votingPost
+Route::get('/vote/{award?}', [VotingController::class, 'index'])->name('voting')->can('conditionally_public|voting_view');
+Route::post('/vote/{award}', [VotingController::class, 'post'])->name('voting.post')->can('conditionally_public|voting_view'); # votingPost
 Route::get('/vote/v/{code}', [VotingController::class, 'codeEntry'])->name('voting.code-entry')->can('conditionally_public|voting_view'); # voteWithCode
 
 #
