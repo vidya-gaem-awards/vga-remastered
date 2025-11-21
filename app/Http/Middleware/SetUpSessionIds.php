@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facade\FuzzyUser;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,12 +35,8 @@ class SetUpSessionIds
             $request->session()->put('access', $randomIdCookie);
             $randomId = $randomIdCookie;
         } elseif (!$randomIdSession) {
-            // Generate a random ID, then append it with a HMAC.
-            // This allows us to verify that we generated the ID.
-            // This has a very low security requirement, so we cut off the ID and HMAC at 16 characters each.
-            $randomId = substr(hash('sha256', random_bytes(64)), 0, 16);
-            $randomId .= ':' . substr(hash_hmac('md5', $randomId, config('app.key')), 0, 16);
-
+            // HMAC no longer necessary, because Laravel encrypts cookies automatically.
+            $randomId = substr(hash('sha256', random_bytes(64)), 0, 8);
             $request->session()->put('access', $randomId);
         } else {
             $randomId = $randomIdSession;
@@ -57,15 +54,9 @@ class SetUpSessionIds
             $votingCode = $votingCodeSession;
         }
 
-        // TODO: still need to figure out if we're going to reuse the 'anonymous user' concept
-        //       in Laravel.
-
-//        /** @var BaseUser $user */
-//        $user = $this->tokenStorage->getToken()->getUser();
-//        $user
-//            ->setIP(self::getIpAddress($request))
-//            ->setRandomID($randomID)
-//            ->setVotingCode($votingCode);
+        // @TODO: This feels janky.
+        FuzzyUser::setRandomId($randomId);
+        FuzzyUser::setVotingCode($votingCode);
 
         return $next($request);
     }

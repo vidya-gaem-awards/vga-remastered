@@ -1,0 +1,743 @@
+@extends('base.standard')
+
+@section('title', 'Awards and Nominations')
+
+@pushonce('css')
+    <style type="text/css">
+        .ui-autocomplete {
+            max-height: 300px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            /* add padding to account for vertical scrollbar */
+        }
+
+        #video-games img {
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            max-width: 100%;
+        }
+
+        #video-games img:hover {
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+        }
+
+        #video-game-collage {
+            background-color: #111;
+            position: relative;
+        }
+
+        #video-game-collage .top {
+            z-index: 1;
+        }
+
+        #video-game-collage .bottom {
+            bottom: 3px;
+        }
+
+        #video-game-collage .vignette {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(#0000003d 50%, rgba(0, 0, 0, 0.26) 50%, rgba(0, 0, 0, 0.87));
+            position: absolute;
+        }
+
+        #video-game-collage .top, #video-game-collage .bottom {
+            position: absolute;
+            text-align: center;
+            font-weight: bold;
+            font-size: 35px;
+            color: white;
+            padding: 0 10px;
+            text-shadow: 0 2px 0 black;
+        }
+
+        .impressive-title {
+            text-align: center;
+            color: #789922;
+            font-family: 'Asap', sans-serif;
+            font-size: 2.4em;
+            line-height: 1em;
+            font-weight: bold;
+        }
+
+        .impressive-title .emoji {
+            width: 36px;
+        }
+
+        .impressive-subtitle {
+            text-align: center;
+            font-family: 'Asap', sans-serif;
+            color: #1F1F1F;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .impressive-description {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 1.1em;
+            font-family: 'Asap', sans-serif;
+        }
+
+        .award-container {
+            border: 1px solid #BBB;
+            background-color: #f5f5f5;
+        }
+
+        .award-container-middle {
+            background: white;
+            box-shadow: rgba(0,0,0,0.1) 0 0 1px;
+        }
+
+        .award-container-padding {
+            padding: 15px;
+        }
+
+        @media (max-width: 991px) {
+            .affix {
+                padding-top: 10px;
+                position: static;
+            }
+
+            #awardDropdown .dropdown-menu {
+                width: 100%;
+                margin-bottom: 60px;
+            }
+        }
+
+        #awardDropdownButton {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        #awardDropdown .dropdown-menu a {
+            white-space: normal;
+        }
+
+        #user-nomination-list ul {
+            margin-bottom: 0;
+        }
+
+        .affix {
+            width: 100%;
+        }
+
+        .awardContainer {
+            display: none;
+            flex-wrap: wrap;
+        }
+
+        .awardBox {
+            background: white;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            padding: 10px 20px 10px 10px;
+            width: calc(50% - 5px);
+            margin-bottom: 5px;
+            margin-right: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .awardBox .fa-chevron-right {
+            position: absolute;
+            right: 5px;
+            top: calc(50% - 7px);
+        }
+
+        .awardBox.active {
+            background-color: #337ab7;
+            color: white;
+        }
+
+        .awardBox .emoji {
+            width: 16px;
+        }
+
+        .awardBox:hover {
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+        }
+
+        .awardBox .awardName {
+            font-weight: bold;
+        }
+
+        .awardBox .awardSubtitle {
+            font-style: italic;
+            font-size: smaller;
+        }
+
+        #awardDropdown {
+            display: block;
+        }
+
+        @media (min-width: 1200px) {
+            .affix {
+                width: 585px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .affix {
+                width: 555px;
+                top: 85px;
+            }
+
+            #awardDropdownButton {
+                display: none;
+            }
+
+            #awardDropdown {
+                display: none;
+                position: static;
+            }
+
+            #awardDropdown .dropdown-menu {
+                position: static;
+                display: block;
+                top: auto;
+                left: auto;
+                float: none;
+                border: none;
+            }
+
+            .awardContainer {
+                display: flex;
+            }
+        }
+    </style>
+@endpushonce
+
+@section('beforeContainer')
+    @include('parts.award-admin-bar')
+@endsection
+
+@section('content')
+    <h1 class="page-header board-header">Awards and Nominations</h1>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-12" id="award-selector">
+            <div class="dropdown" id="awardDropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="awardDropdownButton" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false" data-bs-flip="false">
+                    Select an award
+                </button>
+                <div class="dropdown-menu" aria-labelledby="awardDropdownButton">
+                    @foreach($awards as $award)
+                        <div data-id="{{ $award->id }}" class="awardClickTarget dropdown-item">
+                            <a href="#{{ $award->id }}" class="dropdown-item">
+                                {#<span class="opinion-icon">[{{ count($userNominations[$award->id]) }}]</span>#}
+                                <span style="font-weight: 500;">{{ $award->name }}</span>
+                                <small>{{ $award->subtitle }}</small>
+                            </a>
+                        </div>
+                        @endforeach
+                    @if($settings->award_suggestions || !empty($userSuggestions['new-award']))
+                        <div class="awardClickTarget dropdown-item" data-id="new-award">
+                            <a href="#new-award" class="dropdown-item">
+                                <strong>{{ $settings->award_suggestions ? 'Suggest a new award' : 'View your award suggestions' }}</strong>
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="awardContainer">
+                @foreach($awards as $award)
+                    <div class="awardBox awardClickTarget" data-id="{{ $award->id }}">
+                        <i class="far fa-chevron-right"></i>
+                        <div class="awardName">{{ $award->name }}</div>
+                        <div class="awardSubtitle">{{ $award->subtitle }}</div>
+                    </div>
+                @endforeach
+                @if($settings->award_suggestions || !empty($userSuggestions['new-award']))
+                    <div class="awardBox awardClickTarget" data-id="new-award" style="flex-basis: 100%; margin-top: 15px;">
+                        <i class="far fa-chevron-right"></i>
+                        <div class="awardName">{{ $settings->award_suggestions ? 'Suggest a new award' : 'View your award suggestions' }}</div>
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12">
+            @if(!$settings->isPagePublic('voting'))
+                <div class="alert alert-info">
+                    <strong>Note:</strong> awards may be added, removed, or renamed in response to nominations and feedback.
+                    The awards are not final until the voting page goes live.
+                </div>
+            @endif
+
+            <div id="video-games">
+                <a href="{{ route('video-games') }}" target="_blank">
+                    <div id="video-game-collage">
+                        <div class="top">Forgotten what vidya you played earlier this year?</div>
+                        <div class="vignette"></div>
+                        <img class="img-responsive" src="{{ asset('img/collage.png') }}">
+                        <div class="bottom">Click here for a list of video&nbsp;games from {{ year() }}.</div>
+                    </div>
+                </a>
+            </div>
+
+            <div id="award-info" style="display: none;" data-spy="affix" data-offset-top="90" class="award-container">
+                <div class="award-container-top award-container-padding">
+                    <div id="award-name" class="impressive-title"></div>
+                    <div id="award-subtitle" class="impressive-subtitle"></div>
+                    <div id="award-description" class="impressive-description"></div>
+                </div>
+
+                <div class="award-container-middle award-container-padding d-flex" style="text-align: center; flex-wrap: wrap; justify-content: space-around">
+                    <div class="btn-group" id="award-voting" style="flex-grow: 0">
+                        <button class="btn btn-outline-success" id="thumbs-up" {{ $settings->read_only ? 'disabled' : '' }}>This award is good</button>
+                        <button class="btn btn-outline-danger" id="thumbs-down" {{ $settings->read_only ? 'disabled' : '' }}>This award is shit</button>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-dark" style="float: none; border-radius: 4px;" id="suggest-name" {{ $settings->award_suggestions ? '' : 'disabled title="Award name suggestions are now closed."' }}>Suggest a new award title</button>
+                        <div id="suggestion-count" style="font-size: small;"></div>
+                    </div>
+                </div>
+
+                <div class="award-container-padding">
+                    <div class="card mb-3">
+                        <div class="card-body" id="user-nomination-list">
+                        </div>
+                    </div>
+
+                    <div id="nomination-section">
+                        <form class="form-inline" id="nomination-form">
+                            <div class="form-group" style="flex-grow: 1">
+                                <label class="sr-only" for="tags">Add a nomination:</label>
+                                <div class="input-group" style="flex-grow: 1">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">Add a nomination:</div>
+                                    </div>
+                                    <input class="form-control" id="tags" name="nomination" type="text" required>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary ms-2" type="submit">Submit</button>
+                        </form>
+
+                        <small class="text-muted text-center mt-2 d-block">
+                            <span id="autocomplete"></span><br>
+                            You can make nominations for things that aren't in the dropdown.
+                        </small>
+
+                        <p id="nomination-status" style="font-weight: bold; text-align: center; font-size: 120%;"></p>
+                    </div>
+
+                    @if(!$settings->read_only)
+                        <div class="text-muted text-center mt-2" id="nominations-closed" style="display: none;">
+                            <small>Nominations for this award are not currently open.</small>
+                        </div>
+                    @else
+                        <div class="text-muted text-center mt-2 d-block">
+                            <small>Nominations for this award have closed.</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            @if($settings->award_suggestions || !empty($userSuggestions['new-award']))
+                <div id="new-award" style="display: none;" data-spy="affix" data-offset-top="90" class="award-container">
+                    <div class="award-container-top award-container-padding">
+                        <div class="impressive-title">Suggest a new award</div>
+                        <div class="impressive-description" style="font-size: 1em;">
+                            We're incredibly uncreative, so we'd love to hear your suggestions on what new awards we could add to the
+                            show this year (or in years to come).
+                        </div>
+                    </div>
+
+                    <div class="award-container-middle award-container-padding">
+                        <strong>Guidelines:</strong>
+                        <ul style="margin-top: 5px; margin-bottom: 0;">
+                            <li>Don't submit awards we've done in previous years.</li>
+                            <li>Awards should have at least 5 viable nominees, preferably more.</li>
+                            <li>Make sure it's clear what the award is actually for.</li>
+                        </ul>
+
+                        <div style="margin-top: 15px; display: none;" id="new-award-idea-list">
+                            <strong>Ideas you've submitted:</strong>
+                            <ul style="margin-top: 5px; margin-bottom: 0;">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="award-container-padding">
+                        @if($settings->award_suggestions)
+                            <form id="new-award-form">
+                                <div class="form-group">
+                                    <label for="suggestion-box">Your award idea</label>
+                                    <input class="form-control" id="suggestion-box" name="suggestion" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-outline-dark" type="submit">Submit</button>
+                                </div>
+                                <span id="new-award-status"></span>
+                            </form>
+                        @else
+                            <div style="text-align: center;">
+                                <em>Thanks for your input. Award suggestions are now closed.</em>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+@endsection
+
+@pushonce('js')
+    <script type="text/javascript">
+        var awards = {{ Js::from($awards) }};
+        var userNominations = {{ Js::from($userNominations) }};
+        var userSuggestions = {{ Js::from($userSuggestions) }};
+        var opinions = {{ Js::from($userOpinions) }};
+        var autocompleters = {{ Js::from($autocompleters) }};
+
+        var award = false;
+
+        function updateNominations() {
+            if (award === 'new-award') {
+                if (userSuggestions['new-award'].length > 0) {
+                    $('#new-award-idea-list').show();
+                    var list = $('#new-award-idea-list').find('ul');
+                    list.empty();
+
+                    $.each(userSuggestions['new-award'], function (index, idea) {
+                        list.append($('<li><em>' + idea + '</em></li>'));
+                    });
+                }
+                return;
+            }
+
+            if (userNominations[award].length === 0) {
+                $('#user-nomination-list').html("You haven't nominated anything for this award.");
+            } else {
+                $('#user-nomination-list').html('');
+
+                let $list = $('<ul></ul>');
+                for (const nomination of userNominations[award]) {
+                    let $listItem = $(`<li><span class="nomination">${nomination.nomination}</span></li>`);
+                    $listItem.attr('data-id', nomination.id);
+                    if (awards[award]['nominationsEnabled']) {
+                        $listItem.append(' <a href="#" class="remove-nomination text-danger" title="Remove this nomination"><i class="fal fa-times fa-fw"></i></a>');
+                    }
+                    $list.append($listItem);
+                }
+                $('#user-nomination-list').append($list);
+            }
+
+            var suggestionCount = userSuggestions[award].length;
+            var title = userSuggestions[award].join(', ');
+            if (suggestionCount > 0) {
+                $('#suggestion-count').show().html('You\'ve suggested <abbr title="' + title + '">' + suggestionCount + ' name' + (suggestionCount === 1 ? '' : 's') + '</abbr>');
+            } else {
+                $('#suggestion-count').hide();
+            }
+        }
+
+        $('#award-selector').find('.awardClickTarget').click(function (event) {
+
+            $("#video-games").hide();
+
+            var thus = this;
+
+            if (award === 'new-award') {
+                elementToHide = $('#new-award');
+            } else {
+                elementToHide = $('#award-info');
+            }
+
+            elementToHide.fadeOut(100, function () {
+
+                award = $(thus).attr('data-id');
+                $('#award-selector').find('.awardClickTarget').removeClass("active");
+                $(thus).addClass("active");
+
+                // @TODO: hash shows ID and not slug
+                window.location.hash = award;
+
+                if (award === 'new-award') {
+                    $('#new-award').fadeIn(100);
+                    updateNominations();
+                    return;
+                }
+
+                $('#award-info').find('.impressive-title').html(awards[award]['name']);
+                $('#award-info').find('.impressive-subtitle').html(awards[award]['subtitle']);
+                $('#award-info').find('.impressive-description').html(awards[award]['comments']);
+                if (awards[award]['comments']) {
+                    $('#award-info').find('.impressive-description').show();
+                } else {
+                    $('#award-info').find('.impressive-description').hide();
+                }
+                if (awards[award]['nominationsEnabled']) {
+                    $('#nomination-section').show();
+                    $('#nominations-closed').hide();
+                } else {
+                    $('#nomination-section').hide();
+                    $('#nominations-closed').show();
+                }
+                $('#award-voting').find('button').removeClass("btn-success btn-danger active");
+                if (opinions[award] === 1) {
+                    $('#thumbs-up').addClass("active");
+                } else if (opinions[award] === -1) {
+                    $('#thumbs-down').addClass("active");
+                }
+
+                updateNominations(award);
+
+                $('#award-info').fadeIn(100);
+                $('#nomination-status').hide();
+
+                $('html').scroll();
+
+                $("#tags").val("");
+
+                var autocompleteCat = awards[award]['autocompleter'];
+                {{-- @TODO: pretty sure this doesn't work due to the id/slug change --}}
+                if (autocompleteCat === "video-games") {
+                    $('#autocomplete').html(
+                        "This award provides suggestions using a list of <a href='{{ route('video-games') }}' target='_blank'>video games released in 2024</a>."
+                    );
+                } else if (autocompleteCat === award) {
+                    $('#autocomplete').html("This award provides suggestions based on nominations from other users.");
+                } else {
+                    $('#autocomplete').html("This award provides suggestions from a pre-defined list.");
+                }
+
+                $("#tags").autocomplete({
+                    source: autocompleters[autocompleteCat],
+                    minLength: 2,
+                    delay: 0
+                });
+
+                $("#tags").focus();
+                // twemoji.parse(document.body);
+            });
+        });
+
+        $('#award-voting').find('button').click(function (event) {
+            event.preventDefault();
+
+            var selected = event.currentTarget;
+            var opinion;
+            var opposite;
+
+            if ($(selected).hasClass("selected")) {
+                opinion = 0;
+                opposite = selected;
+            } else if (selected.id === "thumbs-down") {
+                opinion = -1;
+                opposite = $("#thumbs-up");
+            } else if (selected.id === "thumbs-up") {
+                opinion = 1;
+                opposite = $("#thumbs-down");
+            }
+
+            $('#award-voting').find('button').attr('disabled', 'disabled');
+            $(selected).text('Saving...');
+
+            var formAward = award;
+
+            $.post("{{ route('awards.post') }}", {id: award, opinion: opinion}, function (data) {
+                if (data.success) {
+
+                    var icon = $('[data-id="' + formAward + '"] .opinion-icon');
+                    if (opinion === -1) {
+                        if (formAward === award) {
+                            // $(selected).addClass("btn-danger");
+                            // $(opposite).removeClass("btn-success");
+                        }
+//                        $(icon).html("&#x2718;");
+                    } else if (opinion === 1) {
+                        if (formAward === award) {
+                            // $(selected).addClass("btn-success");
+                            // $(opposite).removeClass("btn-danger");
+                        }
+//                        $(icon).html("&#x2714;");
+                    } else {
+                        if (formAward === award) {
+                            // $(selected).removeClass("btn-success btn-danger");
+                        }
+//                        $(icon).html("");
+                    }
+                    if (formAward === award) {
+                        $(selected).addClass("active");
+                        $(opposite).removeClass("active");
+                    }
+                    opinions[formAward] = opinion;
+                    $('#award-voting').find('button').removeAttr('disabled');
+                    $('#thumbs-up').text('This award is good');
+                    $('#thumbs-down').text('This award is shit');
+                } else {
+                    alert("An error occurred: " + data.error);
+                }
+            }, "json");
+        });
+
+        $('#user-nomination-list').on('click', '.remove-nomination', function (event) {
+            const $nomination = $(event.target).parents('li');
+            const nomination = $nomination.find('.nomination').text();
+
+            event.preventDefault();
+
+            if (currentlySubmitting) {
+                return;
+            }
+
+            if (!confirm(`Remove your nomination "${nomination}"?`)) {
+                return;
+            }
+
+            currentlySubmitting = true;
+            var formAward = award;
+
+            $("#nomination-status").show();
+            $("#nomination-status").html("Removing nomination...");
+
+            $.post("{{ route('awards.post') }}", {id: award, removeNomination: $nomination.attr('data-id')}, null, 'json')
+                .done(function (data) {
+                    if (data.success) {
+                        userNominations[formAward] = userNominations[formAward].filter(n => String(n.id) !== $nomination.attr('data-id'));
+
+                        if (formAward === award) {
+                            updateNominations();
+                            $("#nomination-status").html("<span style='color: green;'>Success!</span>");
+                            $("#nomination-status").fadeOut(3000);
+                        }
+                        var icon = $('[data-id="' + formAward + '"] .opinion-icon');
+                        icon.text("[" + userNominations[formAward].length + "]");
+                    } else {
+                        if (formAward === award) {
+                            $("#nomination-status").html("<span style='color: red;'>" + data.error + "</span>");
+                        }
+                    }
+                    currentlySubmitting = false;
+                })
+                .fail(function (xhr, textStatus, error) {
+                    currentlySubmitting = false;
+                    $("#nomination-status").html("<span style='color: red;'>HTTP error: " + xhr.status + " " + xhr.statusText + ". Try again.</span>");
+                    console.log(xhr);
+                });
+        });
+
+        $('#suggest-name').click(function (event) {
+            var suggestion = prompt('Recommend a new name for the ' + awards[award]['name'] + ':');
+            if (!suggestion) {
+                return;
+            }
+
+            var formAward = award;
+            var button = $(event.currentTarget);
+            var originalLabel = button.text();
+
+            $('#suggest-succeed').hide();
+            button.text('Saving...');
+            button.attr('disabled', 'disabled');
+
+            $.post("{{ route('awards.post') }}", {id: award, suggestedName: suggestion}, null, 'json')
+                .done(function (data) {
+                    if (data.error) {
+                        alert('An error occurred: ' + data.error);
+                    } else {
+                        userSuggestions[formAward].push(suggestion);
+                        if (award === formAward) {
+                            updateNominations();
+                        }
+                    }
+                })
+                .fail(function (xhr, textStatus, error) {
+                    alert('HTTP error: ' + xhr.status + " " + xhr.statusText);
+                })
+                .always(function () {
+                    button.text(originalLabel);
+                    button.removeAttr('disabled');
+                });
+        });
+
+        var currentlySubmitting = false;
+
+        $('#nomination-form').submit(function (event) {
+            event.preventDefault();
+
+            if (currentlySubmitting) {
+                return;
+            }
+
+            currentlySubmitting = true;
+            var formAward = award;
+
+            $("#nomination-status").show();
+            $("#nomination-status").html("Submitting nomination...");
+
+            var value = $('#tags').val();
+
+            $.post("{{ route('awards.post') }}", {id: award, nomination: value}, null, 'json')
+                .done(function (data) {
+                    if (data.success) {
+                        var safeValue = $('<div></div>').text($.trim(value)).html();
+                        userNominations[formAward].push({id: data.id, nomination: safeValue});
+                        $('#tags').val("");
+                        $('#tags').autocomplete("close");
+                        if (formAward === award) {
+                            updateNominations();
+                            $("#nomination-status").html("<span style='color: green;'>Success!</span>");
+                            $("#nomination-status").fadeOut(3000);
+                        }
+                        var icon = $('[data-id="' + formAward + '"] .opinion-icon');
+                        icon.text("[" + userNominations[formAward].length + "]");
+                    } else {
+                        if (formAward === award) {
+                            $("#nomination-status").html("<span style='color: red;'>" + data.error + "</span>");
+                        }
+                    }
+                    currentlySubmitting = false;
+                })
+                .fail(function (xhr, textStatus, error) {
+                    currentlySubmitting = false;
+                    $("#nomination-status").html("<span style='color: red;'>HTTP error: " + xhr.status + " " + xhr.statusText + ". Try again.</span>");
+                    console.log(xhr);
+                });
+        });
+
+        $('#new-award-form').submit(function (event) {
+            event.preventDefault();
+
+            if (currentlySubmitting) {
+                return;
+            }
+
+            currentlySubmitting = true;
+
+            $("#new-award-status").show().html("Submitting your idea...");
+            var suggestion = $('#new-award-form').find('input[type=text]').val();
+
+            $.post("{{ route('awards.post') }}", {awardSuggestion: suggestion}, null, 'json')
+                .done(function (data) {
+                    if (data.success) {
+                        var safeValue = $('<div></div>').text($.trim(suggestion)).html();
+                        userSuggestions['new-award'].push(safeValue);
+                        $('#new-award-form').find('input[type=text]').val('');
+                        updateNominations();
+                        $("#new-award-status").html("<span style='color: green;'>Success!</span>");
+                        $("#new-award-status").fadeOut(3000);
+                    } else {
+                        $("#new-award-status").html("<span style='color: red;'>" + data.error + "</span>");
+                    }
+                })
+                .fail(function (xhr, textStatus, error) {
+                    $("#new-award-status").html("<span style='color: red;'>HTTP error: " + xhr.status + " " + xhr.statusText + ". Try again.</span>");
+                })
+                .always(function () {
+                    currentlySubmitting = false;
+                });
+        });
+
+        if (window.location.hash) {
+            var selected = window.location.hash.slice(1);
+            $('[data-id="' + selected + '"]').first().click();
+        }
+    </script>
+@endpushonce

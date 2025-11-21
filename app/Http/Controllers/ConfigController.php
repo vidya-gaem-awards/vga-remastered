@@ -135,7 +135,7 @@ class ConfigController extends Controller
             $this->settings->navbar_items = $navbarItemsOrdered;
         }
 
-        $this->settings->award_suggestions = $request->boolean('award_suggestions');
+        $this->settings->award_suggestions = $request->boolean('awardSuggestions');
         $this->settings->save();
 
         $this->auditService->add(

@@ -80,7 +80,7 @@ class User extends Authenticatable
         foreach ($userPermissions as $permission) {
             $permissions->add($permission);
             foreach ($permission->getChildrenRecursive() as $child) {
-                if (!str_starts_with($child->id, 'LEVEL')) {
+                if ( ! str_starts_with($child->id, 'LEVEL')) {
                     $permissions->add($child);
                 }
             }

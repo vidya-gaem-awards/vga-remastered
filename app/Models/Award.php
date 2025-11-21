@@ -181,9 +181,9 @@ class Award extends Model
             'name'               => $this->name,
             'subtitle'           => $this->subtitle,
             'comments'           => $this->comments,
-            // @TODO: this is going to cause conflicts now that we're using integer IDs for
-            //        both awards and autocompleters.
-            'autocompleter'      => $this->autocompleter?->id ?? $this->id,
+            'autocompleter'      => $this->autocompleter
+                                        ? 'auto_' . $this->autocompleter->id
+                                        : 'award_' . $this->id,
             'order'              => $this->order,
             'enabled'            => $this->enabled,
             'nominationsEnabled' => $this->nominations_enabled,
