@@ -152,6 +152,7 @@ Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundt
 Route::get('/credits', [StaticController::class, 'credits'])->name('credits')->can('conditionally_public|view_unfinished_pages');
 Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers')->can('conditionally_public|view_unfinished_pages');
 Route::get('/voting/results', [StaticController::class, 'resultRedirect'])->name('result-redirect'); # resultRedirect
+Route::get('/version', [StaticController::class, 'version'])->name('version');
 
 #
 # CONFIG

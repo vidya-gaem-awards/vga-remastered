@@ -28,6 +28,8 @@ return [
     */
 
     'env' => env('APP_ENV', 'local'),
+    'commit' => env('GIT_VERSION_HASH'),
+    'build_date' => env('DOCKER_BUILD_DATE'),
 
     /*
     |--------------------------------------------------------------------------

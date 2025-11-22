@@ -41,4 +41,27 @@ class StaticController extends Controller
     {
         return view('promo');
     }
+
+    public function version(): View
+    {
+        $path = base_path('.git/');
+
+        if (config('app.commit')) {
+            $commit = config('app.commit');
+            $commitSource = 'build';
+        } else {
+            if (file_exists($path)) {
+                $head = trim(substr(file_get_contents($path . 'HEAD'), 4));
+                $commit = trim(file_get_contents(sprintf($path . $head)));
+                $commitSource = 'file';
+            } else {
+                $commit = $commitSource = null;
+            }
+        }
+
+        return view('version', [
+            'commit' => $commit,
+            'commitSource' => $commitSource,
+        ]);
+    }
 }
