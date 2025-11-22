@@ -9,7 +9,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label" for="input01">Steam ID</label>
             <div class="col-md-4">
-                <input type="text" class="form-control" id="input01" disabled value="{{ $user->id }}">
+                <input type="text" class="form-control" id="input01" disabled value="{{ $user->steam_id }}">
             </div>
         </div>
 

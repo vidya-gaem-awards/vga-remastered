@@ -211,7 +211,7 @@ class Vga2024 extends Importer
     private function getIdMappers(): array
     {
         $awardMapper = function ($oldId) {
-            $award = Award::where('slug', $oldId)->withTrashed()->first();
+            $award = Award::withoutGlobalScopes()->where('slug', $oldId)->withTrashed()->first();
             if (!$award) {
                 throw new RuntimeException("Could not find Award with slug {$oldId}");
             }

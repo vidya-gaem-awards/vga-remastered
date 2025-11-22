@@ -99,7 +99,7 @@ class PeopleController extends Controller
             $user->save();
 
             $this->auditService->add(
-                Action::makeWith('user-added', $user->steam_id, $request->input('permission'))
+                Action::makeWith('user-added', $user->id, $request->input('permission'))
             );
 
             return response()->json(['success' => true]);

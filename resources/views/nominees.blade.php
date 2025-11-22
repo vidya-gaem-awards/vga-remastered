@@ -676,6 +676,7 @@
                 $("#dialog-edit-name").text("");
                 $("#dialog-edit-subtitle").text("");
                 $("#dialog-edit-image").css("background-image", "");
+                $("#dialog-edit-delete").hide();
 
                 $("#info-name").val(name);
                 $("#info-nomination").toggle(name !== '');
@@ -701,6 +702,7 @@
                 $("#form-action").attr("value", "edit");
                 $("#dialog-edit").attr("data-nominee", nomineeID);
                 $("#dialog-edit-header").text("Editing " + nominees[nomineeID].name);
+                $("#dialog-edit-delete").show();
 
                 // Grab all the relevant information
                 $("#dialog-edit-name").text(nominees[nomineeID].name);
