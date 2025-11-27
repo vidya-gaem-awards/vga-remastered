@@ -1,0 +1,336 @@
+@extends('base.standard')
+
+@section('title', 'Tasks')
+
+@pushonce('css')
+    <link rel="stylesheet" href="{{ asset('css/votingNominees.css') }}">
+
+    <style type="text/css">
+        .progress {
+            height: 30px;
+            margin-bottom: 30px;
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            line-height: 30px;
+            font-size: 14px;
+        }
+
+        .award-name {
+            margin-bottom: 3px;
+        }
+
+        .award-name .emoji {
+            max-width: 16px;
+        }
+
+        .nominee {
+            border-color: #333;
+        }
+
+        .modal-body .nominee {
+            margin: 0 auto 10px auto;
+        }
+
+        .modal-dialog .nominee {
+            width: 351px;
+            height: 143px;
+        }
+
+        textarea[name=flavorText] {
+            font-size: 12px;
+        }
+    </style>
+@endpushonce
+
+@section('beforeContainer')
+    @include('parts.award-admin-bar')
+@endsection
+
+@section('content')
+<h1 class="page-header board-header mb-4">
+    Missing Nominee Data
+</h1>
+
+<div class="row">
+    @foreach($tasks as $name => $data)
+    <div class="col-md-6 col-lg-4">
+        <p class="lead" style="margin-bottom: 10px;">
+            <strong>{{ $name }}</strong>
+        </p>
+        <div class="progress">
+            <div class="progress-bar progress-bar-{{ $data['class'] }}" style="width: {{ $data['percent'] }}%">
+                @if($data['percent'] >= 35)
+                {{ $data['count'] }} / {{ $data['total'] }} ({{ round($data['percent'], 1) }}%)
+                @endif
+            </div>
+            @if($data['percent'] < 35)
+                <span style="margin-left: 7px;" class="text-{{ $data['class'] }}">
+                    {{ $data['count'] }} / {{ $data['total'] }} ({{ round($data['percent'], 1) }}%)
+                </span>
+            @endif
+        </div>
+        @foreach($data['awards'] as $award)
+        <div class="award-name">
+            <a href="{{ route('nominees.manage', $award['award']) }}" target="_blank" title="View on nominees page">
+                {{ $award['award']->name }}
+            </a>
+            <span style="float: right;">{{ count($award['nominees']) }} / {{ $award['award']->nominees->count() }}</span>
+        </div>
+        <div id="{{ $data['id'] }}-{{ $award['award']->id }}" style="margin-bottom: 15px;">
+            <ul>
+                @foreach($award['nominees'] as $nominee)
+                <li>
+                    @if($can('tasks_nominees') || $can('nominations_edit'))
+                        <a href="#" data-award="{{ $award['award']->id }}" data-nominee="{{ $nominee->id }}" class="nomineeLink">
+                            {{ $nominee->name }}
+                        </a>
+                    @else
+                        {{ $nominee->name }}
+                    @endif
+                </li>
+                @endforeach
+            </ul>
+        </div>
+        @endforeach
+    </div>
+    @endforeach
+</div>
+
+@if($can('tasks_nominees') || $can('nominations_edit'))
+<div id="dialog-edit" class="modal" role="dialog" style="z-index: 1098" taxindex="-1">
+    <div class="modal-dialog" role="document">
+      +++  <form class="form-horizontal" id="dialog-edit-form" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="dialog-edit-header">Add new nominee</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="alert alert-dismissible alert-danger" style="display: none;">
+                        <span id="dialog-edit-error"></span>
+                        <button type="button" class="btn-close"></button>
+                    </div>
+
+                    <div style="text-align: center; padding-bottom: 5px;  ">
+                        Note: the design of the nominee box may change over time.
+                    </div>
+
+                    <div class="nominee" id="dialog-edit-image" style="background-size: cover">
+                        <div class="flavorText" id="dialog-edit-flavor"></div>
+                        <div class="nomineeInfo">
+                            <div class="nomineeName" id="dialog-edit-name"></div>
+                            <div class="nomineeSubtitle" id="dialog-edit-subtitle"></div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="action" value="nominee">
+                    <input type="hidden" name="award" id="form-award">
+                    <input type="hidden" name="nominee" id="form-nominee">
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="info-name">
+                            Name <span class="required" title="Required">*</span>
+                        </label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" id="info-name" placeholder="Monster Girl Quest" required
+                                   name="name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="info-subtitle">Subtitle</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" type="text" id="info-subtitle" name="subtitle" autocomplete="off">
+                            <span class="help-block" id="info-subtitle-help"><a target="_blank">Google search</a></span>
+                        </div>
+                    </div>
+                    <div class="form-group row" id="info-image-container">
+                        <label class="col-sm-3 col-form-label" for="info-image">Image</label>
+                        <div class="col-sm-9">
+                            <input type="file" id="info-image" name="image" class="form-control">
+                            <small class="form-text">Recommended image dimensions: <strong>548 x 300</strong></small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label" for="info-flavor">Flavor Text</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" id="info-flavor" name="flavorText" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+              <span id="dialog-edit-status" style="display: none;">
+                <i class="far fa-circle-notch fa-spin me-1"></i> saving...&nbsp;
+              </span>
+                    <button class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="dialog-edit-submit" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+@endsection
+
+@pushonce('js')
+    @if($can('tasks_nominees') || $can('nominations_edit'))
+        <script type="text/javascript">
+            var awards = {{ Js::from($awards) }};
+            var nominees = {{ Js::from($nominees) }};
+            var fullAccess = {{ $can('nominations_edit') ? 'true' : 'false' }};
+            var currentlySubmitting = false;
+            var clickedLink = false;
+            var activeLink = false;
+
+            $(document).ready(function () {
+                $('.alert-danger .btn-close').on('click', function () {
+                    $(this).parent().fadeOut("fast");
+                });
+
+                // When an edit button is clicked
+                $(".nomineeLink").click(function (event) {
+                    event.preventDefault();
+
+                    clickedLink = $(this);
+
+                    // Grab the ID
+                    var awardID = $(this).attr("data-award");
+                    var nomineeID = $(this).attr("data-nominee");
+
+                    var award = awards[awardID];
+                    var nominee = nominees[awardID][nomineeID];
+
+                    // Update the dialog action
+                    $("#form-award").attr("value", awardID);
+                    $("#form-nominee").attr("value", nomineeID);
+
+                    $("#dialog-edit").attr("data-nominee", nomineeID);
+                    $("#dialog-edit-header").text(award.name + ' – ' + nominee.name);
+
+                    // Grab all the relevant information
+                    $(".dialog-edit-id").text(nomineeID);
+                    $("#dialog-edit-name").text(nominee.name);
+                    $("#dialog-edit-subtitle").html(nominee.subtitle);
+                    if (nominee.image) {
+                        $("#dialog-edit-image").css("background-image", "url(" + nominee.image.url + ")");
+                    } else {
+                        $("#dialog-edit-image").css("background-image", "url('{{ asset('img/no-image-available.png') }}'");
+                    }
+
+                    $("#info-id").val(nomineeID);
+                    $("#info-name").val(nominee.name);
+                    $("#info-subtitle").val(nominee.subtitle);
+                    $("#info-image").val("");
+                    $("#info-flavor").val(nominee.flavorText);
+
+                    $("#info-name").removeAttr("disabled");
+                    $("#info-subtitle").removeAttr("disabled");
+                    $("#info-image-container").show();
+                    $("#info-flavor").removeAttr("disabled");
+
+                    if (!fullAccess) {
+                        $("#info-name").attr("disabled", "disabled");
+                        if (nominee.subtitle !== "") {
+                            $("#info-subtitle").attr("disabled", "disabled");
+                        }
+                        if (nominee.image) {
+                            $("#info-image-container").hide();
+                        }
+                        if (nominee.flavorText !== "") {
+                            $("#info-flavor").attr("disabled", "disabled");
+                        }
+                    }
+
+                    if (nominee.subtitle === "") {
+                        $("#info-subtitle-help").show();
+                        $("#info-subtitle-help").find("a").attr("href", "https://google.com/search?q=" + encodeURIComponent(nominee.name));
+                    } else {
+                        $("#info-subtitle-help").hide();
+                    }
+
+                    $("#info-id").attr("disabled", "disabled");
+
+                    // Show the dialog
+                    $("#dialog-edit").modal("show");
+                });
+
+
+                // When the dialog is opened, start the monitor
+                $("#dialog-edit").on("show.bs.modal", function () {
+                    $("#dialog-edit-status").hide();
+                    $("#dialog-edit-submit").removeAttr("disabled");
+                    $("#dialog-edit-error").parent().hide();
+
+                    lastImageValue = "";
+                    lastID = "";
+                    editDialogInterval = setInterval(updateDialogNominee, 500);
+                });
+
+                // When the dialog is closed, clear it
+                $("#dialog-edit").on("hide.bs.modal", function () {
+                    clearInterval(editDialogInterval);
+                });
+
+                // Update the information in the template nominee box
+                function updateDialogNominee() {
+                    $(".dialog-edit-id").text($("#info-id").val());
+                    $("#dialog-edit-name").text($("#info-name").val());
+                    $("#dialog-edit-subtitle").html($("#info-subtitle").val());
+                    $("#dialog-edit-flavor").html($("#info-flavor").val());
+                }
+
+                // When the confirm button is clicked in the edit dialog
+                $("#dialog-edit-form").submit(function (event) {
+                    event.preventDefault();
+
+                    if (currentlySubmitting) {
+                        return;
+                    }
+                    currentlySubmitting = true;
+                    activeLink = clickedLink;
+
+                    // Show the "please wait" message and disable the submit button
+                    $("#dialog-edit-status").show();
+                    $("#dialog-edit-submit").attr("disabled", "disabled");
+                    $("#dialog-edit-error").parent().slideUp();
+
+                    // Grab the nomineeID and action from the dialog
+                    var awardID = $("#form-award").val();
+                    var nomineeID = $("#form-nominee").val();
+
+                    // Send through the AJAX request to do the actual editing
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ route('tasks.post') }}",
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false
+                    }).done(function (data) {
+                        currentlySubmitting = false;
+
+                        if (data.success) {
+                            nominees[awardID][nomineeID] = data.nominee;
+
+                            // Close the dialog
+                            $("#dialog-edit").modal("hide");
+                            // activeLink.hide();
+                        } else {
+                            // Something went wrong! Show the error message.
+                            $("#dialog-edit-status").hide();
+                            $("#dialog-edit-submit").removeAttr("disabled");
+                            $("#dialog-edit-error").html("<strong>Error:</strong> " + data.error);
+                            $("#dialog-edit-error").parent().fadeIn("fast");
+                        }
+                    }, "json");
+
+                    activeLink = false;
+                });
+            });
+        </script>
+    @endif
+@endpushonce
