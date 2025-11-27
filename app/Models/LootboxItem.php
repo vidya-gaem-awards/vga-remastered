@@ -12,6 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LootboxItem extends Model
 {
+    protected function casts(): array
+    {
+        return [
+            'css'    => 'boolean',
+            'buddie' => 'boolean',
+            'music'  => 'boolean',
+        ];
+    }
+
     public function image(): BelongsTo
     {
         return $this->belongsTo(File::class, 'image_id');
@@ -37,12 +46,34 @@ class LootboxItem extends Model
         return $this->hasMany(UserInventoryItem::class);
     }
 
-    protected function casts(): array
+    public static function getTotalRelativeDropChance(): float
+    {
+        return (float) self::sum('drop_chance');
+    }
+
+    public static function getTotalAbsoluteDropChance(): float
+    {
+        return (float) self::sum('absolute_drop_chance');
+    }
+
+    public function jsonSerialize(): array
     {
         return [
-            'css'    => 'boolean',
-            'buddie' => 'boolean',
-            'music'  => 'boolean',
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'name' => $this->name,
+            'image' => $this->image,
+            'css' => $this->css,
+            'buddie' => $this->buddie,
+            'music' => $this->music,
+            'musicFile' => $this->musicFile,
+            'cssContents' => $this->css_contents,
+            'series' => $this->series,
+            'tier' => $this->lootbox_tier_id,
+            'dropChance' => $this->drop_chance,
+            'absoluteDropChance' => $this->absolute_drop_chance,
+            'extra' => $this->extra,
+            'additionalFiles' => $this->additionalFiles,
         ];
     }
 }

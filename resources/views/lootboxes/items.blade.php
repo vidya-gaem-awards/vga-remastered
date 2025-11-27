@@ -1,0 +1,618 @@
+@extends('base.standard')
+
+@section('title', 'Lootbox Manager')
+
+@pushonce('css')
+    <style>
+        #dialog-edit-delete {
+            position: relative;
+            padding-left: 46px;
+        }
+
+        img.delete-this {
+            height: calc(100% + 2px);
+            top: -1px;
+            left: -1px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            position: absolute;
+        }
+
+
+        .inventory-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .inventory-item {
+            width: 150px;
+            margin: 5px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            transition: all 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .inventory-item:hover {
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+            transform: translateY(-10px);
+        }
+
+        .inventory-item img {
+            width: 100%;
+        }
+
+        .item-name {
+            margin-top: 5px;
+            text-align: center;
+            flex-grow: 1;
+            color: black;
+            font-size: 18px;
+        }
+
+        .item-rarity {
+            flex-grow: 1;
+            font-weight: normal;
+            font-style: italic;
+            padding-top: 5px;
+            width: 100%;
+        }
+
+        .item-type {
+            margin-top: 5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .item-series {
+            flex-grow: 1;
+        }
+
+        #info-drop-chance-override {
+            margin-left: -1rem;
+            margin-right: -1rem;
+        }
+
+        .additionalFile-filename {
+            flex: 1 1 auto;
+        }
+    </style>
+@endpushonce
+
+@pushonce('js')
+    <script src='{{ asset('js/utils.js') }}'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var editDialog = $("#dialog-edit");
+            var currentlySubmitting = false;
+
+            function getAbsoluteDropChance () {
+                if (!$('#info-tier').val()) {
+                    return;
+                }
+
+                if ($('#info-override-drop-chance').prop('checked')) {
+                    if (!$('#info-drop-chance-relative')[0].checkValidity() || !$('#info-drop-chance-absolute')[0].checkValidity()) {
+                        return;
+                    }
+                }
+
+                $('#dialog-edit .absolute-drop-chance').html('<i class="fas fa-spinner fa-spin fa-fw"></i>');
+
+                $.ajax({
+                    url: "{{ route('lootbox.items.calculation') }}",
+                    type: 'POST',
+                    data: {
+                        id: $('#info-id').val(),
+                        tier: $('#info-tier').val(),
+                        dropChanceOverride: $('#info-override-drop-chance').prop('checked'),
+                        dropChance: $('#info-drop-chance-relative').val(),
+                        absoluteDropChance: $('#info-drop-chance-absolute').val()
+                    }
+                }).fail(() => {
+                    $('#dialog-edit .absolute-drop-chance').text('Error');
+                }).done(data => {
+                    if (!data.success) {
+                        $('#dialog-edit .absolute-drop-chance').text('Error');
+                    } else {
+                        if (data.absoluteDropChance === null) {
+                            $('#dialog-edit .absolute-drop-chance').text('Unknown');
+                        } else {
+                            const denominator = Math.round(1 / data.absoluteDropChance);
+                            $('#dialog-edit .absolute-drop-chance').text((data.absoluteDropChance * 100).toFixed(5) + '% (~1 in ' + denominator + ')');
+                        }
+                    }
+                });
+            }
+
+            const getAbsoluteDropChanceDebounced = debounce(getAbsoluteDropChance, 250);
+
+            $('#info-drop-chance-relative').change(getAbsoluteDropChanceDebounced);
+            $('#info-drop-chance-absolute').change(getAbsoluteDropChanceDebounced);
+            $('#info-override-drop-chance').change(getAbsoluteDropChanceDebounced);
+            $('#info-tier').change(getAbsoluteDropChanceDebounced);
+
+            editDialog.on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.attr('data-id');
+
+                $(".additionalFile-existing-row:not(.d-none)").remove();
+                $(".delete-additional-file-id").remove();
+
+                if (id === undefined) {
+                    // New item
+                    editDialog.removeAttr('data-id');
+                    $("#dialog-edit-header").text("Add a new lootbox reward");
+
+                    // Clear any existing information in the dialog
+                    $("#info-id").val("");
+                    $("#code-id").text("reward-");
+                    $("#info-action").val("new");
+                    editDialog.find("input[type=text]").val("");
+                    editDialog.find("input[type=number]").val("");
+                    editDialog.find("input[type=file]").val("");
+                    editDialog.find("input[type=checkbox]").prop("checked", false);
+                    $("#dialog-edit-delete").hide();
+
+                    $("#info-override-drop-chance").prop("checked", false);
+
+                    $("#info-musicFile-container").hide();
+                    $("#info-cssContents-container").hide();
+                    $("#info-additionalFiles-container").hide();
+                    $("#info-drop-chance-override").hide();
+                    $('#info-editOnVotingPage').hide();
+
+                } else {
+                    // Editing an existing advert
+                    editDialog.attr('data-id', id);
+                    var item = items[id];
+
+                    $("#dialog-edit-header").text(item.name);
+                    $("#deleteAward").show();
+                    $("#info-id").val(id);
+                    $("#code-id").text("reward-" + item.slug);
+                    $("#info-action").val("edit");
+                    $("#info-slug").val(item.slug);
+                    $("#info-name").val(item.name);
+                    $("#info-override-drop-chance").prop("checked", item.dropChance !== null || item.absoluteDropChance !== null);
+                    $("#info-drop-chance-relative").val(item.dropChance);
+                    $("#info-drop-chance-absolute").val(item.absoluteDropChance ? item.absoluteDropChance * 100 : '');
+                    $("#info-css").prop("checked", item.css);
+                    $("#info-buddie").prop("checked", item.buddie);
+                    $("#info-music").prop("checked", item.music);
+                    $("#info-additionalFiles").prop("checked", item.additionalFiles.length > 0);
+                    $("#info-cssContents").val(item.cssContents);
+                    $("#info-tier").val(item.tier);
+
+                    editDialog.find("input[type=file]").val("");
+
+                    $("#info-musicFile-container").toggle(item.music);
+                    $("#info-cssContents-container").toggle(item.css || item.additionalFiles.length > 0);
+                    $("#info-drop-chance-override").toggle(item.dropChance !== null || item.absoluteDropChance !== null);
+                    $("#info-additionalFiles-container").toggle(item.additionalFiles.length > 0);
+                    $('#info-editOnVotingPage').show();
+
+                    const editOnVotingPage = $('#info-editOnVotingPage a');
+                    editOnVotingPage.attr('href', editOnVotingPage.data('base-href').replace('xxx', item.id));
+
+                    for (const file of item.additionalFiles) {
+                        const row = $(".additionalFile-existing-row").first()
+                            .clone()
+                            .removeClass('d-none')
+                            .attr('data-id', file.id)
+                            .appendTo("#info-additionalFiles-existing");
+
+                        row.find('.additionalFile-filename')
+                            .attr('href', file.url)
+                            .text(file.fullFilename);
+                    }
+
+                    getAbsoluteDropChance();
+                }
+            });
+
+            $("#info-slug").change(function (event) {
+                $("#code-id").text("reward-" + $(this).val());
+            });
+
+            $("#info-css").change(function (event) {
+                $("#info-cssContents-container").toggle($("#info-css").prop('checked'));
+            });
+
+            $("#info-music").change(function (event) {
+                $("#info-musicFile-container").toggle($("#info-music").prop('checked'));
+            });
+
+            $("#info-override-drop-chance").change(function(event) {
+                $("#info-drop-chance-override").toggle($("#info-override-drop-chance").prop('checked'));
+            });
+
+            $("#info-additionalFiles").on('change', function () {
+                $("#info-additionalFiles-container").toggle($("#info-additionalFiles").prop('checked'));
+            });
+
+            $("#addAdditionalFile").on('click', function () {
+                $(".additionalFile-row").first()
+                    .clone()
+                    .addClass('new-file')
+                    .removeClass('d-none')
+                    .appendTo("#info-additionalFiles-rows")
+                    .find('input')
+                    .removeAttr('disabled');
+            })
+
+            $(document).on('click', '.delete-additional-file', function () {
+                $(this).closest('.additionalFile-row').remove();
+            });
+
+            $(document).on('click', '.delete-existing-additional-file', function () {
+                const row = $(this).closest('.additionalFile-existing-row');
+
+                $("#dialog-edit-form").append('<input type="hidden" name="deleteAdditionalFile[]" class="delete-additional-file-id" value="' + row.data('id') + '">');
+                row.remove();
+            });
+
+            $("#dialog-edit-form").on('submit', function (event) {
+                event.preventDefault();
+
+                if (currentlySubmitting) {
+                    return;
+                }
+                currentlySubmitting = true;
+
+                // Show the "please wait" message and disable the submit button
+                $("#dialog-edit-status").show();
+                $('#dialog-edit').find("button").attr("disabled", "disabled");
+                $("#dialog-edit-error").parent().slideUp();
+
+                // Grab the award ID from the dialog
+                var id = editDialog.attr("data-id");
+
+                // Send through the AJAX request
+                var formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('lootbox.items.post') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                }).done(function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        $("#dialog-edit-status").hide();
+                        $("#dialog-edit").find("button").removeAttr("disabled");
+                        $("#dialog-edit-error")
+                            .html("<strong>Error:</strong> " + response.error)
+                            .parent().fadeIn("fast");
+
+                        currentlySubmitting = false;
+                    }
+                }, "json");
+            });
+
+            $("#dialog-edit-delete").click(function () {
+                if (currentlySubmitting) {
+                    return;
+                } else if (!confirm("Are you sure you want to just fuck this item up?")) {
+                    return;
+                }
+
+                currentlySubmitting = true;
+                // Show the "please wait" message and disable the submit button
+                $("#dialog-edit-status").show();
+                $("#dialog-edit").find("button").attr("disabled", "disabled");
+                $("#dialog-edit-error").parent().slideUp();
+
+                var data = [
+                    {name: "action", value: "delete"},
+                    {name: "id", value: editDialog.attr("data-id")}
+                ];
+
+                $.post("{{ route('lootbox.items.post') }}", data, function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        $("#dialog-edit-status").hide();
+                        $("#dialog-edit").find("button").removeAttr("disabled");
+                        $("#dialog-edit-error")
+                            .html("<strong>Error:</strong> " + response.error)
+                            .parent().fadeIn("fast");
+
+                        currentlySubmitting = false;
+                    }
+                }, "json");
+
+            });
+        });
+
+        $('.alert-danger .btn-close').on('click', function () {
+            $(this).parent().fadeOut("fast");
+        });
+    </script>
+@endpushonce
+
+@section('containerClass', 'container-fluid')
+
+@section('beforeContainer')
+    @include('parts.lootbox-admin-bar')
+@endsection
+
+@section('content')
+    <h1 class="page-header board-header">Lootbox Items</h1>
+
+    <div class="text-center">
+        <button class="btn btn-sm btn-primary" id="new-award" type="button" data-bs-toggle="modal" data-bs-target="#dialog-edit">
+            <i class="fal fa-fw fa-plus"></i> Add a new reward
+        </button>
+    </div>
+
+    @foreach($tiers as $tier)
+        <h2 style="border-bottom: 3px solid {{ $tier->color }}; padding-bottom: 8px;">
+            {{ $tier->name }}
+            <small class="text-muted">
+                ({{ 0 + $tier->drop_chance }})
+            </small>
+        </h2>
+
+        <div class="inventory-container">
+            @forelse($tier->lootboxItems as $item)
+                <div class="inventory-item" data-bs-toggle="modal" data-bs-target="#dialog-edit" data-id="{{ $item->id }}">
+                    <img src="{{ $item->image->getUrl() }}">
+                    <div class="item-type">
+                        <div class="badge badge-light text-black">{{ $item->series }}</div>
+                        @if($item->css)
+                            <div class="badge bg-primary">CSS</div>
+                        @endif
+                        @if($item->buddie)
+                            <div class="badge bg-success">Buddie</div>
+                        @endif
+                        @if($item->music)
+                            <div class="badge bg-danger">Music</div>
+                        @endif
+                        @if(!$item->css && !$item->buddie && !$item->music)
+                            <div class="badge bg-secondary">None</div>
+                        @endif
+                    </div>
+                    <div class="item-name">{{ $item->name }}</div>
+                    <div class="item-rarity">
+                        @if($item->drop_chance !== null)
+                            Override: {{ 0 + $item->drop_chance }}
+                        @elseif($item->absolute_drop_chance !== null)
+                            Override: {{ 0 + $item->absolute_drop_chance * 100 }}%
+                        @else
+                            Standard chance
+                        @endif
+                    </div>
+                </div>
+            @empty
+                There are no items in this tier.
+            @endforelse
+        </div>
+    @endforeach
+
+    <div id="dialog-edit" class="modal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" id="dialog-edit-form" enctype="multipart/form-data">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="dialog-edit-header">Add a new reward</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <input type="hidden" id="info-action" name="action">
+                        <input type="hidden" id="info-id" name="id">
+
+                        @if($can('voting_view') && $firstAward)
+                            <div class="form-group row" id="info-editOnVotingPage">
+                                <div class="offset-sm-3 col-sm-9">
+                                    <div><a href="#" class="btn btn-outline-primary btn-sm" data-base-href="{{ route('voting', ['award' => $firstAward, 'lootbox' => 'xxx']) }}" target="_blank">Preview on voting page <i class="fa-regular fa-external-link ms-1"></i></a></div>
+                                    <small class="form-text">Unsaved changes will not appear.</small>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-slug">
+                                Slug <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="info-slug" placeholder="straya" required
+                                       name="slug">
+                                <small class="form-text">Must consist of lowercase letters and dashes only.</small>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-name">
+                                Name <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="info-name" placeholder="The Power of Shitposting" required
+                                       name="name" maxlength="50">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-tier">
+                                Tier <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="info-tier" name="tier" required>
+                                    @foreach($tiers as $tier)
+                                    <option value="{{ $tier->id }}">{{ $tier->name }} ({{ 0 + $tier->drop_chance }})</option>
+                                    @endforeach
+                                </select>
+                                <small class="form-text d-block"><strong>Absolute drop chance for item:</strong> <span class="absolute-drop-chance">0.00%</span></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="offset-sm-3 col-sm-9">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="info-override-drop-chance" name="drop-chance-override">
+                                    <label class="form-check-label" for="info-override-drop-chance">Override drop chance</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="info-drop-chance-override" style="display: none;" class="bg-light">
+                            <hr>
+
+                            <div style="margin-left: 1rem; margin-right: 1rem;">
+                                <div class="form-group row text-danger">
+                                    <div class="col-sm-3 col-form-label">
+                                        Drop Chance
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="row">
+                                            <div class="col-sm-5">
+                                                <label for="info-drop-chance-relative"><small class="form-text">Relative</small></label>
+                                                <input class="form-control" type="number" id="info-drop-chance-relative" name="drop-chance-relative" min="0" max="99999.99999" step="any">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <label for="info-drop-chance-absolute"><small class="form-text">Absolute</small></label>
+                                                <div class="input-group">
+                                                    <input class="form-control" type="number" id="info-drop-chance-absolute" name="drop-chance-absolute" min="0" max="100" step="any">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <small>Drop chance overrides should be used sparingly.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-image">
+                                Image
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="file" id="info-image" name="image" class="form-control">
+                                <small class="form-text">Recommended image dimensions: <strong>200 x 200</strong></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="offset-sm-3 col-sm-9">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="info-css" name="css">
+                                    <label class="form-check-label" for="info-css">Custom CSS</label>
+                                </div>
+                            </div>
+                        </div>
+
+{{--                        <div class="form-group row">--}}
+{{--                            <div class="offset-sm-3 col-sm-9">--}}
+{{--                                <div class="form-check">--}}
+{{--                                    <input class="form-check-input" type="checkbox" id="info-buddie" name="buddie">--}}
+{{--                                    <label class="form-check-label" for="info-buddie">Buddie</label>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                        <div class="form-group row">
+                            <div class="offset-sm-3 col-sm-9">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="info-music" name="music">
+                                    <label class="form-check-label" for="info-music">Music</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" id="info-musicFile-container">
+                            <label class="col-sm-3 col-form-label" for="info-musicFile">Music file</label>
+                            <div class="col-sm-9">
+                                <input type="file" id="info-musicFile" name="musicFile" class="form-control">
+                                <small class="form-text">Required file type: <strong>.ogg</strong></small>
+                            </div>
+                        </div>
+
+                        <div id="info-cssContents-container">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label" for="info-cssContents">CSS contents</label>
+                                <div class="col-sm-9">
+                                    <textarea name="cssContents" id="info-cssContents" class="form-control" style="font-size: 9px; font-family: monospace" rows="4"></textarea>
+                                    <small class="form-text">When this reward is equipped, the class <code id="code-id"></code> will be added to the root HTML element.</small>
+                                </div>
+                            </div>
+
+                            @can('items_manage_special')
+                            <div class="form-group row">
+                                <div class="offset-sm-3 col-sm-9">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="info-additionalFiles" name="additionalFiles">
+                                        <label class="form-check-label" for="info-additionalFiles">CSS requires additional files</label>
+                                    </div>
+                                    <small class="form-text">For especially fancy CSS that needs additional images or fonts. Use as needed, but drink responsibly.</small>
+                                </div>
+                            </div>
+                            @endcan
+                        </div>
+
+                        @can('items_manage_special')
+                            <div class="form-group row" id="info-additionalFiles-container">
+                                <label class="col-sm-3 col-form-label">Additional files</label>
+                                <div class="col-sm-9">
+                                    <div id="info-additionalFiles-existing">
+                                        <div class="input-group d-none additionalFile-existing-row mb-2">
+                                            <a href="#" class="input-group-text additionalFile-filename" target="_blank">
+
+                                            </a>
+                                            <button class="btn btn-warning delete-existing-additional-file" type="button">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="info-additionalFiles-rows">
+                                        <div class="input-group mb-2 additionalFile-row new-file d-none">
+                                            <input type="file" name="additionalFile[]" class="form-control" disabled>
+                                            <input type="hidden" name="additionalFileId[]" value="0" disabled>
+                                            <button class="btn btn-warning delete-additional-file" type="button">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-secondary btn-sm" type="button" id="addAdditionalFile"><i class="fa-regular fa-plus"></i> Add additional file</button>
+                                </div>
+                            </div>
+                        @endcan
+
+                        <div class="alert alert-dismissible alert-danger" style="display: none;">
+                            <span id="dialog-edit-error"></span>
+                            <button type="button" class="btn-close"></button>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-danger me-auto" id="dialog-edit-delete" type="button">
+                            <img src="{{ asset('img/delete-this.png') }}" class="delete-this" alt="A picture of Counter pointing a gun at you, the viewer">
+                            Delete this
+                        </button>
+                        <span id="dialog-edit-status" style="display: none;">
+                            <i class="far fa-circle-notch fa-spin me-1"></i> saving...&nbsp;
+                        </span>
+                        <button class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" id="dialog-edit-submit" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const items = {{ Js::from($items) }};
+        const tiers = {{ Js::from($tiers) }};
+    </script>
+@endsection

@@ -77,9 +77,22 @@
 
                     @if(str_starts_with($action->action, 'item'))
                         <div style="margin-left: 31px; margin-top: 5px;">
-                            @if($action->tableHistory)
-                                {{ $action->tableHistory->values['name'] ?? '[unknown name]' }} :
-                                <code>{{ $action->tableHistory->values['short-name'] ?? '[unknown name]' }}</code><br>
+                            <code>{{ $action->data1 }}</code>
+                            @if($entity)
+                                : {{ $entity->name }}
+                            @elseif($action->tableHistory->values['name'] ?? null)
+                                : {{ $action->tableHistory->values['name'] }}
+                            @endif
+                        </div>
+                    @endif
+
+                    @if(str_starts_with($action->action, 'lootbox-tier'))
+                        <div style="margin-left: 31px; margin-top: 5px;">
+                            <code>{{ $action->data1 }}</code>
+                            @if($entity)
+                                : {{ $entity->name }}
+                            @elseif($action->tableHistory->values['name'] ?? null)
+                                : {{ $action->tableHistory->values['name'] }}
                             @endif
                         </div>
                     @endif

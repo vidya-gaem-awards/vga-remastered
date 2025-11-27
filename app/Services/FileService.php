@@ -6,6 +6,7 @@ use App\Models\File;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class FileService
@@ -32,7 +33,7 @@ class FileService
 
     public function validateUploadedFile(?UploadedFile $file, ?bool $allowMimeBypass = false): void
     {
-        $checkMime = !$allowMimeBypass || Auth::denies('bypass_mime_checks');
+        $checkMime = !$allowMimeBypass || !Gate::denies('bypass_mime_checks');
 
         if ($file === null) {
             throw new Exception('No file was uploaded');

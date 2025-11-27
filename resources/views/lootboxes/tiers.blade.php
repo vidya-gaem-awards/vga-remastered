@@ -1,0 +1,301 @@
+@extends('base.standard')
+
+@section('title', 'Lootbox Tiers')
+
+@pushonce('css')
+    <style>
+        #dialog-edit-delete {
+            position: relative;
+            padding-left: 46px;
+        }
+
+        img.delete-this {
+            height: calc(100% + 2px);
+            top: -1px;
+            left: -1px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            position: absolute;
+        }
+
+        .color-container {
+            padding: 5px;
+            margin: -5px -5px 0 -5px;
+            border-radius: 10px;
+        }
+
+        .color-container.valid #info-color {
+            box-shadow: none;
+            border-color: transparent;
+            background: rgba(255, 255, 255, 0.5);
+            color: black;
+        }
+    </style>
+@endpushonce
+
+@pushonce('js')
+    <script src='{{ asset('js/utils.js') }}'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let currentlySubmitting = false;
+            const editDialog = $("#dialog-edit");
+
+            function getAbsoluteDropChance () {
+                const target =$("#info-drop-chance");
+                if (!target[0].checkValidity()) {
+                    return;
+                }
+
+                $('#dialog-edit .absolute-drop-chance').html('<i class="fas fa-spinner fa-spin fa-fw"></i>');
+
+                $.ajax({
+                    url: "{{ route('lootbox.tiers.calculation') }}",
+                    type: 'POST',
+                    data: {
+                        id: $('#info-id').val(),
+                        dropChance: target.val()
+                    }
+                }).fail(() => {
+                    $('#dialog-edit .absolute-drop-chance').text('Error');
+                }).done(data => {
+                    if (!data.success) {
+                        $('#dialog-edit .absolute-drop-chance').text('Error');
+                    } else {
+                        const denominator = Math.round(1 / data.absoluteDropChance);
+                        $('#dialog-edit .absolute-drop-chance').text((data.absoluteDropChance * 100).toFixed(5) + '% (~1 in ' + denominator + ')');
+                    }
+                });
+            }
+
+            const getAbsoluteDropChanceDebounced = debounce(getAbsoluteDropChance, 250);
+
+            $('#info-color').keyup(() => {
+                if ($('#info-color')[0].checkValidity()) {
+                    $('.color-container').css('background', $('#info-color').val()).addClass('valid');
+                } else {
+                    $('.color-container').css('background', '').removeClass('valid');
+                }
+            });
+
+            editDialog.on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.attr('data-id');
+
+                if (id === undefined) {
+                    // New tier
+                    editDialog.removeAttr('data-id');
+                    $("#dialog-edit-header").text("Add a new lootbox tier");
+                    $("#dialog-edit-delete").hide();
+                    $("#info-action").val("new");
+
+                    // Clear any existing information in the dialog
+                    $("#info-id").val('');
+                    $("#info-name").val('');
+                    $("#info-drop-chance").val('');
+                    $('#dialog-edit .absolute-drop-chance').text('');
+                    $("#info-color").val('');
+                } else {
+                    // Editing an existing tier
+                    editDialog.attr('data-id', id);
+                    var tier = tiers[id];
+
+                    $("#info-action").val("edit");
+                    $("#dialog-edit-header").text(tier.name + ' tier');
+                    $("#dialog-edit-delete").show();
+                    $("#info-id").val(id);
+                    $("#info-name").val(tier.name);
+                    $("#info-drop-chance").val(tier.dropChance);
+                    $("#info-color").val(tier.color);
+                    getAbsoluteDropChance();
+                }
+
+                $('#info-color').keyup();
+            });
+
+            $('#info-drop-chance').change(getAbsoluteDropChanceDebounced);
+
+            $("#dialog-edit-form").submit(function (event) {
+                event.preventDefault();
+
+                if (currentlySubmitting) {
+                    return;
+                }
+                currentlySubmitting = true;
+
+                // Show the "please wait" message and disable the submit button
+                $("#dialog-edit-status").show();
+                $('#dialog-edit').find("button").attr("disabled", "disabled");
+                $("#dialog-edit-error").parent().slideUp();
+
+                // Grab the award ID from the dialog
+                var id = editDialog.attr("data-id");
+
+                // Send through the AJAX request
+                var formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('lootbox.tiers.post') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false
+                }).fail((error) => {
+                    $("#dialog-edit-status").hide();
+                    $("#dialog-edit").find("button").removeAttr("disabled");
+                    $("#dialog-edit-error")
+                        .html("<strong>Error:</strong> server returned a " + error.status + " error")
+                        .parent().fadeIn("fast");
+
+                    currentlySubmitting = false;
+                }).done(function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        $("#dialog-edit-status").hide();
+                        $("#dialog-edit").find("button").removeAttr("disabled");
+                        $("#dialog-edit-error")
+                            .html("<strong>Error:</strong> " + response.error)
+                            .parent().fadeIn("fast");
+
+                        currentlySubmitting = false;
+                    }
+                }, "json");
+            });
+
+            $("#dialog-edit-delete").click(function () {
+                if (currentlySubmitting) {
+                    return;
+                } else if (!confirm("Are you sure you want to just fuck this tier up?")) {
+                    return;
+                }
+
+                currentlySubmitting = true;
+                // Show the "please wait" message and disable the submit button
+                $("#dialog-edit-status").show();
+                $("#dialog-edit").find("button").attr("disabled", "disabled");
+                $("#dialog-edit-error").parent().slideUp();
+
+                var data = [
+                    {name: "action", value: "delete"},
+                    {name: "id", value: editDialog.attr("data-id")}
+                ];
+
+                $.post("{{ route('lootbox.tiers.post') }}", data, function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        $("#dialog-edit-status").hide();
+                        $("#dialog-edit").find("button").removeAttr("disabled");
+                        $("#dialog-edit-error")
+                            .html("<strong>Error:</strong> " + response.error)
+                            .parent().fadeIn("fast");
+
+                        currentlySubmitting = false;
+                    }
+                }, "json");
+
+            });
+
+            $('.alert-danger .btn-close').on('click', function () {
+                $(this).parent().fadeOut("fast");
+            });
+        });
+    </script>
+@endpushonce
+
+@section('beforeContainer')
+    @include('parts.lootbox-admin-bar')
+@endsection
+
+@section('content')
+    <h1 class="page-header board-header">Lootbox Tiers</h1>
+
+    <div class="text-center">
+        <button class="btn btn-sm btn-primary" id="new-award" type="button" data-bs-toggle="modal" data-bs-target="#dialog-edit">
+            <i class="fal fa-fw fa-plus"></i> Add a new tier
+        </button>
+    </div>
+
+    <div class="inventory-container">
+        @foreach($tiers as $tier)
+        <div class="lootbox-tier" data-bs-toggle="modal" data-bs-target="#dialog-edit" data-id="{{ $tier->id }}" style="background: {{ $tier->color }}">
+            <div class="tier-name">{{ $tier->name }}</div>
+            <div class="tier-drop-chance">Drop Chance: {{ $tier->drop_chance }}</div>
+        </div>
+        @endforeach
+    </div>
+
+    <div id="dialog-edit" class="modal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form class="form-horizontal" id="dialog-edit-form">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="dialog-edit-header">Add a new lootbox tier</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="alert alert-dismissible alert-danger" style="display: none;">
+                            <span id="dialog-edit-error"></span>
+                            <button type="button" class="btn-close"></button>
+                        </div>
+
+                        <input type="hidden" id="info-action" name="action">
+                        <input type="hidden" id="info-id" name="id">
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-name">
+                                Name <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="info-name" placeholder="Uncommon" required
+                                       name="name" maxlength="50">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-drop-chance">
+                                Drop Chance <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="number" id="info-drop-chance" name="dropChance" min="0" max="99999.99999" placeholder="10.00" required step="any"
+                                       style="width: 150px;">
+                                <small class="form-text d-block">Drop chance is relative to other tiers</small>
+                                <small class="form-text d-block"><strong>Absolute drop chance:</strong> <span class="absolute-drop-chance"></span></small>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="info-color">
+                                Color <span class="required" title="Required">*</span>
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="color-container">
+                                    <input class="form-control" type="text" id="info-color" placeholder="#000000" required
+                                           name="color" pattern="#[0-9a-fA-F]{6}">
+                                </div>
+                                <small class="form-text">Must be a 6 digit hexadecimal number</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-danger me-auto" id="dialog-edit-delete" type="button">
+                            <img src="{{ asset('img/delete-this.png') }}" class="delete-this" alt="A picture of Counter pointing a gun at you, the viewer">
+                            Delete this
+                        </button>
+                        <span id="dialog-edit-status" style="display: none;">
+                    <i class="far fa-circle-notch fa-spin me-1"></i> saving...&nbsp;
+                  </span>
+                        <button class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" id="dialog-edit-submit" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        const tiers = {{ Js::from($tiers) }};
+    </script>
+@endsection

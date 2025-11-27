@@ -499,7 +499,7 @@
                 {{-- @TODO: pretty sure this doesn't work due to the id/slug change --}}
                 if (autocompleteCat === "video-games") {
                     $('#autocomplete').html(
-                        "This award provides suggestions using a list of <a href='{{ route('video-games') }}' target='_blank'>video games released in 2024</a>."
+                        "This award provides suggestions using a list of <a href='{{ route('video-games') }}' target='_blank'>video games released in {{ year() }}</a>."
                     );
                 } else if (autocompleteCat === award) {
                     $('#autocomplete').html("This award provides suggestions based on nominations from other users.");
