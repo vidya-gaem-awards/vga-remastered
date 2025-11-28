@@ -101,6 +101,7 @@ return [
     'cipher' => 'AES-256-CBC',
 
     'key' => env('APP_KEY'),
+    'voting_code_key' => env('APP_VOTING_CODE_KEY', env('APP_KEY')),
 
     'previous_keys' => [
         ...array_filter(
