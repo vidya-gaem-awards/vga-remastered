@@ -6,12 +6,23 @@ use Illuminate\Support\Facades\Auth;
 
 class FuzzyUserService
 {
-    private string $randomId;
+    private string $ip;
+    private string $cookieId;
     private ?string $votingCode = null;
 
-    public function setRandomId(string $randomId): void
+    public function setIp(string $ip): void
     {
-        $this->randomId = $randomId;
+        $this->ip = $ip;
+    }
+
+    public function setCookieId(string $cookieId): void
+    {
+        $this->cookieId = $cookieId;
+    }
+
+    public function cookieId(): string
+    {
+        return $this->cookieId;
     }
 
     public function id(): string
@@ -19,7 +30,7 @@ class FuzzyUserService
         if (Auth::user()) {
             return 'user_' . Auth::user()->id;
         }
-        return 'ip_' . $this->randomId;
+        return 'ip_' . $this->ip;
     }
 
     public function setVotingCode(?string $votingCode): void

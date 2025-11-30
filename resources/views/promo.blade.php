@@ -1,5 +1,7 @@
 @extends('base.root')
 
+@section('fullTitle', year() . ' Vidya Gaem Awards')
+
 @pushonce('css')
     @verbatim
     <style>

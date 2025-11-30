@@ -55,7 +55,8 @@ class SetUpSessionIds
         }
 
         // @TODO: This feels janky.
-        FuzzyUser::setRandomId($randomId);
+        FuzzyUser::setIp($request->ip());
+        FuzzyUser::setCookieId($randomId);
         FuzzyUser::setVotingCode($votingCode);
 
         return $next($request);

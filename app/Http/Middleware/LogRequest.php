@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Facade\FuzzyUser;
 use App\Models\Access;
 use App\Settings\AppSettings;
 use Closure;
@@ -29,8 +30,6 @@ class LogRequest
         if ($this->settings->read_only) {
             return $response;
         }
-
-        // @TODO: this comment is not currently true, because there is no request middleware.
 
         // If the user didn't have an access cookie when they first loaded the page, one would have been generated
         // in the request middleware. As such, we only need to worry about copying the value from the session
@@ -64,7 +63,7 @@ class LogRequest
         }
 
         Access::create([
-            'cookie_id' => '',
+            'cookie_id' => FuzzyUser::cookieId(),
             'route' => $route?->getName() ?? '',
             'controller' => $route?->getAction('uses') ?? '',
             'request_string' => $request->path(),

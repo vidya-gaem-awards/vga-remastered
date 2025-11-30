@@ -3,6 +3,7 @@
 namespace App\Settings;
 
 use Carbon\CarbonImmutable;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Collection;
 use Spatie\LaravelSettings\Settings;
 
@@ -62,6 +63,18 @@ class AppSettings extends Settings
     }
 
     /**
+     * @return bool Returns true if voting isn't currently open, but it will be in the future.
+     */
+    public function isVotingNotYetOpen(): bool
+    {
+        if (!$this->voting_start || $this->voting_start->isFuture()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @return bool Returns true if voting is currently open.
      */
     public function isVotingOpen(): bool
@@ -75,6 +88,36 @@ class AppSettings extends Settings
         }
 
         return true;
+    }
+
+    /**
+     * @return bool Returns true if voting was previously open but is now closed.
+     */
+    public function hasVotingClosed(): bool
+    {
+        if ($this->voting_end && $this->voting_end->isPast()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @TODO: this is used in the context of start and end times, but does it really belong here?
+     */
+    public static function getRelativeTimeString(CarbonInterface $date): string
+    {
+        $diff = $date->diffAsCarbonInterval();
+
+        if ($diff->totalSeconds <= 120) {
+            return (int)$diff->totalSeconds . ' second' . ((int)$diff->totalSeconds === 1 ? '' : 's');
+        } elseif ($diff->totalMinutes <= 120) {
+            return (int)$diff->totalMinutes . ' minutes';
+        } elseif ($diff->totalHours <= 48) {
+            return (int)$diff->totalHours . ' hours';
+        } else {
+            return (int)$diff->totalDays . ' days';
+        }
     }
 
     public function setDefaultNavbarItems(): void
