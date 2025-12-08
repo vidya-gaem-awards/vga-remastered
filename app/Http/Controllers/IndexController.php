@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Settings\AppSettings;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends Controller
 {
+    public function __construct(
+        private readonly AppSettings $settings,
+        private readonly Kernel $kernel,
+    ) {
+    }
+
     /**
      * This route clones the request, updates the URI to the default_page route and then
      * re-dispatches it.
@@ -20,17 +26,21 @@ class IndexController extends Controller
      *
      * I would rate this as only mildly hacky.
      */
-    public function index(AppSettings $settings, Request $request): Response
+    public function index(): Response
     {
-        $routeUrl = route($settings->default_page, absolute: false);
+        $routeUrl = route($this->settings->default_page, absolute: false);
 
-        $routeClone = $request->duplicate(server: [
+        // We need a fresh Request where the middleware hasn't already run, because some middleware
+        // (such as EncryptCookies) handles being run twice very badly.
+        $request = Request::capture();
+
+        $newRequest = $request->duplicate(server: [
             ...$request->server(),
             'REQUEST_URI' => $routeUrl,
             'SUB_REQUEST' => true,
         ]);
 
-        return Route::dispatch($routeClone);
+        return $this->kernel->handle($newRequest);
     }
 
     public function home(): View

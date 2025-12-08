@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Services\NavbarService;
 use App\Settings\AppSettings;
 use Carbon\CarbonImmutable;
+use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\ForeignIdColumnDefinition;
