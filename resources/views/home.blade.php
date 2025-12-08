@@ -77,7 +77,7 @@
 
 @section('content')
     <header class="jumbotron masthead text-center" style="background: none;">
-        <h1>@year() Vidya Gaem Awards</h1>
+        <h1>{{ year() }} Vidya Gaem Awards</h1>
         <p>>implying you're opinion is worth shit</p>
     </header>
     <div class="row">

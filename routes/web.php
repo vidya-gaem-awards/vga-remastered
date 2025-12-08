@@ -119,7 +119,7 @@ Route::get('/winners', [ResultController::class, 'simple'])->name('winners')->ca
 Route::post('/winners', [ResultController::class, 'winnerImageUpload'])->name('winners.image-upload')->can('awards_edit'); # winnerImageUpload
 Route::get('/results', [ResultController::class, 'detailed'])->name('results')->can('conditionally_public|voting_results');
 Route::get('/results/pairwise', [ResultController::class, 'pairwise'])->name('results.pairwise')->can('conditionally_public|voting_results'); # pairwiseResults
-Route::get('/results/{id}', [ResultController::class, 'awardResults'])->name('results.award')->can('voting_results'); # resultsAward
+Route::get('/results/{award}', [ResultController::class, 'awardResults'])->name('results.award')->can('voting_results'); # resultsAward
 
 #
 # REFERRERS

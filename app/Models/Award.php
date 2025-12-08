@@ -104,6 +104,11 @@ class Award extends Model
         return $this->hasMany(Result::class);
     }
 
+    public function officialResults(): ?Result
+    {
+        return $this->results()->official()->first();
+    }
+
     public function votes(): HasMany
     {
         return $this->hasMany(Vote::class);

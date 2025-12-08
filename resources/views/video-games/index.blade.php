@@ -236,7 +236,7 @@
 
 @section('content')
     <h1 class="page-header board-header">/v/ - The Vidya</h1>
-    <p class="board-subheader">A list of all the games released in @year().</p>
+    <p class="board-subheader">A list of all the games released in {{ year() }}.</p>
 
     <div class="row game-container">
         @foreach($games as $game)

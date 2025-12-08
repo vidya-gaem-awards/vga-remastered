@@ -1,0 +1,156 @@
+@extends('base.standard')
+
+@section('title', 'Results')
+
+@pushonce('css')
+    <style>
+        .table {
+            background: white;
+        }
+
+        .position-1 {
+            color: #c2a939;
+        }
+
+        .position-2 {
+            color: #a9acc3;
+        }
+
+        .position-3 {
+            color: #a77334;
+        }
+
+        .table-success .position {
+            color: black;
+        }
+    </style>
+@endpushonce
+
+@section('content')
+    <h1 class="display-4">Detailed results</h1>
+    <hr>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header">The results you've been waiting for</h5>
+                <div class="card-body">
+                    <p>
+                        Here are the detailed results for the {{ year() }} /v/GAs. Although we only use votes from 4chan in our official
+                        results, we include the results of other websites here for your amusement.
+                    </p>
+                    <p class="mb-0">
+                        If all you want is the official results for each award, you can get those on the
+                        <a href="{{ route('winners') }}">winners&nbsp;page</a>. If you want to see the results in even <em>more</em>
+                        detail, you can view the <a href="{{ route('results.pairwise') }}">pairwise voting results</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header">What are Sweep Points™?</h5>
+                <div class="card-body">
+                    The Schulze method doesn't allow for exact vote counts for each nominee, so instead we calculate Sweep
+                    Points™ as a way to see how much the winners won by.
+                    It may give unexpected results for low vote counts.
+                </div>
+                <div class="card-footer">
+                    <a href="https://youtu.be/i_UG-IKNzIQ" target="_blank">Watch the tutorial <i class="fas fa-external-link-alt fa-xs"></i></a>
+                    <small class="text-muted">a sweep point is a sweep point, you can't say it's only half</small>
+                </div>
+                @can('voting_results')
+                    <div class="card-footer bg-dark">
+                        @if($sweepPoints)
+                            <a href="{{ route('results') }}" class="text-white">Show standard list</a>
+                        @else
+                            <a href="{{ route('results', ["sweepPoints" => 1]) }}" class="text-white">Show complete sweep point list</a>
+                        @endif
+                    </div>
+                @endcan
+            </div>
+        </div>
+    </div>
+
+    @foreach($awards as $award)
+        <h2 id="{{ $award->slug }}">
+            {{ $award->name }}
+            <small class="text-muted">
+                {{ $award->subtitle }}
+            </small>
+            <div class="float-end">
+                <a href="#{{ $award->slug }}" title="Direct link to this result"><i class="fas fa-link fa-xs"></i></a>
+            </div>
+        </h2>
+
+        @if($can('voting_results') && $results[$award->id])
+            <div class="mb-2">
+                <a href="{{ route('results.award', $award) }}" class="h4">View trends and forecasts</a>
+            </div>
+        @endif
+
+        @if(!$results[$award->id])
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-1"></i> Results for this award are not yet available.
+            </div>
+        @elseif($sweepPoints)
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Nominee</th>
+                        <th>Sweep Points</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($award->officialResults()->results as $nominee)
+                    <tr>
+                        <th style="width: 100px;">{{ $loop->index + 1 }}</th>
+                        <td class="position position-{{ $loop->index + 1 }}">{{ $nominees[$award->id][$nominee]->name }}</td>
+                        <td style="width: 200px;">
+                            @if(($award->officialResults()->steps['sweepPoints'][$nominee] ?? 0) > 0)
+                                {{ floor($award->officialResults()->steps['sweepPoints'][$nominee]) }}
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+        @else
+
+            <div class="table-responsive mb-2">
+                <table class="table">
+                    <thead class="thead-light">
+                    <tr>
+                        <th style="width: 18%;"></th>
+                        <th>1<sup>st</sup> Place</th>
+                        <th>2<sup>nd</sup> Place</th>
+                        <th>3<sup>rd</sup> Place</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($results[$award->id] as $filter => $result)
+                            @if($result->votes > 0)
+                                <tr class="{{ $filters[$filter] === '4chan' ? 'table-success' : '' }}">
+                                    <th>
+                                        {{ $filters[$filter] }}<br>
+                                        <small>{{ $result->votes }} {{ $filters[$filter] === '4chan' ? '– official results' : '' }}</small>
+                                    </th>
+                                    @foreach(array_slice($result['results'], 0, 3) as $nominee)
+                                        <td>
+                                            {{ $nominees[$award->id][$nominee]->name }}<br>
+                                            <small class="position position-{{ $loop->index + 1 }}">{{ floor($result['steps']['sweepPoints'][$nominee]) }} Sweep Points™</small>
+                                        </td>
+                                    @endforeach
+                                </tr>
+                          @endif
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    @endforeach
+@endsection

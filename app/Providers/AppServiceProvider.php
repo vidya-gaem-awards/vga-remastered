@@ -70,7 +70,6 @@ class AppServiceProvider extends ServiceProvider
             return $user?->canDo($ability);
         });
 
-        Blade::directive('year', fn () => '<?php echo year(); ?>');
         View::share('settings', app(AppSettings::class));
         View::share('navbar', app(NavbarService::class));
         View::share('can', fn ($ability) => Gate::allows($ability));

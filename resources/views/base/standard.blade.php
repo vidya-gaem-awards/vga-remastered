@@ -4,7 +4,7 @@
     <nav class="navbar fixed-top navbar-expand-md navbar-light bg-yotsuba">
         <div class="container">
             <a class="navbar-brand" href="{{ route('index') }}">
-                @year() /v/GAs
+                {{ year() }} /v/GAs
                 @if(config('app.env') === 'staging')
                     <strong class="text-uppercase">Beta</strong>
                 @elseif(config('app.env') === 'local')
