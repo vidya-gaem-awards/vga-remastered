@@ -242,7 +242,7 @@
                     @foreach($awards as $award)
                         <div data-id="{{ $award->id }}" class="awardClickTarget dropdown-item">
                             <a href="#{{ $award->id }}" class="dropdown-item">
-                                {#<span class="opinion-icon">[{{ count($userNominations[$award->id]) }}]</span>#}
+{{--                                <span class="opinion-icon">[{{ count($userNominations[$award->id]) }}]</span>--}}
                                 <span style="font-weight: 500;">{{ $award->name }}</span>
                                 <small>{{ $award->subtitle }}</small>
                             </a>

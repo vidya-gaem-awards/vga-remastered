@@ -110,10 +110,11 @@
 
     <nav class="navbar fixed-bottom navbar-expand-md navbar-light bg-yotsuba">
         <div class="container">
-
-            <span class="navbar-text text-uppercase fw-bold text-black pe-3">
-                <span class="bg-dark text-bg-dark px-2">{{ config('app.env') }}</span>
-            </span>
+            @if(config('app.env') !== 'production')
+                <span class="navbar-text text-uppercase fw-bold text-black pe-3">
+                    <span class="bg-dark text-bg-dark px-2">{{ config('app.env') }}</span>
+                </span>
+            @endif
 
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBottomCollapsed" aria-controls="navbarBottomCollapsed" aria-expanded="false" aria-label="Toggle bottom menu">
                 <span class="navbar-toggler-icon"></span>
