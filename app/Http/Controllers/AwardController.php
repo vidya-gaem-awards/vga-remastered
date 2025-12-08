@@ -8,6 +8,7 @@ use App\Models\Autocompleter;
 use App\Models\Award;
 use App\Models\AwardFeedback;
 use App\Models\AwardSuggestion;
+use App\Models\File;
 use App\Models\GameRelease;
 use App\Models\UserNomination;
 use App\Models\UserNominationGroup;
@@ -120,12 +121,15 @@ class AwardController extends Controller
             $autocompleters['award_' . $award->id] = array_keys($nominationCount);
         }
 
+        $vidyaLinkImage = File::where('entity', 'Misc.vidyaLink')->first();
+
         return view('awards', [
             'awards' => $awards,
             'userNominations' => $nominations,
             'userOpinions' => $opinions,
             'userSuggestions' => $suggestions,
             'autocompleters' => $autocompleters,
+            'vidyaLinkImage' => $vidyaLinkImage,
         ]);
     }
 

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Action;
+use App\Models\File;
 use App\Models\TableHistory;
 use App\Services\AuditService;
 use App\Services\CloudflareService;
+use App\Services\FileService;
 use App\Settings\AppSettings;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +24,7 @@ class ConfigController extends Controller
         readonly private CloudflareService $cloudflare,
         readonly private AppSettings $settings,
         readonly private AuditService $auditService,
+        readonly private FileService $fileService,
     ) {
     }
 
@@ -43,12 +46,14 @@ class ConfigController extends Controller
             }
         }
 
+        $images = File::whereLike('entity', 'Misc.%')->get()->keyBy('entity');
+
         return view('config', [
-            'title' => 'Config',
             'navigationBarConfig' => implode("\n", $navbarConfig),
             'routes' => $this->getValidNavbarRoutes(),
             'cloudflareAvailable' => $this->cloudflare->isServiceAvailable(),
             'ultraAlerts' => $ultraAlerts,
+            'images' => $images,
         ]);
     }
 
@@ -137,6 +142,26 @@ class ConfigController extends Controller
 
         $this->settings->award_suggestions = $request->boolean('awardSuggestions');
         $this->settings->save();
+
+        if ($request->file('vidya_link')) {
+            try {
+                $this->fileService->handleUploadedFile(
+                    $request->file('vidya_link'),
+                    'Misc.vidyaLink',
+                    'misc',
+                    'vidya-link',
+                );
+            } catch (Exception $e) {
+                return response()->json(['error' => $e->getMessage()]);
+            }
+
+            // Popping the last one ensures we keep the one we just uploaded
+            $existingFiles = File::where('entity', 'Misc.vidyaLink')->get();
+            $existingFiles->pop();
+            foreach ($existingFiles as $oldFile) {
+                $this->fileService->deleteFile($oldFile);
+            }
+        }
 
         $this->auditService->add(
             Action::makeWith('config-updated', 1),

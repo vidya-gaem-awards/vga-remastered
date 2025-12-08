@@ -45,7 +45,7 @@
     </div>
     @endif
 
-    <form class="form-horizontal" action="{{ route('config.post') }}" method="post">
+    <form class="form-horizontal" action="{{ route('config.post') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-lg-5 col-md-12 mb-4">
@@ -106,6 +106,25 @@
                     This is a list of routes you can use in the navigation menu.<br>
                     The dropdown doesn't do anything, it's just for reference.
                 </small>
+
+                <h5 class="mt-4">Images</h5>
+
+                <div class="mb-3">
+                    <label for="vidya_link" class="form-label">'Awards and Nominations' vidya image</label>
+                    <input class="form-control" type="file" id="vidya_link" name="vidya_link">
+                    @if($images->get('Misc.vidyaLink'))
+                        <small class="text-muted form-text">
+                            Existing image:
+                        </small><br>
+                        <a href="{{ $images->get('Misc.vidyaLink')->getUrl() }}" target="_blank" class="d-inline-block">
+                            <img src="{{ $images->get('Misc.vidyaLink')->getUrl() }}" style="height: 50px;">
+                        </a>
+                    @else
+                        <small class="text-muted form-text">
+                            No image currently uploaded
+                        </small>
+                    @endif
+                </div>
             </div>
             <div class="col-md-6 offset-md-1">
                 <label class="h5">Public access</label>

@@ -128,6 +128,21 @@
             flex-wrap: wrap;
         }
 
+        .vidyaLinkPlaceholder {
+            background: white;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            text-align: center;
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px 20px;
+        }
+
+        .vidyaLinkPlaceholder:hover {
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+        }
+
         .awardBox {
             background: white;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
@@ -271,10 +286,17 @@
             <div id="video-games">
                 <a href="{{ route('video-games') }}" target="_blank">
                     <div id="video-game-collage">
-                        <div class="top">Forgotten what vidya you played earlier this year?</div>
-                        <div class="vignette"></div>
-                        <img class="img-responsive" src="{{ asset('img/collage.png') }}">
-                        <div class="bottom">Click here for a list of video&nbsp;games from {{ year() }}.</div>
+                        @if($vidyaLinkImage)
+                            <div class="top">Forgotten what vidya you played earlier this year?</div>
+                            <div class="vignette"></div>
+                            <img class="img-responsive" src="{{ $vidyaLinkImage->getUrl() }}">
+                            <div class="bottom">Click here for a list of video&nbsp;games from {{ year() }}.</div>
+                        @else
+                            <div class="vidyaLinkPlaceholder">
+                                Forgotten what vidya you played earlier this year?<br>
+                                Click here for a list of video&nbsp;games from {{ year() }}.
+                            </div>
+                        @endif
                     </div>
                 </a>
             </div>
