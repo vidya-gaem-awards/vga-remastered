@@ -147,7 +147,6 @@ Route::get('/finished', [LauncherController::class, 'finished'])->name('finished
 
 Route::get('/promo', [StaticController::class, 'promo'])->name('promo');
 Route::get('/privacy', [StaticController::class, 'privacy'])->name('privacy');
-Route::get('/videos', [StaticController::class, 'videos'])->name('videos')->can('conditionally_public|view_unfinished_pages');
 Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack')->can('conditionally_public|view_unfinished_pages');
 Route::get('/credits', [StaticController::class, 'credits'])->name('credits')->can('conditionally_public|view_unfinished_pages');
 Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers')->can('conditionally_public|view_unfinished_pages');

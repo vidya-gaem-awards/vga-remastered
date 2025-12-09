@@ -10,9 +10,11 @@ Example pages:
 - Winners
 --}}
 
-{{--{% block containerClass %}{% endblock %}--}}
+@section('containerClass', ' ')
 
-@pushonce('css')
+@prepend('css')
+    @vite('resources/assets/voting.ts')
+
     <link rel="stylesheet" href="{{ asset('css/theme.css') }}">
 
     <style>
@@ -27,8 +29,4 @@ Example pages:
             }
         }
     </style>
-@endpushonce
-
-@pushonce('js')
-    @vite('resources/assets/voting.ts')
-@endpushonce
+@endprepend

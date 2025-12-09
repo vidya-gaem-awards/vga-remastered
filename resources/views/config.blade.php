@@ -155,17 +155,6 @@
                 <div class="form-check">
                     <input type="checkbox"
                            class="form-check-input"
-                           id="public-videos"
-                           name="publicPages[videos]"
-                           @checked($settings->isPagePublic('videos'))
-                    >
-                    <label class="form-check-label" for="public-videos">
-                        <a href="{{ route('videos') }}" target="_blank">Videos page</a>
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox"
-                           class="form-check-input"
                            id="public-voting"
                            name="publicPages[voting]"
                            @checked($settings->isPagePublic('voting'))
@@ -233,6 +222,17 @@
                     >
                     <label class="form-check-label" for="public-soundtrack">
                         <a href="{{ route('soundtrack') }}" target="_blank">Soundtrack</a>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox"
+                           class="form-check-input"
+                           id="public-trailers"
+                           name="publicPages[trailers]"
+                        @checked($settings->isPagePublic('trailers'))
+                    >
+                    <label class="form-check-label" for="public-trailers">
+                        <a href="{{ route('trailers') }}" target="_blank">/agdg/ trailers</a>
                     </label>
                 </div>
                 <div class="form-check">
