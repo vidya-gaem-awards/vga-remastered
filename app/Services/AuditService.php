@@ -38,7 +38,7 @@ class AuditService
         'nominee-new' => 'Added a nominee to an award',
         'nominee-delete' => 'Removed a nominee from an award',
         'nominee-edit' => 'Edited an award nominee',
-        'winner-image-upload' => 'Uploaded an image for an award winner',
+        'winner-image-updated' => 'Uploaded an image for an award winner',
         'advert-new' => 'Created an advert',
         'advert-edit' => 'Edited an advert',
         'advert-delete' => 'Deleted an advert',
@@ -62,6 +62,16 @@ class AuditService
         'nomination-group-demerged' => 'Demerged two user nominations',
         'nomination-group-updated' => 'Updated a user nomination group',
         'config-cache-cleared' => 'Cleared the website cache',
+        'lootbox-settings-update' => 'Updated lootbox settings',
+    ];
+
+    public const array PUBLIC_ACTIONS = [
+        'voted' => 'Voted',
+        'nomination-made' => 'Made a nomination',
+        'nomination-removed' => 'Removed one of their own nominations',
+        'opinion-given' => 'Gave their opinion on an award',
+        'new-award-suggested' => 'Suggested a new award',
+        'award-name-suggested' => 'Suggested a name for an award',
     ];
 
     /**

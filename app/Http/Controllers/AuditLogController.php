@@ -14,7 +14,7 @@ class AuditLogController extends Controller
             ->with('user')
             ->with('tableHistory')
             ->whereHas('user')
-            ->whereIn('action', array_keys(AuditService::ACTIONS))
+            ->whereNotIn('action', array_keys(AuditService::PUBLIC_ACTIONS))
             ->orderByDesc('created_at')
             ->get();
 

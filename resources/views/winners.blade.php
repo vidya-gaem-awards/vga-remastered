@@ -1,0 +1,570 @@
+@extends('base.standard-themed')
+
+@section('title', 'Winners')
+
+@pushonce('css')
+    <style>
+        .uploadable {
+            cursor: pointer;
+        }
+
+        .uploadable:hover {
+            border-color: red;
+        }
+
+        .empty-image {
+            height: 235px;
+            text-align: center;
+            color: #1f1f1f;
+            background: #EEE url('{{ asset('img/no-image-available.png') }}') bottom right no-repeat;
+            transition: 0.2s all;
+        }
+
+        .empty-image.inactive {
+            display: none;
+        }
+
+        .uploadable .empty-image:hover {
+            color: #1565C0;
+        }
+
+        .uploadable .empty-image:hover .upload-icon {
+            animation: move 0.4s forwards;
+        }
+
+        .empty-image .fa-cog {
+            animation: spin 2s infinite linear;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0px);
+            }
+            100% {
+                transform: translate(0px, -5px);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(359deg);
+            }
+        }
+
+        .empty-image .upload-icon {
+            font-size: 80px;
+            margin-top: 35px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        p {
+            /*font-size: 22px;*/
+            /*line-height: 1.5em;*/
+            /*font-family: "Dot Matrix", monospace;*/
+
+            /*color: white;*/
+        }
+
+        .award {
+
+            min-height: 300px;
+
+            /*margin: 0 auto 35px auto;*/
+            /*padding: 20px;*/
+
+            /*background-color: rgba(0, 0, 0, 0.4);*/
+            /*border: 1px solid #f29823;*/
+        }
+
+        .second-placers {
+            background-image: url(/2020images/cardbg.png);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .second-placer {
+            mix-blend-mode: color-burn;
+            color: #371a1a;
+        }
+
+        .zig {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .winner {
+            /*border: 2px dashed #c2c5b5;*/
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgb(11, 9, 9);
+
+            /*padding: 5px;*/
+        }
+
+        .winner img {
+            max-width: 100%;
+        }
+
+        .award ul {
+            /*list-style-type: none;*/
+            /*margin: 0;*/
+            /*font-size: 20px;*/
+            /*padding-left: 0;*/
+
+            /*font-family: "OratorStd", "Courier New", serif;*/
+            /*font-weight: normal;*/
+            /*text-shadow: #f29823 0px 0px 3px;*/
+        }
+
+        .award ul li {
+            /*line-height: 1.5em;*/
+        }
+
+        .winner-name-container {
+            font-family: "Western Title", serif;
+            text-transform: uppercase;
+            padding: 10px 15px;
+            height: auto;
+            min-height: 120px;
+            font-size: .8em;
+            color: rgba(153, 153, 153, 0.9607843137);
+            mix-blend-mode: color-dodge;
+            z-index: 40;
+            user-select: all;
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.2;
+
+            position: relative;
+        }
+
+        .winner-text-vertical-center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            width: 90%;
+        }
+
+        .winner-name {
+            font-size: 30px;
+            margin-bottom: 5px;
+            /*font-size: 30px;*/
+            /*color: white;*/
+            /*font-family: "Trajan Pro 3", serif;*/
+            /*text-shadow: #00000080 2px 2px 2px;*/
+
+            /*line-height: 1em;*/
+            /*margin-bottom: 15px;*/
+            /*margin-top: 5px;*/
+
+            /*color: #fec544;*/
+            /*font-family: "OratorStd", "Courier New", serif;*/
+            /*text-transform: uppercase;*/
+            /*font-size: 14px;*/
+            /*line-height: 100%;*/
+            /*display: inline-block;*/
+            /*padding: 4px 25px 11px 5px;*/
+            /*position: absolute;*/
+            /*bottom: -1px;*/
+            /*right: -1px;*/
+            /*text-shadow: #f29823 0px 0px 3px;*/
+            /*text-align: right;*/
+            /*background: url(/2019images/nom_namebg.png) repeat-x bottom left, black;*/
+            /*border: 1px solid #f29823;*/
+        }
+
+        .rank {
+            font-size: 15px;
+            color: #8c5338;
+            font-weight: bold;
+            margin-right: 4px;
+            position: relative;
+            top: -4px;
+            left: -10px;
+        }
+
+        .award ul li {
+            /*font-family: "Dot Matrix", sans-serif;*/
+            /*color: white;*/
+            /*font-size: 18px;*/
+            /*font-family: "modern typewriter", Tahoma, sans-serif;*/
+        }
+
+        .winner-container {
+            position: relative;
+        }
+
+        .winner-text {
+            color: #f29823;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            line-height: 10px;
+            padding: 1px 7px;
+            z-index: 300;
+            background: #000;
+            border: 1px solid #f29823;
+        }
+
+        .winner-subtitle {
+            /*color: #f29823;*/
+            font-size: 20px;
+            /*line-height: 10px;*/
+            /*padding: 1px 7px;*/
+            /*z-index: 300;*/
+            /*background: #000;*/
+            /*border: 1px solid #f29823;*/
+            /*position: absolute;*/
+            /*bottom: 15px;*/
+        }
+
+        .end-note {
+            font-family: "Handwritten", sans-serif;
+            color: black;
+            padding: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 460px;
+        }
+
+        .bottom-text {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detailed-results-text {
+            font-family: "Handwritten", sans-serif;
+        }
+
+        @keyframes flareAnim {
+            0%{
+                opacity: 0;
+            }
+            40%{
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            60%{
+                opacity: 0;
+            }
+            100%{
+                opacity: 0;
+            }
+        }
+
+        @keyframes titleAnim {
+            0%{
+                opacity: 1;
+                filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 1)) drop-shadow(0px -2px 2px rgba(221, 33, 23, 0.7)) drop-shadow(0px 1px 1px #1ca88edb)
+                blur(5px);
+            }
+            100%{
+                opacity: 1;
+                filter: drop-shadow(0px -2px 2px rgba(221, 33, 23, 0.7)) drop-shadow(0px 1px 1px #1ca88edb)
+                blur(0.6px);
+            }
+        }
+
+        .title-card-container {
+            width: 100%;
+            height: 90vh;
+            padding-top: 120px;
+        }
+
+        .title-card-container .title-card {
+            max-height: 90vh;
+            width: 100vw;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            opacity: 0;
+            transform: translateX(-50%);
+            animation: titleAnim 1000ms;
+            animation-fill-mode: forwards;
+            animation-delay: 450ms;
+            z-index: 10;
+        }
+
+        .title-card-container::after{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            content: '';
+            background: linear-gradient(to bottom, #000000 90%,rgba(0, 0, 0, 0) 100%);
+            z-index: 0;
+        }
+
+        .title-card-container .flare1,
+        .title-card-container .flare2,
+        .title-card-container .flare3 {
+            z-index: 10;
+            transform: rotate(45deg) scale(2.5);
+            position: absolute;
+            opacity: 0;
+
+            filter: drop-shadow(0px 0px 15px rgba(255, 255, 255, 0.7))
+            drop-shadow(0px -2px 2px rgba(221, 33, 23, 0.3)) drop-shadow(0px 1px 1px #1ca88edb)
+            blur(0.6px);
+        }
+
+        .flare {
+            pointer-events: none;
+        }
+
+        .flare1 {
+            top: -30%;
+            left: 40vw;
+            animation: flareAnim 450ms;
+            animation-iteration-count: 2;
+        }
+        .flare2 {
+            bottom: -50%;
+            left: 10vw;
+            animation: flareAnim 450ms;
+            animation-iteration-count: 2;
+            animation-delay: 80ms;
+        }
+        .flare3 {
+            top: -50%;
+            right: 30vw;
+            animation: flareAnim 450ms;
+            animation-iteration-count: 2;
+            animation-delay: 100ms;
+        }
+
+        .award .photograph {
+            z-index: 10;
+            left: 20px;
+            right: unset;
+
+            width: 240px;
+            height: 288px;
+
+            position: static;
+            transform: rotateZ(-10deg) translate(35px, -20px);
+        }
+
+        .award .photograph .photo-text {
+            font-size: 14px;
+        }
+
+        .award .photo-container {
+            width: 300px;
+        }
+
+        .second-placers-container {
+            font-family: "Handwritten",sans-serif;
+            font-size: 24px;
+            color: #fff;
+            padding: 20px 40px;
+            height: 100%;
+        }
+
+        .award-header {
+            margin-bottom: 20px !important;
+            font-family: "Western Title", sans-serif;
+            text-transform: uppercase;
+            color: rgba(153, 153, 153, 0.9607843137);
+            mix-blend-mode: color-dodge;
+        }
+
+        .window-body {
+            position: relative;
+            padding: 20px;
+        }
+    </style>
+@endpushonce
+
+@pushonce('js')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var fileUploadTarget;
+
+            $('.uploadable').click(function (event) {
+                fileUploadTarget = $(event.currentTarget);
+
+                // The uploadable class is removed while the upload is in progress
+                if (!fileUploadTarget.hasClass('uploadable')) {
+                    return;
+                }
+
+                $('#fileInput').click();
+            });
+
+            $('#fileInput').change(function () {
+                var target = fileUploadTarget;
+                var image = fileUploadTarget.find('img');
+                var icon = fileUploadTarget.find('.upload-icon');
+                var emptyImage = fileUploadTarget.find('.empty-image');
+
+                if (image) {
+                    image.remove();
+                    emptyImage.removeClass('inactive');
+                    emptyImage.find('.upload-help').text('Uploading...');
+                }
+
+                icon.removeClass('fa-file-upload');
+                icon.removeClass('fa-exclamation-triangle');
+                icon.addClass('fa-cog');
+
+                var id = target.attr('data-id');
+                $('#uploadAwardID').val(id);
+                target.removeClass('uploadable');
+
+                var form = $('#fileForm')[0];
+                var data = new FormData(form);
+
+                $.ajax({
+                    type: 'post',
+                    url: '{{ route('winners.image-upload') }}',
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            image = $('<img class="img-responsive center-block">');
+                            image.appendTo(target);
+                            image.hide();
+                            image.attr('src', response.filePath + '?t=' + new Date().getTime());
+
+                            image.bind('load', function () {
+                                emptyImage.addClass('inactive');
+                                image.show();
+                                target.addClass('uploadable');
+                            });
+                        } else {
+                            alert('File upload error: ' + response.error);
+                            emptyImage.find('.upload-help').text('Upload failed, click to try again');
+                            icon.removeClass('fa-cog');
+                            icon.addClass('fa-exclamation-triangle');
+                            target.addClass('uploadable');
+                        }
+                    }
+                });
+
+                $('#fileInput').val('');
+            });
+
+            $('.flare').on('animationend', function () {
+                $(this).remove();
+            });
+        });
+    </script>
+@endpushonce
+
+@section('content')
+    <form enctype="multipart/form-data" id="fileForm" style="display: none;">
+        @csrf
+        <input type="hidden" name="id" id="uploadAwardID">
+        <input type="file" name="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif">
+    </form>
+
+    <div class="center-container" style="padding-top: 68px;">
+        <header>
+            <a class="logo" href="/">
+                <img src="/2024images/logo1-long.png">
+            </a>
+
+            <div class="right-container">
+                <div class="title-text">
+                    {{ year() }} Vidya Game Awards
+                </div>
+
+                <div class="plank-background">
+                    <div class="plank-inner-border"></div>
+                </div>
+            </div>
+        </header>
+
+        @foreach($awards as $award)
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="window">
+                    <div class="window-body">
+                        <div class="plank-background">
+                            <div class="plank-inner-border"></div>
+                        </div>
+
+                        <div class="award-header mb-0">
+                            <div class="flex">
+                                <div class="award-name">{{ $award->name }}</div>
+                                <div class="award-subtitle">{{ $award->subtitle }}</div>
+                            </div>
+                        </div>
+                        <div class="award">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    @if($award->winnerImage || $can('awards_edit'))
+                                        <div class="winner {{ !$settings->read_only && $can('awards_edit') ? 'uploadable' : '' }}"
+                                             title="{{ $can('awards_edit') ? 'Click here to upload an image for this award winner' : '' }}"
+                                             data-id="{{ $award->id }}">
+                                            @if($award->winnerImage)
+                                                <img class="img-responsive center-block" src="{{ $award->winnerImage->getUrl() }}">
+                                            @endif
+                                            @if(!$settings->read_only && $can('awards_edit'))
+                                                <div class="empty-image {{ $award->winnerImage ? 'inactive' : '' }}" >
+                                                    <i class="far fa-file-upload upload-icon"></i>
+                                                    <div style="font-weight: bold; font-size: 18px;" class="upload-help">
+                                                        Click here to upload an image
+                                                    </div>
+                                                    <div>Minimum dimensions: 345 x 245</div>
+                                                    <div>Image will scale as needed</div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    <div class="winner-name-container">
+                                        @if(!empty($winners[$award->id]))
+                                            <div class="winner-name">{!! $winners[$award->id]->name !!}</div>
+                                            <div class="winner-subtitle">{!! $winners[$award->id]->subtitle !!}</div>
+                                        @else
+                                            <div class="winner-name">No winner yet</div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="second-placers-container poster-background">
+                                        @forelse($results[$award->id] as $result)
+                                            <div class="second-placer">{!! $result !!}</div>
+                                        @empty
+                                            <div class="second-placer">No results yet</div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
+        <div class="poster-background end-note">
+            <div class="text-center bottom-text">
+                <h1>Would you like to know more?</h1>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <p class="text-center detailed-results-text">
+                        What's shown above are the official results as seen during the show. If you'd like to see more details,
+                        including how sites other than /v/ voted, visit the <a class="btn" href="{{ route('results') }}">Detailed&nbsp;Results</a> page.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

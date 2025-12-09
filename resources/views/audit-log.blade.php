@@ -30,7 +30,11 @@
                 <td>
                     <div>
                         <img src="{{ $action->user->avatar_url }}" style="width: 25px; margin-right: 3px;"> <strong>{{ $action->user->name }}</strong>
-                        {{ strtolower($actionTypes[$action->action]) }}
+                        @if(isset($actionTypes[$action->action]))
+                            {{ strtolower($actionTypes[$action->action]) }}
+                        @else
+                            performed an unknown action (<code>{{ $action->action }}</code>)
+                        @endif
                     </div>
                     @if(str_starts_with($action->action, 'profile'))
                         <div style="margin-left: 31px; margin-top: 5px;">

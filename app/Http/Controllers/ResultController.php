@@ -2,22 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Action;
 use App\Models\Award;
 use App\Models\Result;
+use App\Models\TableHistory;
+use App\Services\AuditService;
+use App\Services\FileService;
+use App\Settings\AppSettings;
+use Exception;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ResultController extends Controller
 {
-    public function simple()
-    {
-        abort(501);
+    public function __construct(
+        private readonly AppSettings $settings,
+        private readonly AuditService $auditService,
+        private readonly FileService $fileService,
+    ) {
     }
 
-    public function winnerImageUpload()
+    public function simple(): View
     {
-        abort(501);
+        $awards = Award::query()
+            ->with('results')
+            ->with('winnerImage')
+            ->orderBy('order')
+            ->get();
+
+        $results = $winners = [];
+
+        foreach ($awards as $award) {
+            $rankings = array_values($award->officialResults() ? $award->officialResults()->results : []);
+
+            if (empty($rankings)) {
+                $results[$award->id] = null;
+                continue;
+            }
+
+            // @TODO: slug/ID
+            $winners[$award->id] = $award->nominees()->where('slug', $rankings[0])->first();
+
+            foreach ($rankings as $key => &$value) {
+                // @TODO: slug/ID
+                $nominee = $award->nominees()->where('slug', $value)->first();
+                $output = '<span class="rank">#' . ($key + 1) . '</span>&nbsp;';
+
+                if ($nominee) {
+                    $output .= str_replace(' ', '&nbsp;', $nominee->name);
+                } else {
+                    $output .= '<span style="color: white; background: red;">' . $value . '</span>';
+                }
+                $value = $output;
+            }
+
+            $results[$award->id] = $rankings;
+        }
+
+        return view('winners', [
+            'awards' => $awards,
+            'results' => $results,
+            'winners' => $winners,
+        ]);
+    }
+
+    public function winnerImageUpload(Request $request): JsonResponse
+    {
+        if ($this->settings->read_only) {
+            return response()->json(['error' => 'The site is currently in read-only mode. No changes can be made.']);
+        }
+
+        $id = $request->post('id', false);
+
+        $award = Award::find($id);
+        if (!$award) {
+            return response()->json(['error' => 'Invalid award specified.']);
+        }
+
+        try {
+            $file = $this->fileService->handleUploadedFile(
+                $request->file('file'),
+                'Award.winnerImage',
+                'winners',
+                $award->id
+            );
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+
+        if ($award->winnerImage) {
+            $oldFile = $award->winnerImage;
+            $award->winnerImage()->dissociate();
+            $award->save();
+            $this->fileService->deleteFile($oldFile);
+        }
+
+        $award->winnerImage()->associate($file);
+        $award->save();
+
+        $this->auditService->add(
+            Action::makeWith('winner-image-updated', $award->id),
+            TableHistory::makeWith(Award::class, $award->id, ['image' => $file->id])
+        );
+
+        return response()->json(['success' => true, 'filePath' => $file->getURL()]);
     }
 
     public function detailed(Request $request): View
@@ -122,7 +212,7 @@ class ResultController extends Controller
 
         return view('results-pairwise', [
             'awards' => $awards,
-            'pairwise' => $pairwise
+            'pairwise' => $pairwise,
         ]);
     }
 

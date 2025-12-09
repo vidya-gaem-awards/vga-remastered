@@ -254,7 +254,7 @@
                     <div class="platforms mt-auto">
                         @if($game->pc)<i class="fas fa-fw fa-desktop" title="PC"></i>@endif
                         @if($game->xbox)<i class="fab fa-fw fa-xbox" title="Xbox"></i>@endif
-                        @if($game->playStation)<i class="fab fa-fw fa-playstation" title="PlayStation"></i>@endif
+                        @if($game->playstation)<i class="fab fa-fw fa-playstation" title="PlayStation"></i>@endif
                         @if($game->nintendo)<i class="fas fa-fw fa-n" title="Nintendo"></i>@endif
                         @if($game->mobile)<i class="fas fa-fw fa-mobile-screen" title="Mobile"></i>@endif
                         @if($game->vr)<i class="fas fa-fw fa-head-side-goggles" title="VR"></i>@endif

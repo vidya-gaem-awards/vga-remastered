@@ -424,7 +424,8 @@ class LootboxController extends Controller
         $this->settings->save();
 
         $this->auditService->add(
-            Action::makeWith('lootbox-settings-update')
+            Action::makeWith('lootbox-settings-update'),
+            TableHistory::makeWith(AppSettings::class, 1, $request->all()),
         );
 
         $this->addFlash('success', 'Lootbox settings saved.');
