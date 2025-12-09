@@ -14,7 +14,6 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('nominees.manage') }}">Nominee manager</a>
                     <a class="dropdown-item" href="{{ route('tasks') }}">Missing nominee data</a>
-                    <a class="dropdown-item" href="{{ route('tasks.check-images') }}">Image optimisation check</a>
                 </div>
             </li>
             @endcan

@@ -98,7 +98,6 @@ Route::get('/awards/autocompleters/ajax/igdb', [AutocompleterController::class, 
 
 Route::can('tasks_view')->group(function () {
     Route::get('/tasks', [TasksController::class, 'index'])->name('tasks');
-    Route::get('/tasks/check-images', [TasksController::class, 'imageCheck'])->name('tasks.check-images'); # tasksImageCheck
     Route::post('/tasks', [TasksController::class, 'post'])->name('tasks.post'); # tasksPost
 });
 
@@ -162,16 +161,6 @@ Route::can('edit_config')->group(function () {
     Route::post('/config', [ConfigController::class, 'post'])->name('config.post'); # configPost
     Route::post('/config/purge-cache', [ConfigController::class, 'purgeCache'])->name('config.purge-cache'); # configPurgeCache
     Route::get('/config/cron', [ConfigController::class, 'cron'])->name('config.cron'); # cron
-//    Route::post('/config/cron', [ConfigController::class, 'cronPost'])->name('config.cron.post'); # cronPost
-});
-
-#
-# PAGE EDITOR
-#
-
-Route::can('template_edit')->group(function () {
-    Route::get('/config/editor', [EditorController::class, 'index'])->name('editor');
-    Route::post('/config/editor', [EditorController::class, 'post'])->name('editor.post'); # editorPost
 });
 
 #

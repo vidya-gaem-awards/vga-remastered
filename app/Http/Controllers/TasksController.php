@@ -121,11 +121,6 @@ class TasksController extends Controller
         ]);
     }
 
-    public function imageCheck()
-    {
-        abort(501);
-    }
-
     public function post(Request $request): JsonResponse
     {
         if ($this->settings->read_only) {

@@ -229,11 +229,6 @@ class ConfigController extends Controller
         return view('cron');
     }
 
-//    public function cronPost()
-//    {
-//        abort(501);
-//    }
-
     /**
      * Gets an array of routes that can be used in the top navigation bar.
      * @return \Illuminate\Routing\Route[] An array of routes, indexed by the route name.
