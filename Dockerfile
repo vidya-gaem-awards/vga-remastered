@@ -12,11 +12,20 @@ RUN apt update && apt install -y less vim
 ## Uncomment if you need to install additional PHP extensions
 # RUN install-php-extensions bcmath gd
 
+# Build frontend assets
+FROM node:alpine AS node
+COPY package.json package-lock.json vite.config.js app/
+COPY resources/assets app/resources/assets
+WORKDIR app
+RUN npm install
+RUN npm run build
+
 ############################################
 # Production Image
 ############################################
 FROM base AS production
 COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data --from=node /app/public /var/www/html/public
 
 USER www-data
 
