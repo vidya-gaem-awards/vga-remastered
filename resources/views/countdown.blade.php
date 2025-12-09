@@ -1,0 +1,282 @@
+@extends('base.special')
+
+@section('fullTitle', year() . ' Vidya Gaem Awards')
+
+@pushonce('css')
+    @vite('resources/assets/voting.ts')
+
+    <style>
+        html {
+            height: 100%;
+        }
+
+        /*body {*/
+        /*  height: 100%;*/
+        /*background-image: url("/2022images/clouds.png");*/
+        /*background-position: center;*/
+        /*background-size: cover;*/
+        /*}*/
+
+        .meme {
+            width: 160px;
+            height: 600px;
+            margin-top: 5px;
+            /*position: absolute;*/
+            /*top: 250px;*/
+        }
+
+        .leftMeme {
+            margin-left: 10px;
+        }
+
+        .rightMeme {
+            margin-right: 10px;
+        }
+
+        .memeContainer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .timezones a, .mobile-link {
+            background-color: #000;
+            border-radius: 2px;
+            color: #f81317;
+            text-shadow: #f81317 0px 0px 3px;
+            padding: 5px 15px 1px;
+            font-size: 18px;
+            border: 1px solid #f81317;
+            font-family: "OratorStd", "Courier New", serif;
+            line-height: 0.95em;
+            text-decoration: none;
+        }
+
+        .timezones a:hover, .mobile-link:hover {
+            color: #f29823;
+            border: 1px solid #f29823;
+            text-shadow: #f29823 0px 0px 3px;
+            text-decoration: none;
+        }
+
+
+        .timezones, dd, dt {
+            color: #fec544;
+            text-decoration: none;
+            font-family: "OratorStd", "Courier New", serif;
+            text-shadow: #00000080 3px 3px 3px;
+            font-size: 1em;
+            padding: 0;
+        }
+
+        .timezones dl {
+            margin-top: 0;
+            color: white;
+            text-align: center;
+        }
+
+        .timezones dd {
+            font-weight: bold;
+            margin-bottom: 20px;
+            margin-left: 0;
+        }
+
+        .timezones dt {
+            font-weight: normal;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .title h1 {
+            font-size: 44px;
+        }
+
+        .title h2 {
+            margin-top: 5px;
+        }
+
+        .embed-container {
+            margin-left: -10px;
+            margin-right: -10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .embed-container .legend {
+            background-color: #000;
+            text-transform: uppercase;
+            font-family: NES Pixel, sans-serif;
+            font-size: 23px;
+            line-height: 23px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 20px;
+            padding: 0 20px;
+            position: relative;
+            text-align: center;
+            top: -32px;
+            width: fit-content;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%;
+            padding: 0;
+            margin-top: 0;
+            margin-bottom: 0;
+            flex-direction: column;
+            padding-bottom: 30px;
+        }
+
+        .logo-link {
+            display: inline-block;
+            max-width: 60%;
+            margin-bottom: 50px;
+            width: 800px;
+        }
+
+        /*.logo-link:hover {*/
+        /*    filter: grayscale(100%);*/
+        /*}*/
+
+        /*.logo {*/
+        /*    width: 100%;*/
+        /*}*/
+
+        .loading-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            animation: AnimationName 2s linear infinite;
+            background: repeating-linear-gradient(90deg, rgba(71, 126, 183, 1), rgba(170, 185, 199, 1), rgba(71, 126, 183, 1) 50%);
+            background-position: right;
+            background-size: 200% 200%;
+        }
+
+        @keyframes AnimationName {
+            0% {
+                background-position: right;
+            }
+            100% {
+                background-position: left;
+            }
+        }
+
+        .dateInfo {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            line-height: 50px;
+        }
+
+        .dateInfo > div {
+            display: inline-block;
+            color: rgba(153, 153, 153, 0.9607843137);
+            font-family: Western Title, serif;
+            mix-blend-mode: color-dodge;
+            text-transform: uppercase;
+            font-size: 50px;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        /*.logo-text {*/
+        /*    width: 1200px;*/
+        /*    margin-bottom: 20px;*/
+        /*}*/
+
+        /*@media only screen and (max-width: 1400px) {*/
+        /*    .text {*/
+        /*        font-size: 36px;*/
+        /*        filter: blur(0.5px);*/
+        /*    }*/
+        /**/
+        /*    .logo-text {*/
+        /*        width: 800px;*/
+        /*    }*/
+        /**/
+        /*    .logo-link {*/
+        /*        width: 600px;*/
+        /*    }*/
+        /*}*/
+
+        /*@media only screen and (max-width: 600px) {*/
+        /*    .text {*/
+        /*        font-size: 24px;*/
+        /*        filter: blur(0.5px);*/
+        /*    }*/
+
+        /*.logo-link {*/
+        /*    margin-bottom: 20px;*/
+        /*}*/
+        /*}*/
+
+    </style>
+@endpushonce
+
+@pushonce('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.3.1/luxon.min.js" integrity="sha512-Nw0Abk+Ywwk5FzYTxtB70/xJRiCI0S2ORbXI3VBlFpKJ44LM6cW2WxIIolyKEOxOuMI90GIfXdlZRJepu7cczA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.27.1/humanize-duration.min.js" integrity="sha512-0Bd+9yMPZnNzFL0DAx7t9faxR9Djf2p41RVNAUZIdvG6s9q05Vvl4Dwj+rgRqh2esOq01Lv74VGmLA1mo4Ic+A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript">
+        @if($streamDate)
+            const kickoff = luxon.DateTime.fromISO("{{ $streamDate->format('c') }}");
+            document.getElementById("local-time").innerHTML = kickoff.toLocaleString(luxon.DateTime.DATETIME_FULL);
+
+            // This could probably be replaced by moment.js
+            function updateCountdown() {
+                const diff = kicko
+                ff.diffNow().valueOf();
+
+                document.getElementById("countdown").innerHTML = humanizeDuration(diff, { units: ["d", "h", "m"], round: true });
+            }
+            updateCountdown();
+            setInterval(updateCountdown, 10000);
+        @endif
+    </script>
+@endpushonce
+
+@section('body')
+<div class="center-container">
+
+    <header>
+        <a class="logo" href="/">
+            <img src="/2024images/logo1-long.png">
+        </a>
+
+        <div class="right-container">
+            <div class="title-text">
+                {{ year() }} Vidya Game Awards
+            </div>
+
+            <div class="plank-background">
+                <div class="plank-inner-border"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="embed-container">
+
+        <div class="dateInfo">
+            <div id="local-time">Coming soon</div>
+            <div id="countdown"></div>
+        </div>
+
+        <iframe width="100%" height="600" src="https://www.youtube.com/embed/v3bVF9QHnXk" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+
+        <div class="plank-background">
+            <div class="plank-inner-border"></div>
+        </div>
+    </div>
+
+</div>
+@endsection

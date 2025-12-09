@@ -1,0 +1,290 @@
+@extends('base.special')
+
+@section('fullTitle', year() . ' Vidya Gaem Awards')
+
+@pushonce('css')
+    @vite('resources/assets/voting.ts')
+
+    <style>
+        html, body {
+            min-height: 100%;
+        }
+
+        /*body {*/
+        /*    height: 100%;*/
+        /*    background-image: url("/2021images/clouds.png");*/
+        /*    background-position: center;*/
+        /*    background-size: cover;*/
+        /*}*/
+
+        /*.logo {*/
+        /*  background-color: black;*/
+        /*  !*border: 2px solid #af3a81;*!*/
+        /*  margin-bottom: 30px;*/
+        /*  height: 462px;*/
+        /*  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.32), 0 0 0 1px rgba(0,0,0,0.16);*/
+        /*}*/
+
+        .title {
+            font-family: "Young heart", serif;
+            mix-blend-mode: color-burn;
+            text-align: center;
+            font-size: 60px;
+        }
+
+        h1 {
+            font-size: 70px;
+            font-weight: normal;
+        }
+
+        h2 {
+            margin-top: 10px;
+            font-size: 40px;
+        }
+
+        .title h1 {
+            line-height: 100%;
+            margin-top: 10px;
+        }
+
+        .title h2 {
+            font-weight: normal;
+        }
+        /*font-family: "Annapolis", Tahoma, sans-serif;*/
+        /*color: #f7d059;*/
+        /*font-size: 38px;*/
+        /*font-weight: normal;*/
+        /*line-height: 0.95em;*/
+        /*margin-top: 0;*/
+        /*text-shadow: 0 0 3px #f7d059;*/
+        /*}*/
+
+        /*.subtitle {*/
+        /*text-align: center;*/
+        /*font-size: 50px;*/
+        /*line-height: 0.5em;*/
+        /*margin: 20px;*/
+        /*font-family: "FixedSystem", "Courier New", monospace;*/
+        /*color: silver;*/
+        /*}*/
+
+        .links {
+            text-align: center;
+            max-width: 1200px;
+            margin: 15px auto 0 auto;
+        }
+
+        .links.main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .links.bottom {
+            margin-top: 15px;
+            margin-bottom: 30px;
+            font-size: 25px;
+
+            font-family: "Handwritten",sans-serif;
+            mix-blend-mode: color-burn;
+        }
+
+        .links.bottom a {
+            color: rgba(180, 80, 22, 0.8);
+        }
+
+        .link {
+            margin: 6px;
+        }
+
+        /*.link.disabled {*/
+        /*  background: #686868;*/
+        /*  border-radius: 15px;*/
+        /*  color: #dedede;*/
+        /*  padding: 5px 15px;*/
+        /*  font-size: 18px;*/
+        /*  display: inline-block;*/
+        /*  width: 270px;*/
+        /*  transform: translate(1px, 1px);*/
+        /*}*/
+
+        .link .btn {
+            font-size: 16px;
+        }
+
+        /*.link a {*/
+        /*  font-size: 20px;*/
+        /*  display: inline-block;*/
+        /*  width: 300px;*/
+
+        /*  background-color: #000;*/
+        /*  border-radius: 2px;*/
+        /*  color: white;*/
+        /*  text-shadow: #f81317 0px 0px 3px;*/
+        /*  padding: 5px 15px 1px;*/
+        /*  border: 1px solid #f81317;*/
+        /*  font-family: "OratorStd", "Courier New", serif;*/
+        /*  line-height: 0.95em;*/
+        /*  text-decoration: none;*/
+        /*}*/
+
+        /*.link.special a {*/
+        /*  background-color: #f29823;*/
+        /*  text-shadow: #f29823 0px 0px 3px;*/
+        /*  color: black;*/
+        /*}*/
+
+        /*.link a:hover {*/
+        /*  color: #f29823;*/
+        /*  border: 1px solid #f29823;*/
+        /*  text-shadow: #f29823 0px 0px 3px;*/
+        /*  text-decoration: none;*/
+        /*}*/
+
+        /*.link.special a:hover {*/
+        /*  background: #000;*/
+        /*}*/
+
+
+        /*.link a:hover {*/
+        /*  box-shadow: 1px 1px black;*/
+        /*  text-decoration: none;*/
+        /*  transform: translate(1px, 1px);*/
+        /*}*/
+
+        .link .soon {
+            color: gray;
+            text-decoration: none !important;
+            cursor: unset !important;
+        }
+
+        .embed-container {
+            background: #dedede url(/2022images/bgwhite.jpg) repeat;
+            color: #000;
+            background: #000;
+            line-height: 0;
+            margin-top: 20px;
+            margin: 0px 40px;
+        }
+        .embed-container .legend {
+            background-color: #000;
+            text-transform: uppercase;
+            font-family: NES Pixel, sans-serif;
+            font-size: 23px;
+            line-height: 23px;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 20px;
+            padding: 0 20px;
+            position: relative;
+            text-align: center;
+            top: -32px;
+            width: fit-content;
+        }
+
+        .center-container {
+            min-height: 100vh;
+        }
+
+        /*.title h1 {*/
+        /*    filter: blur(1px);*/
+        /*}*/
+        /**/
+        /*#countdown {*/
+        /*    filter: blur(0.75px);*/
+        /*}*/
+
+        /*header .logo {*/
+        /*    margin-right: 0;*/
+        /*    display: flex;*/
+        /*    justify-content: center;*/
+        /*    flex-wrap: wrap;*/
+        /*    height: auto;*/
+        /*}*/
+        /**/
+        /*header .logo img {*/
+        /*    max-height: 100px;*/
+        /*}*/
+
+        button {
+            /*font-size: 16px;*/
+            /*    font-weight: bold;*/
+            /*    height: 40px;*/
+            width: 200px;
+        }
+
+        .under-construction {
+            filter: grayscale();
+        }
+
+        .under-construction::after{
+            content: "Under Construction";
+            position: absolute;
+            width: 200px;
+            rotate: -30deg;
+            left: 53px;
+            top: 8px;
+        }
+
+    </style>
+@endpushonce
+
+@section('body')
+    <div class="center-container">
+
+        <header>
+            <a class="logo" href="/">
+                <img src="/2024images/logo1-long.png">
+            </a>
+
+            <div class="right-container">
+                <div class="title-text">
+                    {{ year() }} Vidya Game Awards
+                </div>
+
+                <div class="plank-background">
+                    <div class="plank-inner-border"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="poster-background">
+            <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="600" src="https://www.youtube.com/embed/mXMcq_LJ8ro" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+
+            <div class="title" style="margin-top: 20px;">
+                <h1>The {{ year() }} Vidya Gaem Awards</h1>
+                <h2 id="countdown">
+                    Thanks for watching!
+                </h2>
+            </div>
+            <div class="links main">
+                <div class="link special">
+                    <a href="https://www.youtube.com/watch?v=mXMcq_LJ8ro">
+                        <button class="btn btn-default">Watch on YouTube</button>
+                    </a>
+                </div>
+                <div class="link">
+                    <a href="{{ route('winners') }}">
+                        <button class="btn btn-default">Results</button>
+                    </a>
+                </div>
+                <div class="link">
+                    <a href="{{ route('credits') }}">
+                        <button class="btn btn-default">Credits and /agdg/</button>
+                    </a>
+                </div>
+                <div class="link">
+                    <a href="{{ route('soundtrack') }}">
+                        <button class="btn btn-default">Soundtrack</button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="links bottom">
+                <div class="link">
+                    <a href="https://vidyagaemawards.com/previous-years">View previous /v/GAs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

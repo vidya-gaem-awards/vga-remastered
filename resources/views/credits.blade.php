@@ -138,7 +138,7 @@
 
             <div class="right-container">
                 <div class="title-text">
-                    2024 Vidya Game Awards
+                    {{ year() }} Vidya Game Awards
                 </div>
 
                 <div class="plank-background">

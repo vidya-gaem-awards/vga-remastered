@@ -1,0 +1,165 @@
+@extends('base.special')
+
+@section('fullTitle', year() . ' Vidya Gaem Awards')
+
+@pushonce('css')
+    @vite('resources/assets/voting.ts')
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            background-image: url("/2023images/bg.png");
+            background-position: center;
+            background-size: cover;
+        }
+
+        button {
+            font-size: 16px;
+            font-weight: bold;
+            height: 40px;
+            width: 200px;
+        }
+
+        h1 {
+            color: white;
+        }
+
+        /*  background-color: #000;*/
+        /*  border-radius: 2px;*/
+        /*  color: #f81317;*/
+        /*  text-shadow: #f81317 0px 0px 3px;*/
+        /*  padding: 5px 15px 1px;*/
+        /*  border: 1px solid #f81317;*/
+        /*  font-family: "OratorStd", "Courier New", serif;*/
+        /*  line-height: 0.95em;*/
+        /*  text-decoration: none;*/
+
+        /*  margin-right: 2rem;*/
+        /*  font-size: 30px;*/
+        /*  display: inline-block;*/
+        /*}*/
+
+        /*.links a:hover {*/
+        /*  color: #f29823;*/
+        /*  border: 1px solid #f29823;*/
+        /*  text-shadow: #f29823 0px 0px 3px;*/
+        /*  text-decoration: none;*/
+        /*}*/
+
+        /*.links a span {*/
+        /*  !*border-bottom: 2px solid #fec544;*!*/
+        /*}*/
+
+        /*.links a.discord {*/
+        /*  color: white;*/
+        /*  font-size: 20px;*/
+        /*  margin-top: 15px;*/
+        /*}*/
+
+        /*s {*/
+        /*  color: #734715;*/
+        /*  text-shadow: none;*/
+        /*  text-decoration-color: #f29823;*/
+        /*}*/
+
+        .center-container {
+            min-height: 100vh;
+        }
+
+        .embed-container {
+            color: #000;
+            margin-left: -10px;
+            margin-right: -10px;
+            padding: 20px;
+            line-height: 0;
+            margin-top: 20px;
+        }
+
+        .header {
+            font-size: 2.7em;
+            line-height: 100%;
+            margin-top: 10px;
+            text-shadow: 1px -1px #4ea24a, 2px -2px #4ea24a, 3px -3px #4ea24a, -1px 1px #da505f, -2px 2px #4ea24a, -3px 3px #4ea24a, 1px 1px #da505f, 2px 2px #061019, 3px 3px #061019, -4px 4px #061019;
+            text-transform: uppercase;
+        }
+
+        /* spacing tweaks due to shared css */
+        .award-header {
+            margin-bottom: 0px;
+        }
+        .poster-background {
+            padding: 30px;
+        }
+
+    </style>
+@endpushonce
+
+@section('body')
+    <div class="center-container">
+
+        <header>
+            <a class="logo" href="/">
+                <img src="/2024images/logo1-long.png">
+            </a>
+
+            <div class="right-container">
+                <div class="title-text">
+                    {{ year() }} Vidya Game Awards
+                </div>
+
+                <div class="plank-background">
+                    <div class="plank-inner-border"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="poster-background">
+            <div class="award-header">
+                <div class="award-name-container">
+                    <div class="award-name">Live on four platforms</div>
+                </div>
+            </div>
+
+            <div class="col-12 text-center">
+                <p class="links">
+                    <a href="https://twitch.tv/vidyagaemawards" target="_blank">
+                        <button class="btn btn-default">Twitch</button>
+                    </a>
+                    <a href="https://www.youtube.com/vidyagaemawards" target="_blank">
+                        <button class="btn btn-default">YouTube</button>
+                    </a>
+                    <a href="https://kick.com/vidyagaemawards" target="_blank">
+                        <button class="btn btn-default">Kick</button>
+                    </a>
+                    <a href="https://twitter.com/vidyagaemawards" target="_blank">
+                        <button class="btn btn-default">Twitter</button>
+                    </a>
+                    <a href="https://discord.gg/4e8JQB4" target="_blank">
+                        <button class="btn btn-default">Chat on Discord</button>
+                    </a>
+                </p>
+
+                <div class="embed-container">
+                    <div id="twitch-embed"></div>
+                </div>
+
+                <!-- Load the Twitch embed script -->
+                <script src="https://embed.twitch.tv/embed/v1.js"></script>
+
+                <!-- Create a Twitch.Embed object that will render within the "twitch-embed" root element. -->
+                <script type="text/javascript">
+                    new Twitch.Embed("twitch-embed", {
+                        width: '100%',
+                        height: 480,
+                        channel: "vidyagaemawards",
+                        theme: 'dark'
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+@endsection
