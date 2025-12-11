@@ -38,7 +38,7 @@
         #video-game-collage .vignette {
             width: 100%;
             height: 100%;
-            background: radial-gradient(#0000003d 50%, rgba(0, 0, 0, 0.26) 50%, rgba(0, 0, 0, 0.87));
+            background: radial-gradient(#00000000 50%, #00000000 50%, rgba(0, 0, 0, 0.4));
             position: absolute;
         }
 
