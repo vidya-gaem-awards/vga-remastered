@@ -537,11 +537,13 @@
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="second-placers-container poster-background">
-                                        @forelse($results[$award->id] as $result)
-                                            <div class="second-placer">{!! $result !!}</div>
-                                        @empty
+                                        @if($results[$award->id])
+                                            @foreach($results[$award->id] as $result)
+                                                <div class="second-placer">{!! $result !!}</div>
+                                            @endforeach
+                                        @else
                                             <div class="second-placer">No results yet</div>
-                                        @endforelse
+                                        @endif
                                     </div>
                                 </div>
                             </div>
