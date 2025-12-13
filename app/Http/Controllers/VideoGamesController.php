@@ -28,7 +28,7 @@ class VideoGamesController extends Controller
     {
         $games = GameRelease::query()->orderBy('name')->get();
 
-        return view('video-games.index', [
+        return view('video-games', [
             'games' => $games,
         ]);
     }

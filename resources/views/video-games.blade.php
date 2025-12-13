@@ -259,7 +259,9 @@
                         @if($game->mobile)<i class="fas fa-fw fa-mobile-screen" title="Mobile"></i>@endif
                         @if($game->vr)<i class="fas fa-fw fa-head-side-goggles" title="VR"></i>@endif
 
-                        <a href="#" class="remove-game float-end" data-title="{{ $game->name }}" data-id="{{ $game->id }}">×</a>
+                        @can('add_video_game')
+                            <a href="#" class="remove-game float-end" data-title="{{ $game->name }}" data-id="{{ $game->id }}">×</a>
+                        @endcan
                     </div>
                 </div>
             </div>
