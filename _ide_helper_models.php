@@ -21,6 +21,7 @@ namespace App\Models{
  * @property string $controller
  * @property string $request_string
  * @property string $request_method
+ * @property int $status_code
  * @property string $ip
  * @property string $user_agent
  * @property string $filename
@@ -42,6 +43,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereRequestMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereRequestString($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereRoute($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereStatusCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereUserAgent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Access whereUserId($value)
  */
@@ -140,9 +142,9 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Vote> $votes
  * @property-read int|null $votes_count
  * @property-read \App\Models\File|null $winnerImage
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Award hideSecret()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Award hideSecret()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Award whereAutocompleterId($value)
@@ -436,9 +438,9 @@ namespace App\Models{
  * @mixin IdeHelperNominee
  * @property int $id
  * @property string $name
- * @property string $subtitle
+ * @property string|null $subtitle
  * @property string $slug
- * @property string $flavor_text
+ * @property string|null $flavor_text
  * @property int $award_id
  * @property int|null $image_id
  * @property \Carbon\CarbonImmutable|null $created_at
@@ -446,8 +448,7 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $deleted_at
  * @property-read \App\Models\Award $award
  * @property-read \App\Models\File|null $image
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserNominationGroup> $userNominationGroups
- * @property-read int|null $user_nomination_groups_count
+ * @property-read \App\Models\UserNominationGroup|null $userNominationGroup
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Nominee onlyTrashed()
@@ -503,6 +504,7 @@ namespace App\Models{
  * @property-read \App\Models\Award $award
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Result official()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result whereAlgorithm($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Result whereAwardId($value)
@@ -748,3 +750,4 @@ namespace App\Models{
  */
 	class VotingCodeLog extends \Eloquent {}
 }
+
