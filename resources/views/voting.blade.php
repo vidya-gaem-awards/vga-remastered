@@ -84,17 +84,12 @@
         <header>
             <a class="logo" href="{{ route('index') }}">
                 <picture>
-                    <source media="(max-width: 800px)" srcset="{{ asset('2024images/logo1.png') }}">
-                    <img src="{{ asset('2024images/logo1-long.png') }}">
+                    <img src="{{ asset('2025images/vga_logo.webp') }}">
                 </picture>
             </a>
             <div class="right-container">
                 <div class="title-text">
                     {{ $voteText }}
-                </div>
-
-                <div class="plank-background">
-                    <div class="plank-inner-border"></div>
                 </div>
             </div>
         </header>
@@ -105,7 +100,10 @@
                     <div class="award-header">
                         <a href="{{ route('voting', $prevAward) }}" class="navigation left"></a>
                         <div class="award-name-container">
-                            <div class="award-name">{{ $award->name }}</div>
+                            <div class="award-name">
+                                <div class="award-name-decoration" id="title-decoration"></div>
+                                {{ $award->name }}
+                            </div>
                             <div class="award-subtitle">{{ $award->subtitle }}</div>
                         </div>
                         <a href="{{ route('voting', $nextAward) }}" class="navigation right"></a>
