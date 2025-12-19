@@ -1379,11 +1379,12 @@ jQuery(function () {
     var titleDeco = [
         "You're lucky to miss the",
         'Drink up before the',
-        'I was beat behind the',
+        'I was beaten behind the',
         'Who the fuck asked for the',
-        'Feel the cromulance,',
+        'Feel the cromulence,',
         'What a beautiful',
         '▲&nbsp;&nbsp;<br/>▲▲',
-        ];
+        'Jump the shark with the',
+    ];
     $('#title-decoration').html(titleDeco[getRandomInt(0, titleDeco.length)]);
 });
