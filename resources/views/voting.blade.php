@@ -102,7 +102,12 @@
                         <div class="award-name-container">
                             <div class="award-name">
                                 <div class="award-name-decoration" id="title-decoration"></div>
-                                {{ $award->name }}
+                                <div class="title-filling">
+                                    {{ $award->name }}
+                                    <div class="title-outline">
+                                        {{ $award->name }}
+                                    </div>
+                                </div>
                             </div>
                             <div class="award-subtitle">{{ $award->subtitle }}</div>
                         </div>
