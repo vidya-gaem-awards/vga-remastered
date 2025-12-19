@@ -167,14 +167,9 @@ header {
 
 .poster-background {
   background-size: 100% 100%;
-  background-image: url("/2024images/paper2.jpg");
-  -webkit-mask-image: url(/2024images/paper-edge-mask.png);
-  -webkit-mask-size: 100% 100%;
-  mask-image: url(/2024images/paper-edge-mask.png);
-  mask-size: 100% 100%;
+  background-image: url("/2025images/blank-postcard.webp");
   padding: 30px;
-  padding-top: 60px;
-  box-shadow: inset 0px 0px 40px #44321a;
+  // box-shadow: inset 0px 0px 40px #44321a;
 }
 
 .buddy-helper-1{
@@ -208,14 +203,17 @@ header {
   justify-content: center;
   text-align: center;
   position: relative;
-  max-width: 1100px;
+  // max-width: 1100px;
   align-items: center;
   margin: 0 auto 20px;
   font-family: 'Voting Title', sans-serif;
   text-transform: capitalize;
+  background-image: url(/2025images/postcard-art.webp);
+  background-size: cover;
+  background-position-x: center;
+  padding-top: 60px;
 
-  //background-image: url(/2020images/tape.png);
-  //background-size: 790px;
+
   //background-position: center top;
   //background-repeat: no-repeat;
 
@@ -245,7 +243,7 @@ header {
   }
 
   .award-name-decoration {
-    font-family: 'Cursive Decoration', sans-serif;
+    font-family: 'Cursive Decoration', cursive, sans-serif;
     position: absolute;
     top: -50px;
     left: -113px;
@@ -253,6 +251,7 @@ header {
     font-size: 0.25em;
     width: 180px;
     line-height: 25px;
+    color: #ee6461;
   }
 
   .award-name-container.oneLine .awardName {
@@ -271,10 +270,25 @@ header {
     @media screen and (max-width: 800px) {
       font-size: 3em;
     }
+
+    .title-filling {
+      position: relative;
+      font-family: 'Voting Title Filled', sans-serif;
+      color: #ffcc7f;
+      .title-outline {
+        font-family: 'Voting Title', sans-serif;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        color: #ee6461;
+      }
+    }
   }
 
   .award-subtitle {
-    font-size: 3em;
+    font-size: 2em;
+    font-family: "Cursive Decoration", cursive, sans-serif;
+    color: #ee6461;
   }
 
   .navigation {

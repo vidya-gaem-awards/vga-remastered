@@ -6,6 +6,13 @@
 }
 
 @font-face {
+  font-family: 'Voting Title Filled';
+  src: url('/2025images/fonts/ExtremeFilled.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Cursive Decoration';
   src: url('/2025images/fonts/MarckScript-Regular.ttf') format('truetype');
   font-weight: normal;
@@ -199,7 +206,7 @@
 /*}*/
 
 html {
-  background: #71431C url('/2024images/background.png') center;
+  background: #71431C url('/2025images/palm-background.webp') center;
   background-size: cover;
   background-attachment: fixed;
 }
