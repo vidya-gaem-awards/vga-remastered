@@ -38,7 +38,8 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 36px;
+  margin-bottom: 18px;
+  height: 140px;
 
   @media screen and (max-width: 1000px) {
     justify-content: space-between;
@@ -49,7 +50,7 @@ header {
   }
 
   .logo {
-    height: 110px;
+    height: 100%;
     display: block;
     margin-right: auto;
 
@@ -68,21 +69,24 @@ header {
   }
 
   .right-container {
-    max-width: 50%;
-    padding: 6px;
+    width: 50%;
+    height: 100%;
+    padding: 27px 80px;
     position: relative;
+    background-image: url("/2025images/surfboard.webp");
+    height: 140px;
+    background-size: 100% 100%;
+    display: table;
 
     .title-text {
-      font-family: "Western Title";
-      color: #999999f5;
-      font-size: 74px;
-      position: relative;
-      text-transform: uppercase;
+      font-family: "Cursive Decoration",sans-serif;
+      color: #310707;
+      font-size: 43px;
       text-align: center;
-      line-height: 1;
-      top: 8px;
-      padding: 10px;
-      mix-blend-mode: color-dodge;
+      line-height: 0.9;
+      mix-blend-mode: color-burn;
+      display: table-cell;
+      vertical-align: middle;
 
       .line-1 {
         //text-transform: uppercase;
@@ -207,7 +211,7 @@ header {
   max-width: 1100px;
   align-items: center;
   margin: 0 auto 20px;
-  font-family: 'Young Heart', sans-serif;
+  font-family: 'Voting Title', sans-serif;
   text-transform: capitalize;
 
   //background-image: url(/2020images/tape.png);
@@ -240,40 +244,29 @@ header {
     }
   }
 
+  .award-name-decoration {
+    font-family: 'Cursive Decoration', sans-serif;
+    position: absolute;
+    top: -50px;
+    left: -113px;
+    rotate: -20deg;
+    font-size: 0.25em;
+    width: 180px;
+    line-height: 25px;
+  }
+
   .award-name-container.oneLine .awardName {
     margin-top: -5px;
   }
 
   .award-name {
-    font-size: 4.7em;
+    font-size: 6.7em;
     line-height: 100%;
     margin-top: 10px;
-
-    /*
-    text-shadow:
-            1px -1px #4EA24A,
-            2px -2px #4EA24A,
-            3px -3px #4EA24A,
-            -1px 1px #DA505F,
-            -2px 2px #4EA24A,
-            -3px 3px #4EA24A,
-            1px 1px #DA505F,
-            2px 2px #061019,
-            3px 3px #061019,
-            -4px 4px #061019;
-    */
-    //5px 5px #4EA24A,
-    //6px 6px #E5E37C,
-    //7px 7px #061019,
-    //-8px 8px #467B81,
-    //-9px 9px #467B81,
-    //-10px 10px #467B81,
-    //11px 11px #E5E37C,
-    //12px 12px #E5E37C,
-    //-13px 13px #AB1119,
-    //-14px 14px #AB1119,
-    //-15px 15px #AB1119;
-
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
 
     @media screen and (max-width: 800px) {
       font-size: 3em;
@@ -281,17 +274,7 @@ header {
   }
 
   .award-subtitle {
-    font-size: 1.8em;
-
-    /*
-    color: #0EBF8C;
-
-    text-shadow:
-            1px 1px #DA505F,
-            2px 2px #061019,
-            3px 3px #061019,
-            -4px 4px #061019;
-    */
+    font-size: 3em;
   }
 
   .navigation {

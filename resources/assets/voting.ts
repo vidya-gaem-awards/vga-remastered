@@ -1374,4 +1374,16 @@ jQuery(function () {
         }
       }, false);
     }
+
+    // apply random text for the award title decoration
+    var titleDeco = [
+        "You're lucky to miss the",
+        'Drink up before the',
+        'I was beat behind the',
+        'Who the fuck asked for the',
+        'Feel the cromulance,',
+        'What a beautiful',
+        '▲&nbsp;&nbsp;<br/>▲▲',
+        ];
+    $('#title-decoration').html(titleDeco[getRandomInt(0, titleDeco.length)]);
 });
