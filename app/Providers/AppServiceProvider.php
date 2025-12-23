@@ -48,6 +48,8 @@ class AppServiceProvider extends ServiceProvider
             ]));
         });
 
+        Gate::define('public', fn (?User $user) => true);
+
         Gate::before(function (?User $user, $ability) {
             /**
              * @TODO: this feels so incredibly nasty. There must be a better way
