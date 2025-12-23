@@ -78,10 +78,13 @@ Route::get('/awards/manage', [AwardAdminController::class, 'managerList'])->name
 Route::post('/awards/manage', [AwardAdminController::class, 'managerPost'])->name('awards.manage.post')->can('awards_edit'); # awardManagerPost
 Route::post('/awards/manage/ajax', [AwardAdminController::class, 'managerPostAjax'])->name('awards.manage.post.ajax')->can('awards_edit'); # awardManagerPostAjax
 
-Route::can('nominations_edit')->group(function () {
+Route::can('nominations_view')->group(function () {
     Route::get('/nominees/export', [NomineeController::class, 'exportNominees'])->name('nominees.export'); # nomineeExport
     Route::get('/nominees/export/user-nominations', [NomineeController::class, 'exportUserNominations'])->name('nominees.export.user-nominations'); #nomineeUserNominationExport
     Route::get('/nominees/{award?}', [NomineeController::class, 'index'])->name('nominees.manage'); # nomineeManager
+});
+
+Route::can('nominations_edit')->group(function () {
     Route::post('/nominees/{award}', [NomineeController::class, 'post'])->name('nominees.manage.post'); # nomineePost
     Route::post('/nominees/{award}/group/ignore', [NomineeController::class, 'nominationGroupIgnore'])->name('nominations.group.ignore'); # nominationsIgnoreGroup
     Route::post('/nominees/{award}/group/merge', [NomineeController::class, 'nominationGroupMerge'])->name('nominations.group.merge'); # nominationsMergeGroup
@@ -89,10 +92,12 @@ Route::can('nominations_edit')->group(function () {
     Route::post('/nominees/{award}/group/unlink', [NomineeController::class, 'nominationGroupUnlink'])->name('nominations.group.unlink'); # nominationsUnlinkGroup
 });
 
-Route::get('/awards/autocompleters', [AutocompleterController::class, 'index'])->name('autocompleters');
-Route::post('/awards/autocompleters/ajax', [AutocompleterController::class, 'ajax'])->name('autocompleters.ajax'); # autocompleterAjax
-Route::get('/awards/autocompleters/ajax/wikipedia', [AutocompleterController::class, 'wikipedia'])->name('autocompleters.wikipedia'); # autocompleterWikipedia
-Route::get('/awards/autocompleters/ajax/igdb', [AutocompleterController::class, 'igdb'])->name('autocompleters.igdb'); # autocompleterIgdb
+Route::can('autocompleter_edit')->group(function () {
+    Route::get('/awards/autocompleters', [AutocompleterController::class, 'index'])->name('autocompleters');
+    Route::post('/awards/autocompleters/ajax', [AutocompleterController::class, 'ajax'])->name('autocompleters.ajax'); # autocompleterAjax
+    Route::get('/awards/autocompleters/ajax/wikipedia', [AutocompleterController::class, 'wikipedia'])->name('autocompleters.wikipedia'); # autocompleterWikipedia
+    Route::get('/awards/autocompleters/ajax/igdb', [AutocompleterController::class, 'igdb'])->name('autocompleters.igdb'); # autocompleterIgdb
+});
 
 #
 # TASKS
