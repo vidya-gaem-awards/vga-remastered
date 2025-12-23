@@ -29,7 +29,11 @@
                 </td>
                 <td>
                     <div>
-                        <img src="{{ $action->user->avatar_url }}" style="width: 25px; margin-right: 3px;"> <strong>{{ $action->user->name }}</strong>
+                        @if($action->user)
+                            <img src="{{ $action->user->avatar_url }}" style="width: 25px; margin-right: 3px;"> <strong>{{ $action->user->name }}</strong>
+                        @else
+                            <strong>Anonymous user</strong>
+                        @endif
                         @if(isset($actionTypes[$action->action]))
                             {{ strtolower($actionTypes[$action->action]) }}
                         @else
