@@ -66,15 +66,15 @@ Route::can('add_video_game')->group(function () {
 # CREW
 #
 
+Route::can('add_user')->group(function () {
+    Route::get('/team/add', [PeopleController::class, 'add'])->name('people.add');
+    Route::post('/team/add/search', [PeopleController::class, 'search'])->name('people.add.search');
+});
+
 Route::can('profile_view')->group(function () {
     Route::get('/team', [PeopleController::class, 'index'])->name('people');
     Route::get('/team/permissions', [PeopleController::class, 'permissions'])->name('people.permissions');
     Route::get('/team/{user}', [PeopleController::class, 'view'])->name('people.view'); # viewPerson
-});
-
-Route::can('add_user')->group(function () {
-    Route::get('/team/add', [PeopleController::class, 'add'])->name('people.add');
-    Route::post('/team/add/search', [PeopleController::class, 'search'])->name('people.add.search');
 });
 
 Route::can('profile_edit_details')->group(function () {
