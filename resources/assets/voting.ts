@@ -1385,6 +1385,7 @@ jQuery(function () {
         'What a beautiful',
         '▲&nbsp;&nbsp;<br/>▲▲',
         'Jump the shark with the',
+        '/v/GA regrettably presents',
     ];
     $('#title-decoration').html(titleDeco[getRandomInt(0, titleDeco.length)]);
 });

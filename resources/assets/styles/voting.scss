@@ -251,7 +251,7 @@ header {
     font-size: 0.25em;
     width: 180px;
     line-height: 25px;
-    color: #ee6461;
+    color: var(--theme-red);
   }
 
   .award-name-container.oneLine .awardName {
@@ -274,13 +274,13 @@ header {
     .title-filling {
       position: relative;
       font-family: 'Voting Title Filled', sans-serif;
-      color: #ffcc7f;
+      color: var(--theme-yellow);
       .title-outline {
         font-family: 'Voting Title', sans-serif;
         position: absolute;
         top: 0px;
         left: 0px;
-        color: #ee6461;
+        color: var(--theme-red);
       }
     }
   }
@@ -288,7 +288,7 @@ header {
   .award-subtitle {
     font-size: 2em;
     font-family: "Cursive Decoration", cursive, sans-serif;
-    color: #ee6461;
+    color: var(--theme-red);
   }
 
   .navigation {
@@ -322,24 +322,32 @@ header {
 }
 
 .awards-list {
+  margin-top: 120px;
+  margin-bottom: 30px;
+  position: relative;
   text-align: left;
   padding: 40px 70px;
+  background-image: url("/2025images/chalkboard.jpg");
+  background-size: 100%;
+  color: white;
+  font-family: "Chalk", sans-serif;
 
+  .a {
+    color: white;
+  }
 
   .your-votes {
-    font-family: "Handwritten", serif;
-    color: rgba(180, 80, 22, 0.8);
-    mix-blend-mode: color-burn;
     font-size: 67px;
+    position: relative;
 
     .votes-left {
-      float: right;
-      width: 0px;
+      width: 200px;
       rotate: 20deg;
-      position: relative;
-      right: 40px;
+      position: absolute;
+      right: -30px;
       line-height: 1;
       font-size: 0.8em;
+      top: 20px;
     }
   }
 
@@ -372,22 +380,28 @@ header {
     }
   }
 
+  .award:hover {
+    text-decoration: underline;
+    text-decoration-color: white;
+  }
+
   .award {
-    color: white;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7), 0 0 6px rgba(180,80,0, 9.5);
     text-decoration: none;
 
     &.complete {
-      text-decoration: line-through;
+      .award-name {
+        color: var(--theme-blue);
+      }
     }
 
-    &.active {
-      color: #fdb305;
+    &.active .award-name {
+      color: var(--theme-yellow);
     }
   }
 
   .award-name {
     font-weight: bold;
+    color: white;
   }
 
   .award-subtitle {
@@ -396,13 +410,84 @@ header {
     padding: 0;
     margin: 0;
     display: inline;
+    color: #e1e1e1;
+  }
+
+  .bamboo {
+    background-image: url('/2025images/bamboo-loop.webp');
+    background-size: 300px 100%;
+    position: absolute;
+
+    &.left-border {
+      left: 0;
+      top: 0px;
+      height: 100%;
+      width: 20px;
+      background-image: url('/2025images/bamboo-loop-vert.webp');
+      background-size: 100% 300px;
+    }
+
+    &.right-border {
+      right: 0;
+      top: 0px;
+      height: 100%;
+      width: 20px;
+      background-image: url('/2025images/bamboo-loop-vert.webp');
+      background-size: 100% 300px;
+    }
+
+    &.top-border {
+      left: 0px;
+      top: -10px;
+      height: 20px;
+      width: 100%;
+    }
+
+    &.bottom-border {
+      left: 0px;
+      bottom: -10px;
+      height: 20px;
+      width: 100%;
+    }
+  }
+
+  .window-decoration-1 {
+    background-image: url(/2025images/hibiscus.webp);
+    position: absolute;
+    top: -65px;
+    left: -36px;
+    width: 200px;
+    height: 150px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .window-decoration-2 {
+    background-image: url(/2025images/coconut3.webp);
+    position: absolute;
+    top: -81px;
+    right: 123px;
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: -10;
+  }
+  .window-decoration-3 {
+    background-image: url(/2025images/coconut2.webp);
+    position: absolute;
+    top: -71px;
+    right: 50px;
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
 
 .your-votes {
-  color: white;
   text-align: center;
   font-size: 40px;
+  text-transform: uppercase;
 
   @media (max-width: 768px) {
     font-size: 30px;
@@ -410,9 +495,8 @@ header {
 }
 
 #submitReminder {
-  font-family: "Young Heart", serif;
-  color: rgba(180, 80, 22, 0.8);
-  mix-blend-mode: color-burn;
+  font-family: "Voting Title Filled", sans-serif;
+  color: var(--theme-red);
   font-size: 4em;
 }
 // END NEW SCSS
@@ -1153,15 +1237,14 @@ body {
   //height: 40px;
   z-index: 301;
   position: absolute;
-  background-color: #CF282F;
-  color: white;
+  background-color: var(--theme-red);
+  color: var(--theme-white);
   /*transition: 200ms linear all;*/
   display: none;
   align-items: center;
   justify-content: center;
   text-align: center;
   bottom: 0;
-  font-size: 0.9em;
   line-height: 1em;
   padding: 3px 8px 8px 8px;
 }
@@ -1566,11 +1649,11 @@ body {
 
   a {
     font-family: "Handwritten", sans-serif;
-    color: rgba(180, 80, 22, 0.8);
-    mix-blend-mode: color-burn;
+    color: white;
     &:hover {
       text-decoration: underline;
     }
+    text-decoration: none;
   }
 }
 //.goBackLink a {

@@ -172,13 +172,13 @@
                                             @if($votingOpen)
                                                 <div class="hoverOverlay overlayWhenTop {{ str_contains($nominee->subtitle, 'href=') ? 'adjustForLink' : '' }}">
                                                     <span>
-                                                      Click to make <strong>{{ $nominee->name }}</strong>
+                                                      Click to make <span class="name-highlight">{{ $nominee->name }}</span>
                                                       your&nbsp;<span class="nextPreference">1st</span>&nbsp;preference
                                                     </span>
                                                 </div>
                                                 <div class="hoverOverlay overlayWhenBottom {{ str_contains($nominee->subtitle, 'href=') ? 'adjustForLink' : '' }}">
                                                     <span>
-                                                        Click to remove <strong>{{ $nominee->name }}</strong>
+                                                        Click to remove <span class="name-highlight">{{ $nominee->name }}</span>
                                                         from your votes
                                                     </span>
                                                 </div>
@@ -206,13 +206,10 @@
                             @endforeach
                         </div>
 
-                        @if($votingOpen)
-                            <h3 style="text-align: center; margin-top: 10px; margin-bottom: 10px;" id="submitReminder">Click "Submit" after voting to save your choices!</h3>
-                        @endif
 
                     </div>
 
-                    <div id="dragLimit">
+                    <div id="dragLimit" class="poster-background">
                         <div class="your-votes-container">
                             <div class="your-votes-title-area">
                                 <div class="your-votes">
@@ -229,26 +226,25 @@
                                     </div>
                                     <div id="btnLockVotes" class="btnSubmit" title="Submit Votes">
                                         <div class="hoverArrow">&gt;</div>
-                                        <div id="submitText">SUBMIT</div>
+                                        <div id="submitText">SEND</div>
                                     </div>
                                 </div>
                             @endif
-
-                            <div class="plank-background">
-                                <div class="plank-inner-border"></div>
-                            </div>
-
                         </div>
 
                         @if($votingOpen)
-                            <div class="buttons" style="margin-top: 10px;">
-                                <a href="{{ route('voting', $nextAward) }}" class="navigation next" title="Next award">
-                                    <img src='{{ asset('2024images/right-sign.png') }}'/>
-                                    {{ $nextAward->name }}
-                                </a>
-                            </div>
+                            <h3 style="text-align: center; margin-top: 10px; margin-bottom: 10px;" id="submitReminder">Click "Submit" after voting to save your choices!</h3>
                         @endif
                     </div>
+
+                    @if($votingOpen)
+                        <div class="buttons" style="margin-top: 10px;">
+                            <a href="{{ route('voting', $nextAward) }}" class="navigation next" title="Next award">
+                                <img src='{{ asset('2024images/right-sign.png') }}'/>
+                                {{ $nextAward->name }}
+                            </a>
+                        </div>
+                    @endif
 
                     <div class="voteGroup placeholder" style="display: none;" id="dropPlaceholder">
                         <div class="voteBox">
@@ -311,11 +307,9 @@
             @endif
         </div>
 
-        <div class="zig"></div>
-
-        <div id="containerAwards" class="awards-list poster-background" style="margin-top: 10px;">
+        <div id="containerAwards" class="awards-list"> 
             <div class="your-votes" style="margin-bottom: 10px;">
-                Awards
+                AWARD MENU
                 @if($votingOpen)
                     <div class="votes-left">{{ $awards->filter(fn ($a) => !$allVotes[$a->id])->count() }} left </div>
                 @endif
@@ -335,7 +329,7 @@
 
             @auth
                 <div class="goBackLink">
-                    <a href="{{ route('home') }}">< Back to the main part of the site</a>
+                    <a href="{{ route('home') }}">< Return home</a>
                 </div>
             @endauth
 
@@ -359,6 +353,15 @@
                     </div>
                 </div>
             @endif
+
+            <div class="bamboo left-border"></div>
+            <div class="bamboo right-border"></div>
+            <div class="bamboo top-border"></div>
+            <div class="bamboo bottom-border"></div>
+
+            <div class="window-decoration-1"></div>
+            <div class="window-decoration-2"></div>
+            <div class="window-decoration-3"></div>
         </div>
     </div>
 

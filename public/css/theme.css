@@ -1,3 +1,17 @@
+:root {
+  --theme-white: #f9e9d4;
+  --theme-yellow: #ffcc7f;
+  --theme-red: #ee6461;
+  --theme-dark-blue: #46688d;
+  --theme-blue: #4e87ab;
+  --theme-black: #323232;
+}
+
+@font-face {
+  font-family: 'Chalk';
+  src: url('/2025images/fonts/Right Chalk.ttf') format('truetype');
+}
+
 @font-face {
   font-family: 'Voting Title';
   src: url('/2025images/fonts/Extreme.ttf') format('truetype');
@@ -71,7 +85,7 @@
 
 @font-face {
   font-family: 'Handwritten';
-  src: url('/2024images/fonts/TrashHand.TTF') format('truetype');
+  src: url('/2025images/fonts/CaveatBrush-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -206,9 +220,15 @@
 /*}*/
 
 html {
-  background: #71431C url('/2025images/palm-background.webp') center;
+  background: #E88A3A url('/2025images/wallpaper-1.webp') center;
   background-size: cover;
-  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+@media (orientation: portrait) {
+  html {
+    background-attachment: fixed;
+  }
 }
 
 body {

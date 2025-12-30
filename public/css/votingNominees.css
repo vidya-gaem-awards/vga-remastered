@@ -7,13 +7,13 @@
   transition: 0.3s linear all;
   background-color: #2C2B31;
   background-position: center;
-
-  font-family: "Western Body";
+  font-family: "Handwritten", sans-serif;
+  font-size: large;
 }
 
 .flavorText {
   display: none;
-  background-color: #F0961F;
+  background-color: var(--theme-white);
   position: absolute;
   top: 0;
   left: 0;
@@ -22,10 +22,14 @@
   height: auto;
   font-size: 1.08em;
   line-height: 15px;
-  color: black;
+  color: var(--theme-black);
   z-index: 40;
   user-select: all;
   text-align: center;
+}
+
+.name-highlight {
+  color: var(--theme-yellow);
 }
 
 .flavorText.shortFlavorText{
@@ -82,7 +86,7 @@
   width: 100%;
   z-index: 300;
   background: rgba(50, 50, 50, 0.5);
-  padding: 0 3px 5px 3px;
+  padding: 2px 3px;
   /*border-top: 1px dotted #c2c5b5;*/
   text-shadow: 1px 1px black;
 }
@@ -91,7 +95,7 @@
   /*font-family: 'X-Files', sans-serif;*/
   text-align: center;
   font-weight: normal;
-  color: white;
+  color: var(--theme-yellow);
   font-size: 1.1em;
   line-height: 1.1;
 }
@@ -101,7 +105,7 @@
   margin-top: 0px;
   font-size: 0.7em;
   line-height: 1.1;
-  color: white;
+  color: var(--theme-white);
 }
 
 .nomineeSubtitle a {
