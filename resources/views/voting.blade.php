@@ -366,7 +366,7 @@
             <div id="containerInventory">
                 <div class="inventory-title-area">
                     <div class="title-text">
-                        Your Caravan
+                        Your Treasure
                     </div>
                 </div>
 
@@ -412,9 +412,14 @@
                     </div>
                 </div>
 
-                <div class="plank-background">
-                    <div class="plank-inner-border"></div>
-                </div>
+                <div class="rattan-edge-left"></div>
+                <div class="rattan-edge-right"></div>
+                <div class="rattan-edge-top"></div>
+                <div class="rattan-edge-bottom"></div>
+                <div class="rattan-corner-1"></div>
+                <div class="rattan-corner-2"></div>
+                <div class="rattan-corner-3"></div>
+                <div class="rattan-corner-4"></div>
             </div>
 
             <form id="cheat-code" style="margin-bottom: 10px; margin-top: 20px; display: none;">
