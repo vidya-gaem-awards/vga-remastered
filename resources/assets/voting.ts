@@ -962,7 +962,7 @@ jQuery(function () {
         bottomAreaContainer.addClass("locked");
         bottomAreaContainer.find('.your-votes').text("Your Votes");
         submitButton.addClass('iVoted').attr('title', 'Saved!');
-        $('#submitReminder').text('Your votes have been submitted.');
+        // $('#submitReminder').text('Your votes have been submitted.');
 
         previousLockExists = true;
         votesChanged = false;
@@ -973,7 +973,7 @@ jQuery(function () {
     function unlockVotes() {
         $(".voteBox").removeClass("locked");
         $(".aNominee").removeClass("locked");
-        $('#submitReminder').text('Don\'t forget to click on "Submit" below to save your votes!');
+        // $('#submitReminder').text('Don\'t forget to click on "Submit" below to save your votes!');
 
         bottomAreaContainer.removeClass("locked");
         bottomAreaContainer.find('.your-votes').text("Your Votes (unsaved)");
@@ -1388,4 +1388,43 @@ jQuery(function () {
         '/v/GA regrettably presents',
     ];
     $('#title-decoration').html(titleDeco[getRandomInt(0, titleDeco.length)]);
+
+    // prompt user if they leave without saving
+    {
+        window.addEventListener('beforeunload', (e: BeforeUnloadEvent) => {
+            if(votesChanged){
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+        
+        const leaveModal : HTMLElement = document.querySelector('#leave-modal') as HTMLElement;
+        const continueEl : HTMLAnchorElement = leaveModal.querySelector("#leave-continue") as HTMLAnchorElement;
+        const cancelEl : HTMLAnchorElement = leaveModal.querySelector("#leave-cancel") as HTMLAnchorElement;
+
+        function hideLeaveDialog() {
+            leaveModal.classList.add("hidden");
+        }
+        cancelEl.onclick = hideLeaveDialog;
+        leaveModal.onclick = hideLeaveDialog;
+
+        // intercept page leaves via anchor tags, show confirmation modal
+        document.addEventListener('click', (e: MouseEvent) => {
+            if(!votesChanged) return;
+
+            const target = e.target as Element; 
+            if(target == continueEl) { // user has manually requested to leave
+                votesChanged = false;
+                return;
+            }
+
+            // show leave modal
+            const link = target.closest('a');
+            if (link && link.href) {
+                continueEl.href = link.href;
+                leaveModal.classList.remove("hidden");
+                e.preventDefault(); 
+            }
+        });
+    }
 });

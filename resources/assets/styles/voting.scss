@@ -327,7 +327,7 @@ header {
   position: relative;
   text-align: left;
   padding: 40px 70px;
-  background-image: url("/2025images/chalkboard.jpg");
+  background-image: url("/2025images/chalkboard.webp");
   background-size: 100%;
   color: white;
   font-family: "Chalk", sans-serif;
@@ -346,7 +346,7 @@ header {
       position: absolute;
       right: -30px;
       line-height: 1;
-      font-size: 0.8em;
+      font-size: 0.45em;
       top: 20px;
     }
   }
@@ -413,43 +413,7 @@ header {
     color: #e1e1e1;
   }
 
-  .bamboo {
-    background-image: url('/2025images/bamboo-loop.webp');
-    background-size: 300px 100%;
-    position: absolute;
-
-    &.left-border {
-      left: 0;
-      top: 0px;
-      height: 100%;
-      width: 20px;
-      background-image: url('/2025images/bamboo-loop-vert.webp');
-      background-size: 100% 300px;
-    }
-
-    &.right-border {
-      right: 0;
-      top: 0px;
-      height: 100%;
-      width: 20px;
-      background-image: url('/2025images/bamboo-loop-vert.webp');
-      background-size: 100% 300px;
-    }
-
-    &.top-border {
-      left: 0px;
-      top: -10px;
-      height: 20px;
-      width: 100%;
-    }
-
-    &.bottom-border {
-      left: 0px;
-      bottom: -10px;
-      height: 20px;
-      width: 100%;
-    }
-  }
+  
 
   .window-decoration-1 {
     background-image: url(/2025images/hibiscus.webp);
@@ -2367,5 +2331,90 @@ a:hover {
 
   #lootbox-editor-css-status {
     cursor: pointer;
+  }
+}
+
+.leave-modal {
+  background-color: #00000080;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh; 
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  .leave-modal-body {
+    position: relative;
+    width: 420px;
+    background-image: url("/2025images/chalkboard.webp");
+    background-size: 100% 100%;
+    margin: 30vh auto 0 auto;
+    text-align: center;
+    padding: 40px 50px;
+
+    color: white;
+    font-family: "Handwritten", sans-serif;
+    font-size: 20px;
+
+    .leave-modal-title {
+      font-family: "Chalk", sans-serif;
+      font-size: 2.0em;
+    }
+
+    .leave-modal-options {
+      display: flex;
+      justify-content: space-evenly;
+
+      a:hover{
+        text-decoration: none;
+        cursor: grab;
+      }
+      a {
+        color: var(--theme-yellow);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.bamboo {
+  background-image: url('/2025images/bamboo-loop.webp');
+  background-size: 300px 100%;
+  position: absolute;
+
+  &.left-border {
+    left: 0;
+    top: 0px;
+    height: 100%;
+    width: 20px;
+    background-image: url('/2025images/bamboo-loop-vert.webp');
+    background-size: 100% 300px;
+  }
+
+  &.right-border {
+    right: 0;
+    top: 0px;
+    height: 100%;
+    width: 20px;
+    background-image: url('/2025images/bamboo-loop-vert.webp');
+    background-size: 100% 300px;
+  }
+
+  &.top-border {
+    left: 0px;
+    top: -10px;
+    height: 20px;
+    width: 100%;
+  }
+
+  &.bottom-border {
+    left: 0px;
+    bottom: -10px;
+    height: 20px;
+    width: 100%;
   }
 }

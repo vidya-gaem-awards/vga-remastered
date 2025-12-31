@@ -231,10 +231,6 @@
                                 </div>
                             @endif
                         </div>
-
-                        @if($votingOpen)
-                            <h3 style="text-align: center; margin-top: 10px; margin-bottom: 10px;" id="submitReminder">Click "Submit" after voting to save your choices!</h3>
-                        @endif
                     </div>
 
                     @if($votingOpen)
@@ -309,7 +305,7 @@
 
         <div id="containerAwards" class="awards-list"> 
             <div class="your-votes" style="margin-bottom: 10px;">
-                AWARD MENU
+                AWARDS 
                 @if($votingOpen)
                     <div class="votes-left">{{ $awards->filter(fn ($a) => !$allVotes[$a->id])->count() }} left </div>
                 @endif
@@ -556,5 +552,28 @@
                 </div>
             @endif
         </div>
+    @endif
+
+    @if($votingOpen)
+    <div class="leave-modal hidden" id="leave-modal">
+        <div class="leave-modal-body">
+            <div class="leave-modal-title">
+                WARNING
+            </div>
+            <p>
+                You have unsaved/unsent votes. If you leave the page without submitting them, they will be lost.
+                If you leave now and lose your votes then complain to us, your mother will die in her sleep.
+            </p>
+            <div class="leave-modal-options">
+                <a id="leave-cancel">Cancel</a>
+                <a id="leave-continue">Leave</a>
+            </div>
+
+            <div class="bamboo left-border"></div>
+            <div class="bamboo right-border"></div>
+            <div class="bamboo top-border"></div>
+            <div class="bamboo bottom-border"></div>
+        </div>
+    </div>
     @endif
 @endsection
