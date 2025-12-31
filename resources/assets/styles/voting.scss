@@ -827,22 +827,107 @@ header {
 $card-width: 350px;
 
 #containerInventory {
+  background-image: url("/2025images/wicker-seamless.webp");
+  background-size: 200px;
+  position: relative;
+  margin: 4px;
+  padding: 20px;
 
   .inventory-title-area {
-    text-shadow: none;
+    text-shadow: 0 0 20px black,0 0 20px black,0 0 30px black;
     //height: 0px;
     width: 100%;
 
-    text-transform: uppercase;
     margin-left: auto;
     margin-right: auto;
     width: fit-content;
     font-size: 46px;
-    padding: 0px 20px;
-    font-family: "Western Title", sans-serif;
+    padding: 0 20px;
+    font-family: "Cursive Decoration", sans-serif;
     text-align: center;
-    mix-blend-mode: color-dodge;
-    color: rgba(153, 153, 153, 0.9607843137);
+    color: var(--theme-yellow);
+  }
+
+  .rattan-edge-left {
+    position: absolute;
+    top: 0px;
+    left: -5px;
+    height: 100%;
+    width: 20px;
+    background-image: url("/2025images/rattan-edge.webp");
+    background-size: 100% auto;
+    transform: scaleX(-1);
+  }
+
+  .rattan-edge-top {
+    position: absolute;
+    top: -2px;
+    left: 0px;
+    height: 20px;
+    width: 100%;
+    background-image: url("/2025images/rattan-edge-horizontal.webp");
+    background-size: auto 100%;
+    transform: scaleY(-1);
+  }
+  
+  .rattan-edge-right {
+    position: absolute;
+    top: 0px;
+    right: -5px;
+    height: 100%;
+    width: 20px;
+    background-image: url("/2025images/rattan-edge.webp");
+    background-size: 100% auto;
+  }
+
+  .rattan-edge-bottom {
+    position: absolute;
+    bottom: -2px;
+    left: 0px;
+    height: 20px;
+    width: 100%;
+    background-image: url("/2025images/rattan-edge-horizontal.webp");
+    background-size: auto 100%;
+  }
+
+  .rattan-corner-1 {
+    position: absolute;
+    top: -1px;
+    left: -4px;
+    background-image: url("/2025images/rattan-corner.webp");
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    transform: scaleX(-1) scaleY(-1);
+  }
+  .rattan-corner-2 {
+    position: absolute;
+    top: -1px;
+    right: -4px;
+    background-image: url("/2025images/rattan-corner.webp");
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    transform: scaleY(-1);
+  }
+  .rattan-corner-3 {
+    position: absolute;
+    bottom: -1px;
+    left: -4px;
+    background-image: url("/2025images/rattan-corner.webp");
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    transform: scaleX(-1);
+  }
+  .rattan-corner-4 {
+    position: absolute;
+    bottom: -1px;
+    right: -4px;
+    background-image: url("/2025images/rattan-corner.webp");
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
   }
 }
 
@@ -907,7 +992,7 @@ $card-width: 350px;
 }
 
 .inventory-item {
-  font-family: "Young Heart", sans-serif;
+  font-family: "Cursive Decoration", sans-serif;
   //width: $card-width;
   //min-height: calc($card-width * 7 / 5);
   z-index: 2;
@@ -995,7 +1080,7 @@ $card-width: 350px;
 
   text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black;
   color: white;
-  font-size: 1.2em;
+  font-size: 1.4em;
 }
 
 .item-quantity {
@@ -2371,7 +2456,7 @@ a:hover {
 
       a:hover{
         text-decoration: none;
-        cursor: grab;
+        cursor: pointer;
       }
       a {
         color: var(--theme-yellow);
