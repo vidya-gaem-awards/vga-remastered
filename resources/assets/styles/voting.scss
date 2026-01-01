@@ -170,6 +170,30 @@ header {
   background-image: url("/2025images/blank-postcard.webp");
   padding: 30px;
   // box-shadow: inset 0px 0px 40px #44321a;
+  position: relative;
+
+  .postcard-inlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+
+    .image-inlay {
+      width: 100%;
+      height: 100%;
+      background-image: url("/2025images/postcard-art.webp");
+      background-size: cover;
+    }
+
+    .white-inlay {
+      width: 100%;
+      height: 100%;
+      background-color: #ffffffa3;
+      background-size: cover;
+    }
+  }
 }
 
 .buddy-helper-1{
@@ -208,11 +232,7 @@ header {
   margin: 0 auto 20px;
   font-family: 'Voting Title', sans-serif;
   text-transform: capitalize;
-  background-image: url(/2025images/postcard-art.webp);
-  background-size: cover;
-  background-position-x: center;
   padding-top: 60px;
-
 
   //background-position: center top;
   //background-repeat: no-repeat;
@@ -348,6 +368,7 @@ header {
       line-height: 1;
       font-size: 0.45em;
       top: 20px;
+      text-transform: uppercase;
     }
   }
 
@@ -451,7 +472,6 @@ header {
 .your-votes {
   text-align: center;
   font-size: 40px;
-  text-transform: uppercase;
 
   @media (max-width: 768px) {
     font-size: 30px;
@@ -1371,18 +1391,19 @@ body {
 }
 
 .voteGroup .number {
-  color: white;
+  color: var(--theme-white);
   text-shadow: 2px 2px black;
   //width: 210px;
   //height: 20px;
   //line-height: 20px;
   //font-weight: normal;
-  font-family: "Olde Title", sans-serif;
+  font-family: "Cursive Decoration", sans-serif;
   font-size: 30px;
   position: absolute;
   left: 18px;
   top: 5px;
   z-index: 1;
+  transform: rorate(-20deg);
 }
 
 .voteGroup:hover .number {
@@ -1500,7 +1521,7 @@ body {
 
 .voteDropArea {
   padding: 5px;
-  min-height: 185px;
+  min-height: 350px;
   //border: 2px dashed #c2c5b5;
   transition: 0.2s all;
   //margin-left: -15px;
@@ -1513,16 +1534,13 @@ body {
                                             }
 
 .your-votes-container {
-  margin-top: 20px;
   padding: 12px 8px;
   position: relative;
   overflow: clip;
 
   .your-votes-title-area {
-    color: white;
     text-shadow: none;
     width: 100%;
-    text-transform: uppercase;
 
     .your-votes {
       margin-left: auto;
@@ -1531,11 +1549,10 @@ body {
       font-size: 46px;
       padding: 0 20px;
       position: relative;
-      font-family: "Western Title";
+      font-family: "Cursive Decoration";
+      color: var(--theme-red);
       min-height: 20px;
       text-align: center;
-      color: rgba(153, 153, 153, 0.9607843137);
-      mix-blend-mode: color-dodge;
     }
   }
 
@@ -1551,6 +1568,7 @@ body {
   //background: rgba(255, 255, 255, 0.5);
   position: relative;
   z-index: 0;
+  min-height: 450px;
 }
 
 #dragLimit.dragActive #voteDropAreaBottom {
@@ -1595,10 +1613,9 @@ body {
   justify-content: center;
   position: relative;
   align-items: center;
-  font-family: "Western Title", sans-serif;
+  font-family: "Handwritten", sans-serif;
   font-size: 36px;
-  color: rgba(153, 153, 153, 0.9607843137);
-  mix-blend-mode: color-dodge;
+  color: var(--theme-red);
 
   @media (max-width: 768px) {
     flex-direction: column;
