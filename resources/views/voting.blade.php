@@ -97,6 +97,7 @@
         <div id="wrapper">
             @if($award)
                 <div class="poster-background">
+                    <div class="postcard-inlay"><div class="image-inlay"></div></div>
                     <div class="award-header">
                         <a href="{{ route('voting', $prevAward) }}" class="navigation left"></a>
                         <div class="award-name-container">
@@ -210,6 +211,7 @@
                     </div>
 
                     <div id="dragLimit" class="poster-background">
+                        <div class="postcard-inlay"><div class="white-inlay"></div></div>
                         <div class="your-votes-container">
                             <div class="your-votes-title-area">
                                 <div class="your-votes">
