@@ -118,6 +118,12 @@ input, select, textarea {
     letter-spacing: -2px;
 }
 
+.board-subtitle {
+    font-size: small;
+    text-align: center;
+    margin-top: -15px;
+}
+
 .board-subheader {
     color: #AE1216;
     text-align: center;

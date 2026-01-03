@@ -29,10 +29,12 @@ class Permission extends Model
         'LEVEL_3' => 'Gives edit access to a number of things',
         'LEVEL_4' => 'Gives access to everything except for critical areas',
         'LEVEL_5' => 'Gives complete admin access',
+        'ips_partial' => 'View redacted IP addresses',
         'items_manage' => 'View and manage the lootbox rewards',
         'items_manage_special' => 'Gives access to special lootbox functionality',
         'news_manage' => 'Add and delete news items',
         'news_view_user' => 'View the user that posted each news item',
+        'nominations_analyse' => 'Analyse user nominations',
         'nominations_edit' => 'Edit official nominees',
         'nominations_view' => 'View nominees and user nominations',
         'profile_edit_details' => 'Edit user details',
@@ -53,7 +55,7 @@ class Permission extends Model
         'LEVEL_1' => ['add_video_game', 'awards_feedback', 'nominations_view', 'tasks_view', 'view_unfinished_pages', 'voting_view'],
         'LEVEL_2' => ['LEVEL_1', 'awards_secret', 'items_manage', 'news_view_user', 'profile_view', 'tasks_nominees', 'voting_code'],
         'LEVEL_3' => ['LEVEL_2', 'autocompleter_edit', 'awards_edit', 'nominations_edit', 'profile_edit_notes'],
-        'LEVEL_4' => ['LEVEL_3', 'add_user', 'arg_manage', 'audit_log_view', 'news_manage', 'profile_edit_details', 'referrers_view', 'voting_results', 'adverts_manage', 'items_manage_special', 'bypass_mime_checks'],
+        'LEVEL_4' => ['LEVEL_3', 'add_user', 'arg_manage', 'audit_log_view', 'news_manage', 'profile_edit_details', 'referrers_view', 'voting_results', 'adverts_manage', 'items_manage_special', 'bypass_mime_checks', 'nominations_analyse'],
         'LEVEL_5' => ['LEVEL_4', 'awards_delete', 'edit_config', 'profile_edit_groups']
     ];
 

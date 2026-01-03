@@ -114,6 +114,10 @@ Route::can('nominations_edit')->group(function () {
     Route::post('/nominees/{award}/group/unlink', [NomineeController::class, 'nominationGroupUnlink'])->name('nominations.group.unlink');
 });
 
+Route::can('nominations_analyse')->group(function () {
+    Route::get('/nominees/{award}/group/{userNominationGroup}', [NomineeController::class, 'analyse'])->name('nominations.group.analyse')->scopeBindings();
+});
+
 Route::can('autocompleter_edit')->group(function () {
     Route::get('/awards/autocompleters', [AutocompleterController::class, 'index'])->name('autocompleters');
     Route::post('/awards/autocompleters/ajax', [AutocompleterController::class, 'ajax'])->name('autocompleters.ajax');
