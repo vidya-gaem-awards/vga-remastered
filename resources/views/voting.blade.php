@@ -210,30 +210,30 @@
 
                     </div>
 
-                    <div id="dragLimit" class="poster-background">
-                        <div class="postcard-inlay"><div class="white-inlay"></div></div>
-                        <div class="your-votes-container">
-                            <div class="your-votes-title-area">
-                                <div class="your-votes">
-                                    Your Votes
+                    @if($votingOpen)
+                        <div id="dragLimit" class="poster-background">
+                            <div class="postcard-inlay"><div class="white-inlay"></div></div>
+                            <div class="your-votes-container">
+                                <div class="your-votes-title-area">
+                                    <div class="your-votes">
+                                        Your Votes
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flexContainer voteDropArea" id="voteDropAreaBottom"></div>
+                                <div class="flexContainer voteDropArea" id="voteDropAreaBottom"></div>
 
-                            @if($votingOpen)
-                                <div class="buttons" style="margin-top: 10px;">
-                                    <div id="btnResetVotes" class="btnSubmit" title="Reset Votes">
-                                        <div class="hoverArrow">&gt;</div>
-                                        <div id="resetText">RESET</div>
+                                    <div class="buttons" style="margin-top: 10px;">
+                                        <div id="btnResetVotes" class="btnSubmit" title="Reset Votes">
+                                            <div class="hoverArrow">&gt;</div>
+                                            <div id="resetText">RESET</div>
+                                        </div>
+                                        <div id="btnLockVotes" class="btnSubmit" title="Submit Votes">
+                                            <div class="hoverArrow">&gt;</div>
+                                            <div id="submitText">SEND</div>
+                                        </div>
                                     </div>
-                                    <div id="btnLockVotes" class="btnSubmit" title="Submit Votes">
-                                        <div class="hoverArrow">&gt;</div>
-                                        <div id="submitText">SEND</div>
-                                    </div>
-                                </div>
-                            @endif
+                            </div>
                         </div>
-                    </div>
+                    @endif
 
                     @if($votingOpen)
                         <div class="buttons" style="margin-top: 10px;">

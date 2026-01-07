@@ -45,7 +45,7 @@ header {
     justify-content: space-between;
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 690px) {
     justify-content: center;
   }
 
@@ -58,7 +58,7 @@ header {
       margin-right: 20px;
     }
 
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 690px) {
       display: none;
     }
 
@@ -70,13 +70,19 @@ header {
 
   .right-container {
     width: 50%;
-    height: 100%;
     padding: 27px 80px;
     position: relative;
     background-image: url("/2025images/surfboard.webp");
-    height: 140px;
     background-size: 100% 100%;
     display: table;
+
+    @media screen and (max-width: 870px) {
+      width: 70%;
+    }
+
+    @media screen and (max-width: 690px) {
+      width: 100%;
+    }
 
     .title-text {
       font-family: "Cursive Decoration",sans-serif;
@@ -87,6 +93,7 @@ header {
       mix-blend-mode: color-burn;
       display: table-cell;
       vertical-align: middle;
+      height: 90px;
 
       .line-1 {
         //text-transform: uppercase;
@@ -99,7 +106,7 @@ header {
 
       // when we move to two lines of header text
       @media screen and (max-width: 1200px) {
-        font-size: 50px;
+        font-size: 40px;
       }
 
 
@@ -866,7 +873,7 @@ $card-width: 350px;
     bottom: 10px;
     background-image: url("/2025images/wicker-seamless.webp");
     background-size: 200px;
-    z-index: -1;
+    z-index: -1; 
   }
 
   .inventory-title-area {
@@ -1466,6 +1473,19 @@ body {
                                               //border: 1px dashed #f29823;
                                               background: rgba(0, 0, 0, 0.2);
                                             }
+
+#dragLimit {
+  margin-top: 60px;
+}
+
+#voteDropAreaBottom:empty::before{
+  content: "Dear /v/GA's,\A\AI didn't play shit this year.\APut my votes towards Concord. \A\ALots of love,     ←lie\A Anon";
+  color: var(--theme-black);
+  font-family: "Handwritten", sans-serif;
+  white-space: pre;
+  display: block;
+  font-size: 1.5em;
+}
 
 .your-votes-container {
   padding: 12px 8px;
