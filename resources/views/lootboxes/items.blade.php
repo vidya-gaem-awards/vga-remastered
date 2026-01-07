@@ -1,3 +1,4 @@
+
 @extends('base.standard')
 
 @section('title', 'Lootbox Manager')
@@ -88,6 +89,7 @@
 
 @pushonce('js')
     <script src='{{ asset('js/utils.js') }}'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -337,6 +339,451 @@
         $('.alert-danger .btn-close').on('click', function () {
             $(this).parent().fadeOut("fast");
         });
+
+        // zip import/export contents
+        {
+            $("#import-prev").on("click", (e) => {
+                if(importIndex > 0)
+                    loadImportIndex(importIndex - 1);
+            });
+
+            $("#import-next").on("click", (e) => {
+                if(importIndex < importItems.length - 1)
+                    loadImportIndex(importIndex + 1);
+            });
+
+            $("#import-item-name").on("change", (e) => {
+                const selection = e.target.value;
+                loadImportId(selection);
+            });
+
+            $("#import-music-file").on("change", (e) => {
+                importFiles.music = e.target.value;
+                console.log(importFiles);
+            });
+
+            const importCountEl = $("#import-item-count");
+            const importNameEl = $("#import-item-name");
+            let importIndex = 0;
+            let importItems = [];
+            let zip = null;
+
+            // load a zip file containing lootbox data for importing
+            $("#import-input").on('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                $("#import-deets").css("display", "initial");
+                $("#import-footer").css("display", "flex");
+
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const arrayBuffer = event.target.result;
+
+                    try {
+                        // load item data from zip
+                        zip = await JSZip.loadAsync(arrayBuffer);
+                        importItems = await Promise.all(
+                            Object.keys(zip.files)
+                                .filter(x => x.endsWith("settings.json"))
+                                .map(async fileName => {
+                                    const file = zip.file(fileName);
+                                    const content = await file.async('text');
+                                    return JSON.parse(content);
+                                })
+                        );
+                        importIndex = 0; 
+                        if (importItems.length == 0){
+                            importCountEl.text("No items loaded");
+                            importNameEl.html("");
+                        }
+                        else {
+                            importNameEl.html("");
+                            let idx = 0;
+                            for (const item of importItems) {
+                                importNameEl.append(new Option(item.name, item.slug));
+                                idx++;
+                            }
+                            await loadImportIndex(0);
+                            console.log("Loaded items", importItems);
+                        }
+                    } catch (err) {
+                        console.error('Error reading ZIP file:', err);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            });
+
+            // load a lootbox into the gui based on ordered index
+            async function loadImportIndex(index){
+                if (!Number.isInteger(index)) throw new Error (`item index was invalid: ${index}`);
+                if (index < 0 || index > importItems.length - 1) throw new Error (`item index was out of bounds: ${index}`);
+
+                importCountEl.text(`${index + 1}/${importItems.length}`);
+                importNameEl.prop('selectedIndex', index);
+                importIndex = index;
+
+                await loadImport(importItems[index]);
+            }
+
+            // load a lootbox into the gui based on id/slug
+            async function loadImportId(id){
+                const itemData = importItems.find(x => x.slug == id);
+                if (!itemData) throw new Error (`item id did not exist: ${id}`);
+                
+                const index = importItems.indexOf(itemData);
+                importCountEl.text(`${index + 1}/${importItems.length}`);
+                importNameEl.prop('selectedIndex', index);
+
+                await loadImport(itemData);
+            }
+
+            // load a file from the previously loaded lootbox zip file into the gui import form
+            let importFiles = null;
+            async function loadImport(item){
+                $("#import-status-fail").hide();
+                $("#import-status-success").hide();
+
+                importFiles = {
+                    image: null,
+                    music: null,
+                    additionalFiles: []
+                };
+
+                verifyImportSlug(item.slug);
+
+                $('#import-slug').val(item.slug);
+                $('#import-name').val(item.name);
+
+                // load image
+                {
+                    const importImgEl = $("#import-img");
+                    const imagePath = `${item.slug}/${item.image}`;
+                    const imageData = await zip.file(imagePath).async('uint8array');
+
+                    const extension = imagePath.split('.').pop().toLowerCase();
+                    const mimeType = getMimeFromExtension(extension);
+                    const blob = new Blob([imageData], { type: mimeType });
+                    const file = new File([blob], item.image, { type: mimeType });
+                    importImgEl.attr('src', URL.createObjectURL(blob));
+                    importFiles.image = file;
+                }
+                
+                // load music 
+                if(item.music){
+                    const musicPath = `${item.slug}/${item.music}`;
+                    const musicData = await zip.file(musicPath).async('uint8array');
+
+                    const extension = musicPath.split('.').pop().toLowerCase();
+                    const mimeType = getMimeFromExtension(extension);
+
+                    const blob = new Blob([musicData], { type: mimeType });
+                    const file = new File([blob], item.music, { type: mimeType });
+
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    $("#import-music-file")[0].files = dataTransfer.files;
+
+                    importFiles.music = file;
+                } else {
+                    $("#import-music-file")[0].files = new DataTransfer().files;
+                }
+
+                // load css
+                if (item.CSS) {
+                    const cssEl = $("#import-css-body");
+                    cssEl.val(item.CSS);
+                    cssEl.css("display", "initial");
+                    $("#import-css-enable").prop("checked", true);
+
+                    $("#import-extra-files-root").show();
+
+                    const extraFilesFolder = await zip.folder(`${item.slug}/additionalFiles`);
+                    if (extraFilesFolder) {
+                        extraFilesFolder.forEach((name, file) => {
+                            if (file.dir) return;
+
+                            $("#import-additional-files").html("");
+                            file.async('uint8array').then(uint8array => {
+                                const extension = name.split('.').pop().toLowerCase();
+                                const mimeType = getMimeFromExtension(extension);
+                                const blob = new Blob([uint8array], {type: mimeType});
+                                const file = new File([blob], name, {type: mimeType});
+                                importFiles.additionalFiles.push(file);
+                                $("#import-additional-files").append(`<li class="list-group-item">${name}</li>`);
+                            });
+                        });
+                    }
+                }
+                else {
+                    $("#import-extra-files-root").css("display", "none");
+                    $("#import-css-body").css("display", "none");
+                    $("#import-css-enable").prop("checked", false);
+                    $("#import-additional-files").html("<li class='list-group-item' style='height: 38px;'></li>");
+                }
+
+                if (item.tier) {
+                    $("#import-tier").val(item.tier);
+                }
+
+                if (item.dropChanceModifier?.absolute) {
+                    $("#import-chance-enable").prop("checked", true);
+
+                    const typeEl = $("#import-chance-type");
+                    typeEl.val("absolute");
+                    typeEl.css("display", "initial");
+
+                    const valueEl = $("#import-chance-value");
+                    valueEl.val(item.dropChanceModifier.absolute);
+                    valueEl.css("display", "initial");
+                }
+                else if (item.dropChanceModifier?.relative) {
+                    $("#import-chance-enable").prop("checked", true);
+
+                    const typeEl = $("#import-chance-type");
+                    typeEl.val("relative");
+                    typeEl.css("display", "initial");
+
+                    const valueEl = $("#import-chance-value");
+                    valueEl.val(item.dropChanceModifier.relative);
+                    valueEl.css("display", "initial");
+                }
+                else {
+                    $("#import-chance-value").css("display", "none");
+                    $("#import-chance-type").css("display", "none");
+                    $("#import-chance-enable").prop("checked", false);
+                }
+
+
+            }
+
+            // submit/upload an imported lootbox
+            let currentlyImporting = false;
+            $("#import-submit").on('click', function (event) {
+                event.preventDefault();
+
+                if (currentlyImporting) {
+                    return;
+                }
+                currentlyImporting = true;
+
+                // Show the "please wait" message and disable the submit button
+                $("#import-status-fail").hide();
+                $("#import-status-success").hide();
+                $("#import-status-sending").show();
+                $('#import-submit').attr("disabled", "disabled");
+
+                // Send through the AJAX request
+                let importForm = new FormData();
+                // required fields
+                importForm.append("action", "new");
+                importForm.append("slug", $('#import-slug').val());
+                importForm.append("name", $('#import-name').val());
+                importForm.append("tier", $('#import-tier').val());
+                importForm.append("image", importFiles.image);
+
+                // drop chance override
+                if ($("#import-chance-enable").prop("checked")) {
+                    importForm.append("drop-chance-override", "on");
+                    const dropChanceVal = $("#import-chance-value").val();
+
+                    switch($("#import-chance-type").val()){
+                        case "absolute":
+                            importForm.append("drop-chance-absolute", dropChanceVal);
+                            break;
+                        case "relative":
+                            importForm.append("drop-chance-relative", dropChanceVal);
+                            break;
+                        default:
+                            console.error("invalid drop chance override type");
+                    }
+                }
+
+                // custom css
+                if ($("#import-css-enable").prop("checked")) {
+                    importForm.append("css", "on");
+                    importForm.append("cssContents", $("#import-css-body").val());
+
+                    if (importFiles.additionalFiles.length > 0) {
+                        importForm.append("additionalFiles", "on");
+                        for (const file of importFiles.additionalFiles){
+                            importForm.append("additionalFile[]", file);
+                        }
+                    }
+                }
+
+                if (importFiles.music) {
+                    importForm.append("music", "on");
+                    importForm.append("musicFile", importFiles.music);
+                }
+
+                console.log("importing lootbox", importForm);
+
+                $.ajax({
+                    url: "{{ route('lootbox.items.post') }}",
+                    type: 'POST',
+                    data: importForm,
+                    contentType: false,
+                    processData: false
+                }).done(function (response) {
+                    $("#import-status-sending").hide();
+                    $('#import-submit').removeAttr("disabled");
+                    currentlyImporting = false;
+                    if (response.success) {
+                        $("#import-status-success").show();
+                    } else {
+                        $("#import-status-fail").show();
+                        console.error("error while importing lootbox", response);
+                    }
+                }, "json");
+            });
+
+
+            // warn if slug is already in use
+            $("#import-slug").on('change', function (event) {
+                verifyImportSlug(event.target.value);
+            });
+            function verifyImportSlug(value){
+                const existingSlugItem = Object.values(items).find(x => x.slug == value)
+                setElementVisible("import-slug-warn", existingSlugItem);
+                return existingSlugItem == null;
+            }
+
+            // show/hide an element
+            function setElementVisible(elementId, visibility){
+                const element = $(`#${elementId}`);
+                if(visibility){
+                    element.show();
+                } else {
+                    element.hide();
+                }
+            }
+
+            // returns the mime type for common image, audio, video and font formats
+            function getMimeFromExtension(extension) {
+                const ext = extension.replace('.', '').toLowerCase();
+
+                const mimeMap = {
+                    'jpg': 'image/jpeg',
+                    'jpeg': 'image/jpeg',
+                    'png': 'image/png',
+                    'gif': 'image/gif',
+                    'webp': 'image/webp',
+                    'svg': 'image/svg+xml',
+                    'ico': 'image/x-icon',
+
+                    'mp3': 'audio/mpeg',
+                    'wav': 'audio/wav',
+                    'ogg': 'audio/ogg',
+                    'oga': 'audio/ogg',
+                    'weba': 'audio/webm',
+
+                    'mp4': 'video/mp4',
+                    'webm': 'video/webm',
+                    'ogv': 'video/ogg',
+
+                    'woff': 'font/woff',
+                    'woff2': 'font/woff2',
+                    'ttf': 'font/ttf',
+                    'eot': 'application/vnd.ms-fontobject',
+                    'otf': 'font/otf'
+                };
+
+                if(mimeMap[ext]) return mimeMap[ext];
+                throw new Error("Could not find mime type for extension: " + ext);
+            }
+
+            // downloads all lootbox data, then packs and saves into a zip file
+            $("#export-all-btn").on("click", async () => {
+                const zip = new JSZip();
+
+                for await (const item of Object.values(items)){
+                    console.log("exporting item: " + item.name, item);
+                    const deets = {
+                        version: 1,
+                        slug: item.slug,
+                        name: item.name,
+                        tier: item.tier,
+                        CSS: (item.css && item.cssContents) ? item.cssContents : null,
+                        dropChanceModifier: ( item.absoluteDropChance || item.dropChance ) ? 
+                            {
+                                absolute: item.absoluteDropChance,
+                                relative: item.dropChance
+                            } : null,
+                        music: null
+                    }
+                    const folder = zip.folder(deets.slug);
+
+                    // download lootbox contents in parallel
+                    let promises = [];
+                    {
+                        // image
+                        promises.push(
+                            fetch(item.image.url)
+                                .then(response => response.blob())
+                                .then(blob => {
+                                    const extension = item.image.url.split('.').pop();
+                                    const filename = `image.${extension}`
+                                    folder.file(filename, blob, { binary: true });
+                                    deets.image = filename;
+                                })
+                        );
+
+                        // music
+                        if( item.music && item.musicFile ){
+                            promises.push(
+                                fetch(item.musicFile.url)
+                                    .then(response => response.blob())
+                                    .then(blob => {
+                                        const extension = item.musicFile.url.split('.').pop();
+                                        const filename = `music.${extension}`;
+                                        folder.file(filename, blob, { binary: true });
+                                        deets.music = filename;
+                                    })
+                            );
+                        }
+
+                        // additional files
+                        if( item.additionalFiles?.length ){
+                            const additionalFilesDir = folder.folder('additionalFiles');
+                            for( const file of item.additionalFiles ){
+                                promises.push(
+                                    fetch(file.url)
+                                        .then(response => response.blob())
+                                        .then(blob => {
+                                            additionalFilesDir.file(item.fullFilename, blob, { binary: true });
+                                        })
+                                );
+                            }
+                        }
+                    }
+                    await Promise.all(promises);
+                    // TODO: error handling for file downloads
+
+                    folder.file("settings.json", JSON.stringify(
+                        deets, null, 2
+                    ));
+                }
+
+                // Generate the ZIP file
+                await zip.generateAsync({type: "blob"})
+                    .then(function(content) {
+                        // Create and trigger download link
+                        const url = URL.createObjectURL(content);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = "lootbox-export.zip";
+
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        // Clean up
+                        URL.revokeObjectURL(url);
+                    });
+            });
+        }
+
     </script>
 @endpushonce
 
@@ -352,6 +799,12 @@
     <div class="text-center">
         <button class="btn btn-sm btn-primary" id="new-award" type="button" data-bs-toggle="modal" data-bs-target="#dialog-edit">
             <i class="fal fa-fw fa-plus"></i> Add a new reward
+        </button>
+        <button class="btn btn-sm btn-primary" id="import-btn" type="button" data-bs-toggle="modal" data-bs-target="#dialog-import">
+            <i class="fal fa-fw fa-upload"></i> Import from zip file
+        </button>
+        <button id="export-all-btn" class="btn btn-sm btn-primary" type="button">
+            <i class="fal fa-fw fa-download"></i> Export all to zip file
         </button>
     </div>
 
@@ -563,7 +1016,7 @@
 
                         @can('items_manage_special')
                             <div class="form-group row" id="info-additionalFiles-container">
-                                <label class="col-sm-3 col-form-label">Additional files</label>
+                                <label class="col-sm-3 col-form-label">Additional Files</label>
                                 <div class="col-sm-9">
                                     <div id="info-additionalFiles-existing">
                                         <div class="input-group d-none additionalFile-existing-row mb-2">
@@ -607,6 +1060,127 @@
                         <button class="btn btn-primary" id="dialog-edit-submit" type="submit">Submit</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialog-import" class="modal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="dialog-import-header" accept=".zip">Import rewards from zip</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label" for="import-input">
+                                File
+                            </label>
+                            <div class="col-sm-9">
+                                <input type="file" id="import-input" name="lootbox-export.zip" accept=".zip" class="form-control">
+                                <small class="form-text">Use the export lootbox to zip feature to generate</small>
+                            </div>
+                        </div>
+                        <div class="form-group" id="import-deets" style="display: none;">
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span id="import-item-count" class="input-group-text">No items loaded</span>
+                                    <select class="form-select" id="import-item-name" style="flex-grow: 1;"></select>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="import-prev">◀</button>
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="import-next">▶</button>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="form-group row">
+                                <img id="import-img" style="height: 150px; object-fit: contain;"></img>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Slug</span>
+                                    <input type="text" class="form-control" id="import-slug"></input>
+                                </div>
+                                <small class="text-danger" style="display: none"; id="import-slug-warn">slug already in use!</small>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Name</span>
+                                    <input type="text" class="form-control" id="import-name"></input>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Music</span>
+                                    <input type="file" class="form-control" id="import-music-file" accept=".ogg"></input>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Custom CSS</span>
+                                    <textarea class="form-control" id="import-css-body" style="display: none; font-family:courier; font-size:12px;" rows="8"></textarea>
+                                    <div class=input-group-text>
+                                        <input 
+                                            id="import-css-enable" 
+                                            type="checkbox" 
+                                            class="form-check-input" 
+                                            onclick="
+                                                setElementVisible('import-css-body', this.checked);
+                                                setElementVisible('import-extra-files-root', this.checked);">
+                                        </input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row" id="import-extra-files-root" style="display: none;">
+                                <div class="input-group">
+                                    <span class="input-group-text">Additional files</span>
+                                    <ul class="list-group" id="import-additional-files" style="flex-grow: 1;"></ul>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Tier</span>
+                                        <select class="form-select" id="import-tier">
+                                            @foreach($tiers as $tier)
+                                            <option value="{{ $tier->id }}">{{ $tier->name }} ({{ 0 + $tier->drop_chance }})</option>
+                                            @endforeach
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="input-group">
+                                    <span class="input-group-text">Chance Override</span>
+                                        <select class="form-select" id="import-chance-type" style="display: none;">
+                                            <option value="absolute">Absolute</option>
+                                            <option value="relative">Relative (%)</option>
+                                        </select>
+                                        <input class="form-control" type="number" id="import-chance-value" style="display: none;"></input>
+                                    <div class=input-group-text>
+                                        <input 
+                                            id="import-chance-enable" 
+                                            type="checkbox" 
+                                            class="form-check-input" 
+                                            onclick="
+                                                setElementVisible('import-chance-type', this.checked); 
+                                                setElementVisible('import-chance-value', this.checked);">
+                                        </input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" id="import-footer" style="display: none;">
+                        <span id="import-status-sending" style="display: none;">
+                            <i class="far fa-circle-notch fa-spin me-1"></i> saving...&nbsp;
+                        </span>
+                        <span id="import-status-success" style="display: none;">
+                            <i class="far fa-check me-1"></i> Success&nbsp;
+                        </span>
+                        <span id="import-status-fail" style="display: none;">
+                            <i class="far fa-x me-1"></i> Error&nbsp;
+                        </span>
+                        <button class="btn btn-primary" id="import-submit" type="submit">Submit</button>
+                    </div>
             </div>
         </div>
     </div>
