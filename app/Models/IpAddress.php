@@ -15,4 +15,11 @@ class IpAddress extends Model
             'whitelisted' => 'boolean',
         ];
     }
+
+    public function getSuspiciousAttribute(): bool
+    {
+        return $this->usage_type === 'Data Center/Web Hosting/Transit'
+            || $this->abuse_score > 0
+            || $this->report_count > 0;
+    }
 }

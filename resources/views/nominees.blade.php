@@ -450,6 +450,13 @@
                                                         @endif
                                                     @endif
                                                 @endif
+                                                @if($can('nominations_analyse') && !$group->mergedInto)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('nominations.group.analyse', [$award, $group]) }}">
+                                                            <i class="fa-regular fa-magnifying-glass fa-fw"></i> Analyse nominations
+                                                        </a>
+                                                    </li>
+                                                @endif
                                             </ul>
                                         </div>
                                         @endforeach
@@ -836,9 +843,14 @@
             });
 
             $(".nomination-dropdown a").on('click', function (event) {
+                const $button = $(this);
+
+                if ($button.attr('href') !== '#') {
+                    return;
+                }
+
                 event.preventDefault();
 
-                const $button = $(this);
                 const $group = $button.closest('.nomination-container');
                 const groupId = $group.data('id');
                 const action = $button.data('action');

@@ -244,6 +244,15 @@
                         </div>
                     @endif
 
+                    @if($votingOpen)
+                        <div class="buttons" style="margin-top: 10px;">
+                            <a href="{{ route('voting', $nextAward) }}" class="navigation next" title="Next award">
+                                <img src='{{ asset('2024images/right-sign.png') }}'/>
+                                {{ $nextAward->name }}
+                            </a>
+                        </div>
+                    @endif
+
                     <div class="voteGroup placeholder" style="display: none;" id="dropPlaceholder">
                         <div class="voteBox">
                             <div class="nominee">

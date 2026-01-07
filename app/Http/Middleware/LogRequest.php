@@ -68,6 +68,7 @@ class LogRequest
             'controller' => $route?->getAction('uses') ?? '',
             'request_string' => $request->path(),
             'request_method' => $request->method(),
+            'status_code' => $response->getStatusCode(),
             'ip' => $request->ip(),
             'user_agent' => $userAgent,
             // @TODO: This has been pointless for years, all requests go to index.php

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Action;
 use App\Models\Award;
+use App\Models\IpAddress;
 use App\Models\Nominee;
 use App\Models\TableHistory;
 use App\Models\UserNomination;
@@ -15,6 +16,7 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
@@ -410,6 +412,28 @@ class NomineeController extends Controller
         return response($csv->toString(), 200, [
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename="vga-' . year() . '-user-nominations.csv"',
+        ]);
+    }
+
+    public function analyse(Award $award, UserNominationGroup $userNominationGroup): View|RedirectResponse
+    {
+        if ($award->secret && Gate::denies('awards_secret')) {
+            abort(404);
+        }
+
+        if ($userNominationGroup->mergedInto) {
+            return redirect()->route('nominations.group.analyse', [$award, $userNominationGroup->mergedInto]);
+        }
+
+        $ips = $userNominationGroup->userNominations
+            ->pluck('fuzzy_user_id', 'fuzzy_user_id')
+            ->filter(fn ($fuzzy) => str_starts_with($fuzzy, 'ip_'))
+            ->map(fn ($fuzzy) => IpAddress::where('ip', substr($fuzzy, 3))->first());
+
+        return view('nominees-analyse', [
+            'award' => $award,
+            'group' => $userNominationGroup,
+            'ips' => $ips,
         ]);
     }
 

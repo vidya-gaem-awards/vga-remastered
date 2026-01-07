@@ -147,6 +147,7 @@ class AwardController extends Controller
             }
 
             $result = AwardSuggestion::query()
+                ->whereNull('award_id')
                 ->where('fuzzy_user_id', FuzzyUser::id())
                 ->where('suggestion', $awardSuggestion)
                 ->first();
