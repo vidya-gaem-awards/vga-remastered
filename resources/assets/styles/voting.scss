@@ -445,33 +445,12 @@ header {
   
 
   .window-decoration-1 {
-    background-image: url(/2025images/hibiscus.webp);
+    background-image: url("/2025images/hibiscus 2.svg");
     position: absolute;
     top: -65px;
     left: -36px;
     width: 200px;
     height: 150px;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  .window-decoration-2 {
-    background-image: url(/2025images/coconut3.webp);
-    position: absolute;
-    top: -81px;
-    right: 123px;
-    width: 100px;
-    height: 100px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    z-index: -10;
-  }
-  .window-decoration-3 {
-    background-image: url(/2025images/coconut2.webp);
-    position: absolute;
-    top: -71px;
-    right: 50px;
-    width: 100px;
-    height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
   }
@@ -661,14 +640,16 @@ header {
   justify-content: center;
   padding-left: 10px;
   padding-right: 10px;
+  height: 140px;
 }
 
 .lootbox-image {
   position: relative;
-  top: 22px;
+  top: 0px;
   margin: auto;
-  transform: scale(2);
-  transform-origin: bottom;
+  //transform: scale(2);
+  rotate: 90deg;
+  transform-origin: center;
   image-rendering: pixelated;
 }
 
@@ -681,12 +662,24 @@ header {
   flex-wrap: wrap;
   text-align: center;
   flex-basis: 100%;
+  position: relative;
+  width: 30%;
 
   .inventory-item {
     .item-tier {
       height: auto;
     }
   }
+}
+
+.lootbox::before{
+  content: ' ';
+  width: 2px;
+  position: absolute;
+  left: 50%;
+  top: -150%;
+  bottom: 30%;
+  background: white;
 }
 
 .lootbox-title {
@@ -712,12 +705,24 @@ header {
 #rewards, .themed-modal {
   .modal-content {
     min-width: 200px;
-    background: url('/2024images/loot-background.png');
-    background-size: cover;
-    //image-rendering: pixelated;
+    background: black;
+    image-rendering: pixelated;
     border: 20px white ridge;
     border-radius: 8px;
+
+    position: relative;
+
+    .loot-water{
+      content: '';
+      background-image: url("/2025images/Water.gif");
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      bottom: 30%;
+    }
   }
+
 
   .modal-title-container {
     font-family: "NES Pixel", monospace;
@@ -758,7 +763,7 @@ header {
 #rewards {
   .modal-body {
     position: absolute;
-    bottom: 28%;
+    bottom: 38%;
     width: 100%;
   }
 
@@ -817,6 +822,8 @@ header {
   animation-duration: 1s;
   animation-name: lootboxIn;
   animation-fill-mode: forwards;
+  z-index: 2;
+  width: initial;
 }
 
 @keyframes lootboxIn {
@@ -1477,6 +1484,18 @@ body {
 
 #dragLimit {
   margin-top: 60px;
+
+  .coconut-decoration {
+    position: absolute;
+    background-image: url("/2025images/coconuts-1.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    bottom: -229px;
+    height: 230px;
+    width: 230px;
+    right: 60px;
+    z-index: 1;
+  }
 }
 
 #voteDropAreaBottom:empty::before{
@@ -2123,10 +2142,12 @@ a:hover {
   }
 
   #rewards {
+    /*
     .modal-body {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
     }
+      */
 
     .lootboxbox {
       padding-left: 0;

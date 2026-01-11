@@ -733,29 +733,29 @@ jQuery(function () {
         $('.lootbox-image').show();
 
         var lootboxes = [
-          '1.png',
-          '2.png',
-          '3.png',
-          '4.png',
-          '5.png',
-          '6.png',
-          '7.png',
-          '8.png',
-          '9.png',
-          '10.png',
-          '11.png',
+          ['mario.webp', 0, 2],
+          ['dopefish.webp', 15, 2],
+          ['ecco.gif', 10, 2],
+          ['cavestory.webp', 20, 2],
+          ['darkstalkers.webp', -20, 1],
+          ['disgaea.webp', 20, 1],
+          ['yugi.webp', 0, 1],
+          ['taiko.webp', -38, 0.5],
         ];
 
         $('.lootbox-image').each(function () {
-            $(this).attr('src', '/2024images/lootbox_sprites/' + lootboxes[getRandomInt(0, lootboxes.length)]);
+            let lootbox = lootboxes[getRandomInt(0, lootboxes.length)];
+            $(this).attr('src', '/2025images/lootbox_sprites/' + lootbox[0]);
+            $(this).css('translate', lootbox[1]);
+            $(this).css('scale', lootbox[2]);
         });
 
         var prompts = [
-            '"Stick em up!"',
-            '"Watch it, partner!"',
-            'Bandits!',
-            '"This town aint big enough for the two of us"',
-            '"Today is Friday in California"'
+            `"Whoa, a big one!"`,
+            `Something's on the line`,
+            `A bite!`,
+            `"Nothing like a good day on the water" *siiiip*`,
+            `"They fear me."`
           ];
         $('#loot-modal-flavor').text(prompts[getRandomInt(0, prompts.length)]);
 

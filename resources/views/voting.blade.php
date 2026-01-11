@@ -232,15 +232,7 @@
                                         </div>
                                     </div>
                             </div>
-                        </div>
-                    @endif
-
-                    @if($votingOpen)
-                        <div class="buttons" style="margin-top: 10px;">
-                            <a href="{{ route('voting', $nextAward) }}" class="navigation next" title="Next award">
-                                <img src='{{ asset('2024images/right-sign.png') }}'/>
-                                {{ $nextAward->name }}
-                            </a>
+                            <div class="coconut-decoration"></div>
                         </div>
                     @endif
 
@@ -433,6 +425,9 @@
             </div>
             <div class="modal-content">
                 <div class="loot-ratio-fixer"></div>
+                <div style="position: absolute; top: 0px; width: 100%; height: 20px; background: black; z-index: 3;"></div>
+                <div class="loot-water"></div>
+                <div class="loot-water" style="z-index: 2; top: 40%; filter: opacity(50%); background-position-y: -13px;"></div>
                 <div style="position: absolute; top: 0px; width: 100%; height: 100%;">
 
                     <div class="modal-body" style="text-align: center;">
@@ -473,8 +468,8 @@
 
                     <div class="modal-footer" style="text-align: center;">
                         <div class="lootbox-prompt" id="unboxButton">
-                            <div id="loot-modal-flavor">"Stick em up!"</div>
-                            <div id="shoot">▶ Shoot!</div>
+                            <div id="loot-modal-flavor">"Whoa, a big one!"</div>
+                            <div id="shoot">▶ Reel 'em in!</div>
                         </div>
                         <div id="closeRewards" style="display: none;">
                             <div data-bs-dismiss="modal">Collect drops</div><br>
