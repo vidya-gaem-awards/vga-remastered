@@ -751,7 +751,7 @@
                                     fetch(file.url)
                                         .then(response => response.blob())
                                         .then(blob => {
-                                            additionalFilesDir.file(item.fullFilename, blob, { binary: true });
+                                            additionalFilesDir.file(file.fullFilename, blob, { binary: true });
                                         })
                                 );
                             }
