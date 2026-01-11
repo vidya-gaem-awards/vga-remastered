@@ -741,6 +741,14 @@ jQuery(function () {
           ['disgaea.webp', 20, 1],
           ['yugi.webp', 0, 1],
           ['taiko.webp', -38, 0.5],
+          ['megaman.webp', 15, 1],
+          ['pokemon.webp', 10, 1],
+          ['darius.webp', -38, 1],
+          ['superblackbass.webp', 28, 2],
+          ['kirby.webp', 0, 2],
+          ['ffl2.webp', 0, 2],
+          ['coelecanth.webp', 0, 2],
+          ['zelda.webp', -28, 0.5],
         ];
 
         $('.lootbox-image').each(function () {
