@@ -747,7 +747,7 @@ jQuery(function () {
           ['superblackbass.webp', 28, 2],
           ['kirby.webp', 0, 2],
           ['ffl2.webp', 0, 2],
-          ['coelecanth.webp', 0, 2],
+          ['coalecanth.webp', 0, 1],
           ['zelda.webp', -28, 0.5],
         ];
 
