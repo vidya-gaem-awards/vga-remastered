@@ -695,8 +695,16 @@
 
             // downloads all lootbox data, then packs and saves into a zip file
             $("#export-all-btn").on("click", async () => {
+                if (!confirm(
+                    'This will download and zip all lootbox data in your machine/browser memory.\n\n' +
+                    'Ask a team member if this has already been done to avoid hammering the server and your machine.\n\n' +
+                    '2TB of DDR7 9999GHz RAM is recommended for this operation.\n\n' +
+                    'Continue?'
+                )) return;
+
                 const zip = new JSZip();
 
+                let anyFailures = false;
                 for await (const item of Object.values(items)){
                     console.log("exporting item: " + item.name, item);
                     const deets = {
@@ -720,12 +728,22 @@
                         // image
                         promises.push(
                             fetch(item.image.url)
-                                .then(response => response.blob())
+                                .then(response => {
+                                    if(response.ok) return response.blob();
+                                    throw new Error(`Failed to fetch file. HTTP response ${response.status}`);
+                                })
                                 .then(blob => {
                                     const extension = item.image.url.split('.').pop();
                                     const filename = `image.${extension}`
                                     folder.file(filename, blob, { binary: true });
                                     deets.image = filename;
+                                })
+                                .catch(error => {
+                                    console.error(
+                                        `Error downloading image for lootbox: ${item.name}\n`,
+                                        error
+                                    );
+                                    anyFailures = true;
                                 })
                         );
 
@@ -733,12 +751,22 @@
                         if( item.music && item.musicFile ){
                             promises.push(
                                 fetch(item.musicFile.url)
-                                    .then(response => response.blob())
+                                    .then(response => {
+                                        if(response.ok) return response.blob();
+                                        throw new Error(`Failed to fetch file. HTTP response ${response.status}`);
+                                    })
                                     .then(blob => {
                                         const extension = item.musicFile.url.split('.').pop();
                                         const filename = `music.${extension}`;
                                         folder.file(filename, blob, { binary: true });
                                         deets.music = filename;
+                                    })
+                                    .catch(error => {
+                                        console.error(
+                                            `Error downloading music for lootbox: ${item.name}\n`,
+                                            error
+                                        );
+                                        anyFailures = true;
                                     })
                             );
                         }
@@ -746,19 +774,29 @@
                         // additional files
                         if( item.additionalFiles?.length ){
                             const additionalFilesDir = folder.folder('additionalFiles');
-                            for( const file of item.additionalFiles ){
+                            for( const extraFile of item.additionalFiles ){
                                 promises.push(
-                                    fetch(file.url)
-                                        .then(response => response.blob())
+                                    fetch(extraFile.url)
+                                        .then(response => {
+                                            if(response.ok) return response.blob();
+                                            throw new Error(`Failed to fetch file. HTTP response ${response.status}`);
+                                        })
                                         .then(blob => {
-                                            additionalFilesDir.file(item.fullFilename, blob, { binary: true });
+                                            additionalFilesDir.file(extraFile.fullFilename, blob, { binary: true });
+                                        })
+                                        .catch(error => {
+                                            console.error(
+                                                `Error downloading additional file for lootbox: ${item.name}\n`,
+                                                error
+                                            );
+                                            anyFailures = true;
                                         })
                                 );
                             }
                         }
                     }
+
                     await Promise.all(promises);
-                    // TODO: error handling for file downloads
 
                     folder.file("settings.json", JSON.stringify(
                         deets, null, 2
@@ -781,6 +819,10 @@
                         // Clean up
                         URL.revokeObjectURL(url);
                     });
+
+                if (anyFailures) {
+                    alert("Some errors occurred while downloading lootbox contents. See console log for details");
+                }
             });
         }
 
