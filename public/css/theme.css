@@ -220,14 +220,15 @@
 /*}*/
 
 html {
-  background: #E88A3A url('/2025images/wallpaper-1.webp') center;
+  background: #5fbdfa url('/2025images/wallpaper-9.webp') center;
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-@media (orientation: portrait) {
+@media screen and (min-width: 1920px) and (min-aspect-ratio: 16.5/9 ) {
   html {
-    background-attachment: fixed;
+    background-size: clamp(1920px, 100vw, 2560px) auto;
   }
 }
 
