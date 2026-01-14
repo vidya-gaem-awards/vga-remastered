@@ -22,6 +22,36 @@
     @vite('resources/assets/voting.ts')
 @endpushonce
 
+@if(!$award)
+    @pushonce('js')
+        <script>
+            const isMobile = /mobi|android|iphone|ipad|ipod/i.test(navigator.userAgent);
+            if (isMobile) {
+                const wrap = document.createElement('div');
+                wrap.className = 'mobileMeme';
+
+                const img = document.createElement('img');
+                img.src = '/2025images/phonepost.jpg'
+
+                const top = document.createElement('div');
+                top.className = 'mobileMeme__top';
+                top.textContent = 'PHONEPOSTER';
+
+                const bottom = document.createElement('div');
+                bottom.className = 'mobileMeme__bottom';
+                bottom.textContent = 'DETECTED';
+
+                wrap.append(img, top, bottom);
+                document.body.appendChild(wrap);
+
+                // fade out, then remove
+                    setTimeout(() => wrap.classList.add('mobileMeme--fade'), 1500);
+                wrap.addEventListener('transitionend', () => wrap.remove(), { once: true });
+            }
+        </script>
+    @endpushonce
+@endif
+
 @section('body_attr', 'id="voting-page"')
 
 @section('head')
@@ -84,7 +114,7 @@
         <header>
             <a class="logo" href="{{ route('index') }}">
                 <picture>
-                    <img src="{{ asset('2025images/vga_logo.webp') }}">
+                    <img src="{{ asset('2025images/vga_logo_2.webp') }}">
                 </picture>
             </a>
             <div class="right-container">
@@ -234,6 +264,13 @@
                             </div>
                             <div class="coconut-decoration"></div>
                         </div>
+
+                        <div class="buttons" style="margin-top: 10px;">
+                            <a href="{{ route('voting', $nextAward) }}" class="navigation next" title="Next award">
+                                <img src='{{ asset('2024images/right-sign.png') }}'/>
+                                {{ $nextAward->name }}
+                            </a>
+                        </div>
                     @endif
 
                     <div class="voteGroup placeholder" style="display: none;" id="dropPlaceholder">
@@ -247,30 +284,36 @@
             @else
                 <div id="startMessage" class="poster-background">
                     @if($votingNotYetOpen || $votingOpen)
-                        <div class="wanted-title">
-                            <h2>ALL VIDYALANTEES WANTED</h2>
-                            <h3>$0,000,000 REWARD</h3>
+                        <div class="start-header">
+                            <div style="background-image: url('/2025images/vga_logo.webp');width: 340px;background-size: contain;background-repeat: no-repeat;"></div>
+                            <div>
+                                <div style="margin: auto;width: fit-content;font-size: 40px;">Aloha from the 2025 /v/GAs</div>
+                                <div style="margin: auto;width: fit-content;font-size: 30px;text-align: center;">Have a relaxing visit during our voting season</div>
+                                <div style="margin: auto;width: fit-content;font-size: 18px;text-align: center;padding-top: 20px;">No spaghetti to be stowed. $80 fee. </div>
+                            </div>
                         </div>
                         <hr/>
                         <h1 style="text-align: center;">HOW TO VOTE</h1>
-                        <div style="margin-top: 5px; margin-bottom: 15px;" class="virgin-chad">
-                            <img src="{{ asset('img/virgin.png') }}"/>
-                            <div>
-                                <strong>The Varmint Voice</strong><br/>
-                                click on the nominee you want to win, then hit submit.
-                            </div>
-                        </div>
-                        <div class="virgin-chad">
-                            <img src="{{ asset('img/chad.png') }}"/>
-                            <div>
-                                <strong>The Chief Choice</strong><br/>
-                                click on multiple nominees in the order you want them to win.
-                            </div>
-                        </div>
                         <p style="padding-top: 30px;">
                             Click on the nominee you want to win most first, followed by the nominee you want to win second, etc.<br/>
                             <b>You can preference as many or as few nominees as you want.</b>
                         </p>
+                        <div class="virgin-chad" style="display: flex;gap: 30px;padding: 10px 0;">
+                            <div style="margin-top: 5px; margin-bottom: 15px;">
+                                <img src="https://vga-remastered.lndo.site/img/virgin.png">
+                                <span>
+                                    <strong>The Virgin Vote</strong><br>
+                                    click on the nominee you want to win, then hit submit.
+                                </span>
+                            </div>
+                            <div>
+                                <img src="https://vga-remastered.lndo.site/img/chad.png">
+                                <span>
+                                    <strong>The Chad Choice</strong><br>
+                                    click on multiple nominees in the order you want them to win.
+                                </span>
+                            </div>
+                        </div>
                     @endif
 
                     @if($votingNotYetOpen)

@@ -38,7 +38,7 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 6px;
   height: 140px;
 
   @media screen and (max-width: 1000px) {
@@ -822,8 +822,11 @@ header {
   animation-duration: 1s;
   animation-name: lootboxIn;
   animation-fill-mode: forwards;
+
+  // these styles added just for 2025 fish bits. Feel free to remove next year
   z-index: 2;
   width: initial;
+  bottom: 40px;
 }
 
 @keyframes lootboxIn {
@@ -1597,7 +1600,7 @@ body {
 }
 
 .buttons .navigation {
-  color: brown;
+  color: var(--theme-black);
   text-transform: uppercase;
   padding: 0px 60px 0px 20px;
   position: relative;
@@ -1866,12 +1869,19 @@ a:hover {
 
 /* Instruction page (appears when no awards are selected) */
 #startMessage {
-  max-width: 880px;
+  max-width: 1050px;
   margin: 0 auto;
   margin-bottom: 25px;
   color: black;
   font-family: "Handwritten", sans-serif;
+  font-size: 20px;
   padding: 60px;
+
+  .start-header {
+    @media screen and (min-width: 850px)  {
+      display: flex;
+    }
+  }
 
   img {
     filter: sepia();
@@ -1882,30 +1892,16 @@ a:hover {
     line-height: 1;
     div {
       display: inline-block;
-      font-size: 1.5em;
+      font-size: 1.2em;
       vertical-align: middle;
     }
     img {
-      display: inline-block;
       filter: sepia();
       mix-blend-mode: color-burn;
-      width: 80px;
-      margin-right: 5px
-    }
-  }
-
-  .wanted-title {
-    font-family: "Western Title", serif;
-    text-transform: capitalize;
-    text-align: center;
-
-    h2 {
-      font-size: 7em;
-      font-weight: initial;
-      line-height: 1em;
-      @media (max-width: 768px) {
-          font-size: 4.8em;
-      }
+      width: auto;
+      height: 80px;
+      margin-right: 5px;
+      float: left;
     }
   }
 
@@ -2495,4 +2491,41 @@ a:hover {
     height: 20px;
     width: 100%;
   }
+}
+
+.mobileMeme {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 1;
+  height: fit-content;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: opacity 1.5s linear;
+
+  img { 
+    width: 100vw;
+    height: auto;
+    object-fit: contain;
+  }
+  @media screen and (min-aspect-ratio: 485/273 ) {
+    width: auto;
+    height: 100vh;
+  }
+
+  &__top,
+  &__bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font: 2rem Impact, sans-serif;
+    color: white;
+    text-shadow: 4px 4px 0 #000;
+    font-size: clamp(1.5rem, 4vw, 4rem);
+  }
+  &__top { top: 0; }
+  &__bottom { bottom: 0; }
+
+  &--fade { opacity: 0; }
 }
