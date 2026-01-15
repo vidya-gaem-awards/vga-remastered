@@ -287,8 +287,8 @@
                         <div class="start-header">
                             <div style="background-image: url('/2025images/vga_logo.webp');width: 340px;background-size: contain;background-repeat: no-repeat;"></div>
                             <div>
-                                <div style="margin: auto;width: fit-content;font-size: 40px;">Aloha from the 2025 /v/GAs</div>
-                                <div style="margin: auto;width: fit-content;font-size: 30px;text-align: center;">Have a relaxing visit during our voting season</div>
+                                <div style="margin: auto;width: fit-content;font-size: 40px;text-align: center; line-height: 100%; padding-bottom: 15px;">Aloha from the 2025 <span style="white-space: nowrap;">/v/GAs</span></div>
+                                <div style="margin: auto;width: fit-content;font-size: 30px;text-align: center; line-height: 100%;">Have a relaxing visit during our voting season</div>
                                 <div style="margin: auto;width: fit-content;font-size: 18px;text-align: center;padding-top: 20px;">No spaghetti to be stowed. $80 fee. </div>
                             </div>
                         </div>
@@ -300,14 +300,14 @@
                         </p>
                         <div class="virgin-chad" style="display: flex;gap: 30px;padding: 10px 0;">
                             <div style="margin-top: 5px; margin-bottom: 15px;">
-                                <img src="https://vga-remastered.lndo.site/img/virgin.png">
+                                <img src="/img/virgin.png">
                                 <span>
                                     <strong>The Virgin Vote</strong><br>
                                     click on the nominee you want to win, then hit submit.
                                 </span>
                             </div>
                             <div>
-                                <img src="https://vga-remastered.lndo.site/img/chad.png">
+                                <img src="/img/chad.png">
                                 <span>
                                     <strong>The Chad Choice</strong><br>
                                     click on multiple nominees in the order you want them to win.
@@ -469,6 +469,8 @@
             <div class="modal-content">
                 <div class="loot-ratio-fixer"></div>
                 <div style="position: absolute; top: 0px; width: 100%; height: 20px; background: black; z-index: 3;"></div>
+                <div style="position: absolute; top: 0px; height: 100%; left: 0; background: black; z-index: 3;width: 20px;"></div>
+                <div style="position: absolute; top: 0px; height: 100%; right: 0; background: black; z-index: 3;width: 20px;"></div>
                 <div class="loot-water"></div>
                 <div class="loot-water" style="z-index: 2; top: 40%; filter: opacity(50%); background-position-y: -13px;"></div>
                 <div style="position: absolute; top: 0px; width: 100%; height: 100%;">
