@@ -21,6 +21,7 @@ services:
     image: mariadb:11.4
     container_name: database
     hostname: database
+    restart: always
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: true
     volumes:

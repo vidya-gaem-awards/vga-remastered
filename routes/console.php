@@ -1,8 +1,13 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
-use Illuminate\Support\Facades\Artisan;
+use App\Settings\AppSettings;
+use Illuminate\Support\Facades\Schedule;
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');
+Schedule::command('app:results')->everyFifteenMinutes()->when(function () {
+    $appSettings = resolve(AppSettings::class);
+
+    $votingOpen = $appSettings->isVotingOpen();
+    $votingJustClosed = $appSettings->hasVotingClosed() && $appSettings->voting_end->isAfter('-1 hour');
+
+    return $votingOpen || $votingJustClosed;
+})->withoutOverlapping();

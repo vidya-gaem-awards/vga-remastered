@@ -74,7 +74,7 @@ readonly class ResultGenerator
         Log::info('Updating IP address data');
 
         $ips = DB::query()
-            ->selectRaw('DISTINCT (v.ip) as ip')
+            ->selectRaw('DISTINCT (ip) as ip')
             ->from('votes')
             ->get();
 
@@ -83,7 +83,7 @@ readonly class ResultGenerator
         $updated = 0;
 
         foreach ($ips as $ip) {
-            $result = $this->abuseIpdb->updateIpInformation($ip['ip']);
+            $result = $this->abuseIpdb->updateIpInformation($ip->ip);
             if ($result) {
                 $updated++;
             }
@@ -298,7 +298,6 @@ readonly class ResultGenerator
 
             // Remove existing data (except old timekeys)
             Result::whereIn('time_key', [$timeKey, 'latest'])
-                ->whereNot('algorithm', 'schulze')
                 ->delete();
         }
 

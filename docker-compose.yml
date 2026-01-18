@@ -11,6 +11,14 @@ services:
   cache:
     image: redis:7
 
+  scheduler:
+    image: "ghcr.io/vidya-gaem-awards/vga-remastered:main"
+    command: [ "php", "/var/www/html/artisan", "schedule:work" ]
+    stop_signal: SIGTERM
+    healthcheck:
+      test: [ "CMD", "healthcheck-schedule" ]
+      start_period: 10s
+
 networks:
   default:
     name: caddy_net
