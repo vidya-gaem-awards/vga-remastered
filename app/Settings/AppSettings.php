@@ -100,16 +100,17 @@ class AppSettings extends Settings
 
     /**
      * @TODO: this is used in the context of start and end times, but does it really belong here?
+     * Returns a positive value when a future date is given e.g. 5 days
      */
     public static function getRelativeTimeString(CarbonInterface $date): string
     {
-        $diff = $date->diffAsCarbonInterval();
+        $diff = now()->diffAsCarbonInterval($date);
 
-        if ($diff->totalSeconds <= 120) {
+        if ($diff->abs()->totalSeconds <= 120) {
             return (int)$diff->totalSeconds . ' second' . ((int)$diff->totalSeconds === 1 ? '' : 's');
-        } elseif ($diff->totalMinutes <= 120) {
+        } elseif ($diff->abs()->totalMinutes <= 120) {
             return (int)$diff->totalMinutes . ' minutes';
-        } elseif ($diff->totalHours <= 48) {
+        } elseif ($diff->abs()->totalHours <= 48) {
             return (int)$diff->totalHours . ' hours';
         } else {
             return (int)$diff->totalDays . ' days';
