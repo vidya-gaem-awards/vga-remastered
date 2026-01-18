@@ -38,6 +38,16 @@ class Vga2024 extends Importer
 {
     protected $processed = [];
 
+    protected $settings = [
+        'only' => [Result::class],
+        'max_time' => null,
+        'ignore' => null,
+        'skip_join_tables' => true,
+        'skip_config' => true,
+    ];
+
+    protected $nomineeCache = [];
+
     protected function year(): string
     {
         return '2024';
@@ -49,11 +59,15 @@ class Vga2024 extends Importer
             $this->processTable($class);
         }
 
-        foreach (array_keys($this->getJoinTables()) as $table) {
-            $this->processJoinTable($table);
+        if ($this->settings['skip_join_tables'] !== true) {
+            foreach (array_keys($this->getJoinTables()) as $table) {
+                $this->processJoinTable($table);
+            }
         }
 
-        $this->processSettings();
+        if ($this->settings['skip_config'] !== true) {
+            $this->processSettings();
+        }
     }
 
     private function processSettings()
@@ -115,15 +129,19 @@ class Vga2024 extends Importer
 
         $mapping = $this->getTableMapping()[$class];
 
-        $time = $mapping['time'] ?? 0;
+        if (!$force) {
+            if (is_array($this->settings['only']) && !in_array($class, $this->settings['only'])) {
+                return;
+            }
 
-        if ($time > 60 && !$force && empty($mapping['yes'])) {
-            return;
+            if ($this->settings['max_time'] !== null && ($mapping['time'] ?? 0) > $this->settings['max_time']) {
+                return;
+            }
+
+            if (is_array($this->settings['ignore']) && in_array($class, $this->settings['ignore'])) {
+                return;
+            }
         }
-
-//        if ((empty($mapping['yes']) || !empty($mapping['skip'])) && !$force) {
-//            return;
-//        }
 
         $required = $mapping['required'] ?? [];
         foreach ($required as $entity) {
@@ -299,6 +317,7 @@ class Vga2024 extends Importer
                 ],
             ],
             GameRelease::class => [
+                'time' => 1,
                 'ignore' => $platformList,
                 'custom' => function ($newRecord, $oldRecord) use ($platformList) {
                     $platforms = [];
@@ -315,6 +334,7 @@ class Vga2024 extends Importer
                 },
             ],
             Template::class => [
+                'time' => 1,
                 'columns' => [
                     'last_updated' => 'created_at',
                 ],
@@ -323,15 +343,19 @@ class Vga2024 extends Importer
                 ],
             ],
             Autocompleter::class => [
+                'time' => 1,
                 'columns' => [
                     'id' => 'slug',
                 ],
             ],
             LootboxTier::class => [
+                'time' => 1,
             ],
             File::class => [
+                'time' => 1,
             ],
             Award::class => [
+                'time' => 1,
                 'required' => [
                     Autocompleter::class,
                     File::class,
@@ -342,6 +366,7 @@ class Vga2024 extends Importer
                 ],
             ],
             LootboxItem::class => [
+                'time' => 1,
                 'required' => [
                     LootboxTier::class,
                     File::class,
@@ -364,6 +389,7 @@ class Vga2024 extends Importer
                 ]
             ],
             Nominee::class => [
+                'time' => 2,
                 'required' => [
                     Award::class,
                     File::class,
@@ -373,6 +399,7 @@ class Vga2024 extends Importer
                 ]
             ],
             AwardSuggestion::class => [
+                'time' => 1,
                 'required' => [
                     Award::class,
                 ],
@@ -395,8 +422,50 @@ class Vga2024 extends Importer
                 'required' => [
                     Award::class,
                 ],
+                'custom' => function ($newRecord, $oldRecord) {
+                    $mapper = function ($slug) use ($newRecord) {
+                        if (!isset($this->nomineeCache[$newRecord['award_id']][$slug])) {
+                            $this->nomineeCache[$newRecord['award_id']][$slug] = Nominee::withoutGlobalScopes()
+                                ->where('award_id', $newRecord['award_id'])
+                                ->where('slug', $slug)
+                                ->first()
+                                ->id;
+                        }
+
+                        return $this->nomineeCache[$newRecord['award_id']][$slug];
+                    };
+
+                    $results = array_map($mapper, json_decode($oldRecord->results, true));
+
+                    $steps = json_decode($oldRecord->steps, true);
+                    $newSteps = [
+                        'pairwise' => [],
+                        'strengths' => [],
+                        'sweepPoints' => [],
+                    ];
+
+                    foreach ($steps['pairwise'] as $id1 => $comparisons) {
+                        foreach ($comparisons as $id2 => $count) {
+                            $newSteps['pairwise'][$mapper($id1)][$mapper($id2)] = $count;
+                        }
+                    }
+                    foreach ($steps['strengths'] as $id1 => $comparisons) {
+                        foreach ($comparisons as $id2 => $count) {
+                            $newSteps['strengths'][$mapper($id1)][$mapper($id2)] = $count;
+                        }
+                    }
+                    foreach ($steps['sweepPoints'] as $id1 => $points) {
+                        $newSteps['sweepPoints'][$mapper($id1)] = $points;
+                    }
+
+                    return [
+                        'results' => $results,
+                        'steps' => $newSteps
+                    ];
+                },
             ],
             User::class => [
+                'time' => 1,
                 'columns' => [
                     'special' => 'team_member',
                     'avatar' => 'avatar_url',
@@ -413,9 +482,21 @@ class Vga2024 extends Importer
                     'timestamp' => 'created_at',
                     'number' => 'voting_group',
                 ],
-                'custom' => fn ($newRecord, $oldRecord) => [
-                    'updated_at' => $oldRecord->timestamp,
-                ],
+                'custom' => function ($newRecord, $oldRecord) {
+                    $preferences = json_decode($oldRecord->preferences, true);
+                    $preferences = array_map(function ($slug) use ($newRecord) {
+                        return Nominee::withoutGlobalScopes()
+                            ->where('award_id', $newRecord['award_id'])
+                            ->where('slug', $slug)
+                            ->first()
+                            ->id;
+                    }, $preferences);
+
+                    return [
+                        'preferences' => $preferences,
+                        'updated_at' => $oldRecord->timestamp,
+                    ];
+                },
             ],
             News::class => [
                 'required' => [
@@ -433,6 +514,7 @@ class Vga2024 extends Importer
                 ],
             ],
             Permission::class => [
+                'time' => 1,
             ],
             TableHistory::class => [
                 'time' => 4,
@@ -444,6 +526,7 @@ class Vga2024 extends Importer
                 ],
             ],
             Login::class => [
+                'time' => 1,
                 'required' => [
                     User::class,
                 ],
@@ -467,6 +550,9 @@ class Vga2024 extends Importer
                 ],
                 'columns' => [
                     'timestamp' => 'created_at',
+                ],
+                'custom' => fn ($newRecord, $oldRecord) => [
+                    'status_code' => -1,
                 ],
             ],
             Action::class => [

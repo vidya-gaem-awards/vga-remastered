@@ -70,10 +70,9 @@
                             @if($nominee1->id === $nominee2->id)
                                 <td>---</td>
                             @else
-                                {{-- @TODO: use nominee slugs or IDs? --}}
-                                <td title="{{ $pairwise[$award->id][$nominee1->slug][$nominee2->slug] }} vs {{ $pairwise[$award->id][$nominee2->slug][$nominee1->slug] }}"
-                                    class="{{ $pairwise[$award->id][$nominee1->slug][$nominee2->slug] > $pairwise[$award->id][$nominee2->slug][$nominee1->slug] ? 'better' : 'worse' }}">
-                                    {{ $pairwise[$award->id][$nominee1->slug][$nominee2->slug] }}
+                                <td title="{{ $pairwise[$award->id][$nominee1->id][$nominee2->id] }} vs {{ $pairwise[$award->id][$nominee2->id][$nominee1->id] }}"
+                                    class="{{ $pairwise[$award->id][$nominee1->id][$nominee2->id] > $pairwise[$award->id][$nominee2->id][$nominee1->id] ? 'better' : 'worse' }}">
+                                    {{ $pairwise[$award->id][$nominee1->id][$nominee2->id] }}
                                 </td>
                            @endif
                         @endforeach

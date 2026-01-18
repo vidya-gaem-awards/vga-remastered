@@ -42,12 +42,10 @@ class ResultController extends Controller
                 continue;
             }
 
-            // @TODO: slug/ID
-            $winners[$award->id] = $award->nominees()->where('slug', $rankings[0])->first();
+            $winners[$award->id] = $award->nominees()->where('id', $rankings[0])->first();
 
             foreach ($rankings as $key => &$value) {
-                // @TODO: slug/ID
-                $nominee = $award->nominees()->where('slug', $value)->first();
+                $nominee = $award->nominees()->where('id', $value)->first();
                 $output = '<span class="rank">#' . ($key + 1) . '</span>&nbsp;';
 
                 if ($nominee) {
@@ -158,9 +156,7 @@ class ResultController extends Controller
         /** @var Award $award */
         foreach ($awards as $award) {
             foreach ($award->nominees as $nominee) {
-                // @TODO: backwards compatibility measure. Need to pick one and only one to use
                 $nominees[$award->id][$nominee->id] = $nominee;
-                $nominees[$award->id][$nominee->slug] = $nominee;
             }
             foreach ($award->results as $result) {
                 if ($result->time_key !== 'latest') {
@@ -256,8 +252,7 @@ class ResultController extends Controller
             'award' => $award,
             'resultHistory' => $resultHistory,
             'nomineeColours' => $nomineeColours,
-            // @TODO: slug vs ID issue again
-            'nominees' => $award->nominees->keyBy('slug'),
+            'nominees' => $award->nominees->keyBy('id'),
         ]);
     }
 }

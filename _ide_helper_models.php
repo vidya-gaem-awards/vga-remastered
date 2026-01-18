@@ -290,6 +290,7 @@ namespace App\Models{
  * @property int $report_count
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read bool $suspicious
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|IpAddress query()
