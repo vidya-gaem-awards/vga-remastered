@@ -141,6 +141,8 @@ function resetCSS() {
     $('#lootbox-editor-css-status').addClass('bg-secondary').removeClass('bg-success');
     $('#lootbox-editor-css-status input[type=checkbox]').prop('checked', false);
     $('#lootbox-editor-css-status .label').text('Inactive');
+
+    localStorageRemove('activeCSS');
 }
 
 function resetMusic() {
