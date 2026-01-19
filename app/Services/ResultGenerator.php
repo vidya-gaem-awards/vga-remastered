@@ -245,7 +245,7 @@ readonly class ResultGenerator
         foreach ($voters as $id => $info) {
             $count++;
 
-            Vote::where('cookie_id', $id)
+            Vote::where('cookie_id', (string)$id)
                 ->update(['voting_group' => $info['number']]);
 
             if ($count % 1000 === 0) {
