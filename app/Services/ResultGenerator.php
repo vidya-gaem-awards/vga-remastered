@@ -400,7 +400,7 @@ readonly class ResultGenerator
             throw new RuntimeException('Database is in read-only mode.');
         }
 
-        $start = $this->settings->voting_start;
+        $start = $this->settings->voting_start->setTimezone('UTC');
         if (!$start) {
             throw new RuntimeException("Can't backfill without a voting start date.");
         }
