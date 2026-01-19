@@ -48,7 +48,7 @@ readonly class ResultGenerator
         '21-kiwifarms' => 8192,
         '22-4chan-ads' => 16384,
         '23-youtube' => 32768,
-        '24-4chan-no-vpns' => '(voting_group & 4 OR (voting_group & 2048 AND voting_group & 1024)) AND voting_group & 65536'
+        '24-4chan-no-vpns' => '(voting_group & 4 OR (voting_group & 2048 AND voting_group & 1024)) AND NOT voting_group & 65536'
     ];
 
 
