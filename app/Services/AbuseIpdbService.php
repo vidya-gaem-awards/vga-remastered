@@ -23,14 +23,14 @@ class AbuseIpdbService
     {
         return $this->client->get('check', [
             'ipAddress' => $ipAddress,
-        ])->json('data');
+        ])->throw()->json('data');
     }
 
     public function updateIpInformation(string $ipAddress, bool $force = false): bool
     {
         $ip = IpAddress::where('ip', $ipAddress)->first();
 
-        if ($ip && $ip->updated_at->isAfter('-7 days') && !$force) {
+        if ($ip && $ip->updated_at->isAfter('-28 days') && !$force) {
             return false;
         }
 
