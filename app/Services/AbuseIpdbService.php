@@ -49,6 +49,9 @@ class AbuseIpdbService
         $ip->report_count = $info['totalReports'];
         $ip->domain = $info['domain'];
         $ip->save();
+        // Always update the timestamp, even if nothing actually changed, since we use it as a
+        // 'last checked' date rather than 'last updated'
+        $ip->touch();
 
         return true;
     }
