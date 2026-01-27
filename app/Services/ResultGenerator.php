@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Throwable;
+
+use function Sentry\captureException;
 
 readonly class ResultGenerator
 {
@@ -60,7 +63,11 @@ readonly class ResultGenerator
 
     public function performFullUpdate(): void
     {
-        $this->updateIpAddresses();
+        try {
+            $this->updateIpAddresses();
+        } catch (Throwable $t){
+            captureException($t);
+        }
         $this->updateVotingGroups();
         $this->updateResults();
     }
