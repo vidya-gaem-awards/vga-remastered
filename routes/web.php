@@ -142,6 +142,8 @@ Route::can('voting_view')->group(function () {
     Route::get('/vote/code', [VotingController::class, 'codeViewer'])->name('voting.code-viewer');
 });
 
+Route::redirect('/vote/dbMO', '/vote/v/dbMO');
+
 Route::can('conditionally_public|voting_view')->group(function () {
     Route::get('/vote/{award?}', [VotingController::class, 'index'])->name('voting');
     Route::post('/vote/{award}', [VotingController::class, 'post'])->name('voting.post');
