@@ -97,10 +97,12 @@
         }
 
         .embed-container {
-            margin-left: -10px;
-            margin-right: -10px;
-            padding: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
+            padding: 15px 30px;
             position: relative;
+            max-width: 1100px;
         }
 
         .embed-container .legend {
@@ -177,12 +179,20 @@
 
         .dateInfo > div {
             display: inline-block;
-            color: rgba(153, 153, 153, 0.9607843137);
-            font-family: Western Title, serif;
-            mix-blend-mode: color-dodge;
-            text-transform: uppercase;
-            font-size: 50px;
+            color: var(--theme-black);
+            font-family: "Cursive Decoration", serif;
+            font-size: 30px;
             text-align: center;
+            width: contain;
+        }
+
+        @media (max-width: 1080px) {
+            .dateInfo {
+                display: initial;
+            }
+            .dateInfo > div {
+                display: block;
+            }
         }
 
         img {
@@ -230,12 +240,12 @@
     <script type="text/javascript">
         @if($streamDate)
             const kickoff = luxon.DateTime.fromISO("{{ $streamDate->format('c') }}");
-            document.getElementById("local-time").innerHTML = kickoff.toLocaleString(luxon.DateTime.DATETIME_FULL);
+            document.getElementById("local-time").innerText = 
+                "See you on " + kickoff.toLocaleString(luxon.DateTime.DATETIME_FULL);
 
             // This could probably be replaced by moment.js
             function updateCountdown() {
-                const diff = kicko
-                ff.diffNow().valueOf();
+                const diff = kickoff.diffNow().valueOf();
 
                 document.getElementById("countdown").innerHTML = humanizeDuration(diff, { units: ["d", "h", "m"], round: true });
             }
@@ -249,18 +259,15 @@
 <div class="center-container">
     @include('common.header')
 
-    <div class="embed-container">
+    <div class="embed-container poster-background">
 
         <div class="dateInfo">
             <div id="local-time">Coming soon</div>
             <div id="countdown"></div>
         </div>
 
-        <iframe width="100%" height="600" src="https://www.youtube.com/embed/v3bVF9QHnXk" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <iframe width="100%" height="600" src="https://www.youtube.com/embed/Sw4jzGUZiZ0" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
-        <div class="plank-background">
-            <div class="plank-inner-border"></div>
-        </div>
     </div>
 
 </div>
