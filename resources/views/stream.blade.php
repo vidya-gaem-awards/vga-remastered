@@ -100,22 +100,7 @@
 
 @section('body')
     <div class="center-container">
-
-        <header>
-            <a class="logo" href="/">
-                <img src="/2024images/logo1-long.png">
-            </a>
-
-            <div class="right-container">
-                <div class="title-text">
-                    {{ year() }} Vidya Game Awards
-                </div>
-
-                <div class="plank-background">
-                    <div class="plank-inner-border"></div>
-                </div>
-            </div>
-        </header>
+        @include('common.header')
 
         <div class="poster-background">
             <div class="award-header">

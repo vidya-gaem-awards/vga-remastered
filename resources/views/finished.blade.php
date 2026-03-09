@@ -231,22 +231,7 @@
 
 @section('body')
     <div class="center-container">
-
-        <header>
-            <a class="logo" href="/">
-                <img src="/2024images/logo1-long.png">
-            </a>
-
-            <div class="right-container">
-                <div class="title-text">
-                    {{ year() }} Vidya Game Awards
-                </div>
-
-                <div class="plank-background">
-                    <div class="plank-inner-border"></div>
-                </div>
-            </div>
-        </header>
+        @include('common.header')
 
         <div class="poster-background">
             <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="600" src="https://www.youtube.com/embed/mXMcq_LJ8ro" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
