@@ -90,10 +90,30 @@
         /* spacing tweaks due to shared css */
         .award-header {
             margin-bottom: 0px;
+            padding-top: 0px;
         }
         .poster-background {
             padding: 30px;
         }
+        .award-header .award-name-container {
+            max-width: initial;
+            color: var(--theme-red)
+        }
+        .award-header .award-name-fill {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            color: var(--theme-yellow);
+            font-family: "Voting Title Filled", sans-serif;
+            z-index: 1;
+            width: 100%;
+        }
+        .award-name {
+            z-index: 2;
+            width: 100%;
+        }
+
+
 
     </style>
 @endpushonce
@@ -106,6 +126,7 @@
             <div class="award-header">
                 <div class="award-name-container">
                     <div class="award-name">Live on four platforms</div>
+                    <div class="award-name award-name-fill">Live on four platforms</div>
                 </div>
             </div>
 
