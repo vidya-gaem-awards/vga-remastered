@@ -141,8 +141,8 @@
                     <a href="https://kick.com/vidyagaemawards" target="_blank">
                         <button class="btn btn-default">Kick</button>
                     </a>
-                    <a href="https://twitter.com/vidyagaemawards" target="_blank">
-                        <button class="btn btn-default">Twitter</button>
+                    <a href="https://x.com/vidyagaemawards" target="_blank">
+                        <button class="btn btn-default">X</button>
                     </a>
                     <a href="https://discord.gg/4e8JQB4" target="_blank">
                         <button class="btn btn-default">Chat on Discord</button>
