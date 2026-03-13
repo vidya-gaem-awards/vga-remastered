@@ -78,7 +78,7 @@
 
         .track-title {
             transition: all 0.2s ease-in-out;
-            color: #bf0000;
+            color: var(--theme-yellow);
             /*font-family: "OratorStd", "Courier New", serif;*/
             margin-left: 10px;
         }
@@ -107,19 +107,34 @@
             margin-top: 80px;
             margin-bottom: 80px;
             padding: 30px 30px;
-            mask-image: url(/2024images/paper-edge-mask-tall.png);
-            -webkit-mask-image: url(/2024images/paper-edge-mask-tall.png);
         }
 
         .table {
             background: initial;
+            color: var(--theme-white);
+        }
+
+        .chalkboard {
+            border-image-source: url("/2025images/bamboo-border.webp");
+            border-image-slice: 70;
+            border-image-width: 26px; 
+            border-image-outset: 10px;
+            border-image-repeat: round round; 
+            background-image: url("/2025images/chalkboard.webp");
+            background-size: 100% 100%;
+            padding:40px;
+            color: white;
+        }
+
+        .artist {
+            color: white;
         }
 
     </style>
 @endpushonce
 
 @section('content')
-    <div class="center-container poster-background">
+    <div class="center-container chalkboard">
         @empty($tracks)
             <p class="text-center soon">Full tracklist coming soon</p>
         @else
