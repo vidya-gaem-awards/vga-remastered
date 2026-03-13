@@ -226,6 +226,14 @@
             top: 8px;
         }
 
+        .thankyou {
+            width: 100%;
+            font-family: "Cursive Decoration", serif;
+            color: var(--theme-black);
+            text-align: center;
+            font-size: 33px;
+        }
+
     </style>
 @endpushonce
 
@@ -234,17 +242,15 @@
         @include('common.header')
 
         <div class="poster-background">
-            <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="600" src="https://www.youtube.com/embed/mXMcq_LJ8ro" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
-
-            <div class="title" style="margin-top: 20px;">
-                <h1>The {{ year() }} Vidya Gaem Awards</h1>
-                <h2 id="countdown">
-                    Thanks for watching!
-                </h2>
+            <div class="thankyou">
+                Thanks for staying, and see you next year!
             </div>
+
+            <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="600" src="https://www.youtube.com/embed/fQZo-9Doq4Q" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+
             <div class="links main">
                 <div class="link special">
-                    <a href="https://www.youtube.com/watch?v=mXMcq_LJ8ro">
+                    <a href="https://www.youtube.com/watch?v=fQZo-9Doq4Q">
                         <button class="btn btn-default">Watch on YouTube</button>
                     </a>
                 </div>
