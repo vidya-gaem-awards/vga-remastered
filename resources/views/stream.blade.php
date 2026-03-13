@@ -106,11 +106,16 @@
             color: var(--theme-yellow);
             font-family: "Voting Title Filled", sans-serif;
             z-index: 1;
-            width: 100%;
+            width: calc(100% - 40px);
+            margin-left: 20px;
+            margin-right: 20px;
         }
         .award-name {
             z-index: 2;
             width: 100%;
+        }
+        .btn-default {
+            margin-top: 4px;
         }
 
 
