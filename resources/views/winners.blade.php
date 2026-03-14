@@ -125,6 +125,7 @@
 
         .winner-name-container {
             font-family: "Cursive Decoration", sans-serif;
+            text-shadow: #0004 1px 1px;
             padding: 10px 15px;
             height: auto;
             min-height: 120px;
@@ -134,7 +135,7 @@
             user-select: all;
             text-align: center;
             margin-top: 20px;
-            line-height: 1.2;
+            line-height: 1;
 
             position: relative;
         }
@@ -150,7 +151,7 @@
 
         .winner-name {
             font-size: 40px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
             /*font-size: 30px;*/
             /*color: white;*/
             /*font-family: "Trajan Pro 3", serif;*/
@@ -372,10 +373,13 @@
 
         .award-header {
             margin-bottom: 20px !important;
+            padding-top: 0px;
         }
 
         .award-header .award-name-container {
             max-width: initial;
+            padding: 0;
+            position: relative;
         }
         .award-name-container .award-name-fill {
             position: absolute;
@@ -385,21 +389,17 @@
             font-family: "Voting Title Filled", sans-serif;
             z-index: 1;
             width: 100%;
-            margin-left: 20px;
-            margin-right: 20px;
+            margin: 0;
+            line-height: 78%;
         }
         .award-name-container .award-name-outline {
             z-index: 2;
             color: var(--theme-red);
-            position: absolute;
-            top: 0;
-            left: 0px;
             width: 100%;
-            margin-left: 20px;
-            margin-right: 20px;
+            margin: 0;
+            line-height: 78%;
         }
         .award-subtitle {
-            padding-top: 10px;
         }
 
         .window-body {
