@@ -88,8 +88,7 @@
         }
 
         .second-placer {
-            mix-blend-mode: color-burn;
-            color: #371a1a;
+            color: var(--theme-black);
         }
 
         .zig {
@@ -125,14 +124,12 @@
         }
 
         .winner-name-container {
-            font-family: "Western Title", serif;
-            text-transform: uppercase;
+            font-family: "Cursive Decoration", sans-serif;
             padding: 10px 15px;
             height: auto;
             min-height: 120px;
             font-size: .8em;
-            color: rgba(153, 153, 153, 0.9607843137);
-            mix-blend-mode: color-dodge;
+            color: var(--theme-red);
             z-index: 40;
             user-select: all;
             text-align: center;
@@ -152,7 +149,7 @@
         }
 
         .winner-name {
-            font-size: 30px;
+            font-size: 40px;
             margin-bottom: 5px;
             /*font-size: 30px;*/
             /*color: white;*/
@@ -180,8 +177,8 @@
         }
 
         .rank {
-            font-size: 15px;
-            color: #8c5338;
+            font-size: 20px;
+            color: var(--theme-red);
             font-weight: bold;
             margin-right: 4px;
             position: relative;
@@ -368,19 +365,63 @@
             color: #fff;
             padding: 20px 40px;
             height: 100%;
+            border-left: 2px solid #4e1616a6;
+            margin-left: 15px;
+
         }
 
         .award-header {
             margin-bottom: 20px !important;
-            font-family: "Western Title", sans-serif;
-            text-transform: uppercase;
-            color: rgba(153, 153, 153, 0.9607843137);
-            mix-blend-mode: color-dodge;
+        }
+
+        .award-header .award-name-container {
+            max-width: initial;
+        }
+        .award-name-container .award-name-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--theme-yellow);
+            font-family: "Voting Title Filled", sans-serif;
+            z-index: 1;
+            width: 100%;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .award-name-container .award-name-outline {
+            z-index: 2;
+            color: var(--theme-red);
+            position: absolute;
+            top: 0;
+            left: 0px;
+            width: 100%;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .award-subtitle {
+            padding-top: 10px;
         }
 
         .window-body {
             position: relative;
             padding: 20px;
+        }
+
+        .chalkboard {
+            border-image-source: url("/2025images/bamboo-border.webp");
+            border-image-slice: 70;
+            border-image-width: 26px; 
+            border-image-outset: 10px;
+            border-image-repeat: round round; 
+            background-image: url("/2025images/chalkboard.webp");
+            background-size: 100% 100%;
+            padding:40px;
+            color: white;
+        }
+        .chalkboard h1 {
+            font-family: Chalk, sans-serif;
+            color: white;
+            text-transform: uppercase;
         }
     </style>
 @endpushonce
@@ -477,15 +518,14 @@
         @foreach($awards as $award)
         <div class="row mb-4">
             <div class="col-12">
-                <div class="window">
+                <div class="window poster-background">
                     <div class="window-body">
-                        <div class="plank-background">
-                            <div class="plank-inner-border"></div>
-                        </div>
-
                         <div class="award-header mb-0">
                             <div class="flex">
-                                <div class="award-name">{{ $award->name }}</div>
+                                <div class="award-name-container">
+                                    <div class="award-name award-name-outline">{{ $award->name }}</div>
+                                    <div class="award-name award-name-fill">{{ $award->name }}</div>
+                                </div>
                                 <div class="award-subtitle">{{ $award->subtitle }}</div>
                             </div>
                         </div>
@@ -522,7 +562,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-9">
-                                    <div class="second-placers-container poster-background">
+                                    <div class="second-placers-container">
                                         @if($results[$award->id])
                                             @foreach($results[$award->id] as $result)
                                                 <div class="second-placer">{!! $result !!}</div>
@@ -540,7 +580,7 @@
         </div>
         @endforeach
 
-        <div class="poster-background end-note">
+        <div class="end-note chalkboard">
             <div class="text-center bottom-text">
                 <h1>Would you like to know more?</h1>
             </div>
