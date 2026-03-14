@@ -155,21 +155,21 @@
                 </p>
 
                 <div class="embed-container">
-                    <div id="twitch-embed"></div>
+                    <iframe width="80%" height="540" src="https://www.youtube.com/embed/fQZo-9Doq4Q?si=Uya7mc2mX-VP8_fK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
 
                 <!-- Load the Twitch embed script -->
-                <script src="https://embed.twitch.tv/embed/v1.js"></script>
+                <!-- <script src="https://embed.twitch.tv/embed/v1.js"></script> -->
 
                 <!-- Create a Twitch.Embed object that will render within the "twitch-embed" root element. -->
-                <script type="text/javascript">
+                <!-- <script type="text/javascript">
                     new Twitch.Embed("twitch-embed", {
                         width: '100%',
                         height: 480,
                         channel: "vidyagaemawards",
                         theme: 'dark'
                     });
-                </script>
+                </script> -->
             </div>
         </div>
     </div>
