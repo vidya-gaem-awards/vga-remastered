@@ -82,15 +82,9 @@
 
         .links.bottom {
             margin-top: 15px;
-            margin-bottom: 30px;
             font-size: 25px;
 
             font-family: "Handwritten",sans-serif;
-            mix-blend-mode: color-burn;
-        }
-
-        .links.bottom a {
-            color: rgba(180, 80, 22, 0.8);
         }
 
         .link {
@@ -234,6 +228,34 @@
             font-size: 33px;
         }
 
+
+        .chalkboard {
+            border-image-source: url("/2025images/bamboo-border.webp");
+            border-image-slice: 70;
+            border-image-width: 26px; 
+            border-image-outset: 10px;
+            border-image-repeat: round round; 
+            background-image: url("/2025images/chalkboard.webp");
+            background-size: 100% 100%;
+            padding:40px;
+            color: white;
+            font-family: Handwritten,sans-serif;
+            margin: 20px;
+
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .chalkboard h1 {
+            font-family: Chalk, sans-serif;
+            color: white;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .chalkboard a {
+            color: var(--theme-yellow);
+        }
+
     </style>
 @endpushonce
 
@@ -246,8 +268,11 @@
                 Thanks for staying, and see you next year!
             </div>
 
-            <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="600" src="https://www.youtube.com/embed/fQZo-9Doq4Q" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+            <div class="embed-container" style="margin-top: 20px;"><iframe width="100%" height="550" src="https://www.youtube.com/embed/fQZo-9Doq4Q" frameborder="0" allowfullscreen="" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+        </div>
 
+        <div class="chalkboard" style="margin-top:30px;">
+            <h1>Before you leave</h1>
             <div class="links main">
                 <div class="link special">
                     <a href="https://www.youtube.com/watch?v=fQZo-9Doq4Q">
