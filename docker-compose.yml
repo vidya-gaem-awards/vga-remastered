@@ -2,7 +2,7 @@ name: vga-beta
 
 services:
   app:
-    image: "ghcr.io/vidya-gaem-awards/vga-remastered:main"
+    image: "ghcr.io/vidya-gaem-awards/vga-remastered:${IMAGE_TAG:-main}"
     environment:
       SSL_MODE: "mixed"
       AUTORUN_ENABLED: true
@@ -12,7 +12,7 @@ services:
     image: redis:7
 
   scheduler:
-    image: "ghcr.io/vidya-gaem-awards/vga-remastered:main"
+    image: "ghcr.io/vidya-gaem-awards/vga-remastered:${IMAGE_TAG:-main}"
     command: [ "php", "/var/www/html/artisan", "schedule:work" ]
     stop_signal: SIGTERM
     healthcheck:
