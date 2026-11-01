@@ -52,5 +52,8 @@ jobs:
 
       - name: Perform Docker Compose deployment
         run: |
+            # Deploy the image built from the branch selected in "Use workflow from"
+            export IMAGE_TAG="${GITHUB_REF_NAME//\//-}"
+            echo "Deploying image tag: $IMAGE_TAG"
             docker --context server compose --file docker-compose.yml --project-name ${{ inputs.environment }} pull
             docker --context server compose --file docker-compose.yml --project-name ${{ inputs.environment }} up --detach --remove-orphans --force-recreate
