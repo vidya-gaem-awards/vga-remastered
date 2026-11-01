@@ -51,65 +51,46 @@ docker compose exec database bash
 maridb
 
 CREATE USER 'user'@'%';
-GRANT ALL PRIVILEGES ON *.* TO 'clamburger'@'%' IDENTIFIED BY 'YLmeGGPOo5eRPCXSIVyvgEje';
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' IDENTIFIED BY 'YLmeGGPOo5eRPCXSIVyvgEje';
 exit
 
 mariadb-secure-installation
 ```
 
+### Setting up a new environment for a new year
+
+Create a database and set up a new database user in MariaDB. You can do this from Adminer or 
+phpMyAdmin. Give the user database-specific privileges; don't give it any global privileges.
+
+In the GitHub settings for the repo, go to Environments, and create a new environment.
+You will need to add four environment secrets. They are fairly self-explanatory, but
+you'll need to get SERVER_PRIVATE_KEY from Clamburger, as it is stored in a local KeePass database.
+
+The Caddy file at docker/server/caddy/Caddyfile needs to be updated to add the new domain, which
+means the server-level Docker Compose stack needs to be redeployed. This is very annoying but
+unfortunately unavoidable at present. See the "Deploying the server services" section above.
+
+Once that's done, deploy the application using the GitHub steps below. Finally, initialize the 
+environment using the following command:
+
+```
+docker compose -p vga-2026 exec app php artisan app:init-db
+```
+
 ## Deploying the application
 
-### Deploying to beta
+### Using GitHub
 
-First, you'll need to create a database and set up a new database user in MariaDB. You can do this
-from Adminer or phpMyAdmin.
+All commits to the repo will build an image automatically, but deploying is manual. Once the
+image is ready, run the "Deploy application" workflow from GitHub Actions.
 
-Run these commands from the root directory of the project.
+### Manually
 
-1. (Once-off) Set up your Docker context
-   ```
-   docker context create vga --docker "host=ssh://vga"
-   docker context use vga
-   ```
-2. Switch to the Docker context. (This is optional - if you don't use this, you will need to add
-   `--context vga` to all docker commands below.)
-   ```
-   docker context use vga
-   ```
-3. Create a `.env.production` file and fill it in as necessary. Use `staging` as the value for `APP_ENV`.
-4. Build the image:
-   ```
-   docker compose build --no-cache
-   ```
-5. Deploy
-   ```
-   docker compose up -d 
-   ```
-6. (Once-off) Initialize the database:
-   ```
-   docker compose exec app php artisan app:init-db
-   ```
-
-### Deploying to production
-
-Follow the same steps above, with the following changes:
-
-* In your `.env.production`, make sure the `APP_ENV` is set to production instead of staging
-  (all other variables will likely be the same)
-* In steps 5 and 6, add `-p vga-2025` after each instance of `docker compose`, like so:
-  ```
-  # Deploy
-  docker compose -p vga-2025 up -d
-  
-  # Initialize the database
-  docker compose -p vga-2025 exec app php artisan app:init-db
-  ```
-
-It's been set up like this so that if you forget to specify the project name, you'll (potentially)
-destroy beta instead of production.
+It's no longer possible to manually deploy the application. If you really need to, you'll have
+to grab the docker-compose.yml from commit 4298994a, which is the last commit before automatic
+builds were implemented. Further instructions will be in that commit's README.
 
 ### Connecting to the containers
-
 
 If you need to get into the container for whatever reason, use one of these commands:
 
@@ -118,5 +99,5 @@ If you need to get into the container for whatever reason, use one of these comm
 docker compose exec app bash
 
 # Production
-docker compose -p vga-2025 exec app bash
+docker compose -p vga-2026 exec app bash
 ```

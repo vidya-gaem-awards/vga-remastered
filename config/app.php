@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Vidya Gaem Awards'),
-    'year' => env('APP_YEAR', '2025'),
+    'year' => env('APP_YEAR', '2026'),
 
     /*
     |--------------------------------------------------------------------------

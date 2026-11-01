@@ -16,6 +16,15 @@ beta.vidyagaemawards.com {
     }
 }
 
+2026.vidyagaemawards.com {
+    reverse_proxy vga-2026-app-1:8443 {
+        transport http {
+            tls
+            tls_insecure_skip_verify
+        }
+    }
+}
+
 gex.vgas.xyz {
     reverse_proxy whoami:80
 }

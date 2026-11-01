@@ -68,7 +68,7 @@ return [
             'bucket' => env('R2_BUCKET', 'vga-remastered'),
             'endpoint' => env('R2_ENDPOINT'),
             'url' => env('R2_URL', 'https://cdn.vgas.xyz'),
-            'root' => env('R2_FOLDER', env('APP_ENV', 'local') . '/' . env('APP_YEAR', '2025')),
+            'root' => env('R2_FOLDER', env('APP_ENV', 'local') . '/' . env('APP_YEAR', '2026')),
             'use_path_style_endpoint' => true,
             'throw' => true,
         ],
