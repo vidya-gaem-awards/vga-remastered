@@ -20,8 +20,11 @@ services:
   adminer:
     type: compose
     services:
-      image: dehy/adminer
-      command: /bin/s6-svscan /etc/services.d
+      image: adminer:latest
+      command: entrypoint.sh php -S [::]:8080 -t /var/www/html
+      environment:
+        ADMINER_DEFAULT_SERVER: database
+        ADMINER_DESIGN: nette
     portforward: true
 
 proxy:
@@ -30,4 +33,4 @@ proxy:
   phpmyadmin:
     - pma.vga-remastered.lndo.site
   adminer:
-    - adminer.vga-remastered.lndo.site
+    - adminer.vga-remastered.lndo.site:8080
