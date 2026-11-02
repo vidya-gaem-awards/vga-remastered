@@ -117,9 +117,9 @@
         .chalkboard {
             border-image-source: url("/2025images/bamboo-border.webp");
             border-image-slice: 70;
-            border-image-width: 26px; 
+            border-image-width: 26px;
             border-image-outset: 10px;
-            border-image-repeat: round round; 
+            border-image-repeat: round round;
             background-image: url("/2025images/chalkboard.webp");
             background-size: 100% 100%;
             padding:40px;
@@ -135,25 +135,22 @@
 
 @section('content')
     <div class="center-container chalkboard">
-        @empty($tracks)
+        @if($sections->isEmpty())
             <p class="text-center soon">Full tracklist coming soon</p>
         @else
             <table class="table" id="track-list">
-                @foreach($preshow as $track)
-                    <tr class="{{ $loop->first ? 'line-before' : '' }}">
-                        <td></td>
-                        <td><span class="track-title">{{ $track[0] }}</span> <span class="artist">{{ $track[1] }}</span></td>
-                        <td>{{ $track[2] }}</td>
-                    </tr>
-                @endforeach
-                @foreach($tracks as $track)
-                    <tr class="{{ $loop->first ? 'line-before' : '' }}">
-                        <td>#{{ $loop->index + 1 }}</td>
-                        <td><span class="track-title">{{ $track[0] }}</span> <span class="artist">{{ $track[1] }}</span></td>
-                        <td>{{ $track[2] }}</td>
-                    </tr>
+                @foreach($sections as $section => $songs)
+                    <tbody class="song-section song-section-{{ $section }}">
+                    @foreach($songs as $song)
+                        <tr class="{{ !$loop->parent->first && $loop->first ? 'line-before' : '' }}">
+                            <td>@if($song->number)#{{ $song->number }}@endif</td>
+                            <td><span class="track-title">{{ $song->title }}</span> <span class="artist">{{ $song->artist }}</span></td>
+                            <td>{{ $song->context }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
                 @endforeach
             </table>
-        @endempty
+        @endif
     </div>
 @endsection

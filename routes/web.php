@@ -15,6 +15,7 @@ use App\Http\Controllers\NomineeController;
 use App\Http\Controllers\PeopleController;
 use App\Http\Controllers\ReferrerController;
 use App\Http\Controllers\ResultController;
+use App\Http\Controllers\SoundtrackController;
 use App\Http\Controllers\StaticController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\VideoGamesController;
@@ -195,6 +196,14 @@ Route::can('conditionally_public|view_unfinished_pages')->group(function () {
 });
 
 #
+# SOUNDTRACK
+#
+
+Route::can('conditionally_public|view_unfinished_pages')->group(function () {
+    Route::get('/soundtrack', [SoundtrackController::class, 'show'])->name('soundtrack');
+});
+
+#
 # STATIC PAGES
 #
 
@@ -204,7 +213,6 @@ Route::get('/voting/results', [StaticController::class, 'resultRedirect'])->name
 Route::get('/version', [StaticController::class, 'version'])->name('version');
 
 Route::can('conditionally_public|view_unfinished_pages')->group(function () {
-    Route::get('/soundtrack', [StaticController::class, 'soundtrack'])->name('soundtrack');
     Route::get('/credits', [StaticController::class, 'credits'])->name('credits');
     Route::get('/trailers', [StaticController::class, 'trailers'])->name('trailers');
 });
