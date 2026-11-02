@@ -348,7 +348,7 @@ return [
     |
     */
     'post_migrate' => [
-        'ide-helper:models --write-mixins',
+        'ide-helper:models --write-mixin --no-interaction',
     ],
 
 ];
