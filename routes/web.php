@@ -203,6 +203,12 @@ Route::can('conditionally_public|view_unfinished_pages')->group(function () {
     Route::get('/soundtrack', [SoundtrackController::class, 'show'])->name('soundtrack');
 });
 
+Route::can('soundtrack_manage')->group(function () {
+    Route::get('/soundtrack/manage', [SoundtrackController::class, 'manage'])->name('soundtrack.manage');
+    Route::post('/soundtrack/manage/settings', [SoundtrackController::class, 'settingsSave'])->name('soundtrack.manage.settings');
+    Route::post('/soundtrack/manage/songs', [SoundtrackController::class, 'songsSave'])->name('soundtrack.manage.songs');
+});
+
 #
 # STATIC PAGES
 #

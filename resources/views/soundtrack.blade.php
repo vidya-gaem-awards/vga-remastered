@@ -135,6 +135,32 @@
 
 @section('content')
     <div class="center-container chalkboard">
+        @if($albumArt)
+            <img src="{{ $albumArt->getUrl() }}" alt="Album art" class="img-fluid album-art d-block mx-auto mb-4">
+        @endif
+
+        @if($soundtrack->download_url)
+            <p class="download-now text-center">
+                <a href="{{ $soundtrack->download_url }}" class="btn">
+                    Download main tracks
+                    @if($soundtrack->download_size)
+                        ({{ $soundtrack->download_size }})
+                    @endif
+                </a>
+            </p>
+        @endif
+
+        @if($soundtrack->preshow_download_url)
+            <p class="text-center preshow-download">
+                <a href="{{ $soundtrack->preshow_download_url }}" class="btn">
+                    Download preshow tracks
+                    @if($soundtrack->preshow_download_size)
+                        ({{ $soundtrack->preshow_download_size }})
+                    @endif
+                </a>
+            </p>
+        @endif
+
         @if($sections->isEmpty())
             <p class="text-center soon">Full tracklist coming soon</p>
         @else

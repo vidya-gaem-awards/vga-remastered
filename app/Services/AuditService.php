@@ -63,6 +63,8 @@ class AuditService
         'nomination-group-updated' => 'Updated a user nomination group',
         'config-cache-cleared' => 'Cleared the website cache',
         'lootbox-settings-update' => 'Updated lootbox settings',
+        'soundtrack-settings-update' => 'Updated the soundtrack download links',
+        'soundtrack-songs-update' => 'Edited the soundtrack tracklist',
     ];
 
     public const array PUBLIC_ACTIONS = [
