@@ -1,0 +1,126 @@
+@use 'mixins' as *;
+
+/* Shown at /vote when no award is selected */
+.start-message {
+  max-width: 1050px;
+  margin: 0 auto 25px;
+  padding: 60px;
+  color: black;
+  font-family: var(--font-hand);
+  font-size: 20px;
+}
+
+.start-message__intro {
+  @media screen and (min-width: 850px) {
+    display: flex;
+  }
+}
+
+.start-message__logo {
+  width: 340px;
+  background-image: var(--image-start-logo);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.start-message__headline,
+.start-message__tagline,
+.start-message__fineprint {
+  margin: auto;
+  width: fit-content;
+  text-align: center;
+}
+
+.start-message__headline {
+  font-size: 40px;
+  line-height: 100%;
+  padding-bottom: 15px;
+}
+
+.start-message__tagline {
+  font-size: 30px;
+  line-height: 100%;
+}
+
+.start-message__fineprint {
+  font-size: 18px;
+  padding-top: 20px;
+}
+
+.start-message__nowrap {
+  white-space: nowrap;
+}
+
+.start-message__heading {
+  @include reset-text;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: normal;
+  color: black;
+}
+
+.start-message__subheading {
+  @include reset-text;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1.2;
+  color: black;
+}
+
+.start-message__text {
+  margin: 0 0 1rem;
+  line-height: 1.3;
+
+  &--instructions {
+    padding-top: 30px;
+  }
+}
+
+.start-message__vote-styles {
+  display: flex;
+  gap: 30px;
+  padding: 10px 0;
+  line-height: 1;
+}
+
+.vote-style {
+  font-size: 1.2em;
+
+  &--virgin {
+    margin-top: 5px;
+    margin-bottom: 15px;
+  }
+
+  @media screen and (max-width: 720px) {
+    font-size: 0.9em;
+  }
+}
+
+.vote-style__image {
+  float: left;
+  width: auto;
+  height: 80px;
+  margin-right: 5px;
+  filter: sepia();
+  mix-blend-mode: color-burn;
+
+  @media screen and (max-width: 720px) {
+    margin-right: 100%;
+    margin-left: 10px;
+  }
+}
+
+.start-message__actions {
+  text-align: center;
+}
+
+.start-message__start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 16px;
+}

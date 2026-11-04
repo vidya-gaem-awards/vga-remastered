@@ -1,0 +1,292 @@
+@use 'mixins' as *;
+
+/* Container for nominee cards: the pool inside the award poster, and the ballot under "Your Votes" */
+.nominee-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 5px;
+  min-height: 350px;
+  transition: 0.2s all;
+
+  @include mobile {
+    min-height: 100px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  &--pool:empty {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  &--ballot {
+    position: relative;
+    z-index: 0;
+    row-gap: 5px;
+    min-height: 450px;
+
+    &:empty::before {
+      content: "Dear /v/GA's,\A\AI didn't play shit this year.\APut my votes towards Concord. \A\ALots of love,     ←lie\A Anon";
+      display: block;
+      white-space: pre;
+      color: var(--theme-black);
+      font-family: var(--font-hand);
+      font-size: 1.5em;
+    }
+  }
+
+  &[data-dragging] {
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  :where(&[data-flash]) .nominee-card {
+    background: white;
+  }
+
+  :where(&[data-flash]) .nominee-card__body {
+    opacity: 0;
+  }
+}
+
+/*
+ * A single nominee. voting.ts moves these between the pool and ballot grids and
+ * keeps data-zone ("pool" or "ballot") in sync with where the card currently is.
+ */
+.nominee-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: calc(25% - 12px);
+  margin: 0 6px 7px;
+  user-select: none;
+  letter-spacing: 0.25px;
+  transition: 0.3s linear all;
+
+  @media screen and (max-width: 1100px) {
+    width: calc(100% / 3 - 10px);
+  }
+
+  @include mobile {
+    width: 100%;
+    flex-basis: 100%;
+    margin-bottom: 5px;
+  }
+
+  &--votable {
+    cursor: pointer;
+  }
+}
+
+.nominee-card__body {
+  position: relative;
+  width: 100%;
+  transition: 0.3s linear all;
+  background-color: var(--nominee-card-background);
+  background-position: center;
+  font-family: var(--font-hand);
+  font-size: large;
+
+  @include mobile {
+    height: 75px;
+  }
+}
+
+.nominee-card__image {
+  /* Fixed aspect ratio: padding-top percentages are relative to the width. */
+  padding-top: calc(300 / 548 * 100%);
+  box-shadow: inset 0 0 15px rgb(11, 9, 9);
+  background-image: var(--nominee-image);
+  background-size: 100% 100%;
+
+  :where(.nominee-card[data-zone="ballot"]) & {
+    box-shadow: 0 0 8px rgb(11, 9, 9);
+  }
+
+  @include mobile {
+    padding: 0;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+}
+
+/* Desktop: the whole card is the drag handle */
+.nominee-card__drag-area {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+/* Mobile: only the grip on the right of ballot cards is a drag handle */
+.nominee-card__grip {
+  display: none;
+
+  @include mobile {
+    :where(.nominee-card[data-zone="ballot"]) & {
+      display: block;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 25px;
+      height: 100%;
+      padding: 5px;
+      background: var(--nominee-grip-color);
+      text-align: center;
+    }
+  }
+}
+
+/* Preference number shown on cards in the ballot */
+.nominee-card__rank {
+  display: none;
+  position: absolute;
+  left: 18px;
+  top: 5px;
+  z-index: 1;
+  color: var(--theme-white);
+  text-shadow: 2px 2px black;
+  font-family: var(--font-script);
+  font-size: 30px;
+
+  :where(.nominee-card[data-zone="ballot"]) & {
+    display: block;
+  }
+
+  :where(.nominee-card[data-dragging]) & {
+    display: none;
+  }
+
+  @include desktop {
+    :where(.nominee-card:hover) & {
+      display: none;
+    }
+  }
+
+  @include mobile {
+    position: static;
+    align-self: stretch;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    letter-spacing: unset;
+    color: black;
+    text-shadow: unset;
+
+    &::after {
+      content: ' - tap to remove or drag handle to reorder';
+    }
+  }
+}
+
+/* "Click to add/remove" banner, only shown on desktop hover */
+.nominee-card__hint {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 301;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px 8px 8px;
+  background-color: var(--theme-red);
+  color: var(--theme-white);
+  text-align: center;
+  line-height: 1em;
+
+  @include desktop {
+    :where(.nominee-card[data-zone="pool"]:hover) &--add,
+    :where(.nominee-card[data-zone="ballot"]:hover) &--remove {
+      display: flex;
+    }
+  }
+}
+
+.nominee-card__hint-name {
+  color: var(--theme-yellow);
+}
+
+.nominee-card__flavor {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  padding: 10px 15px;
+  background-color: var(--theme-white);
+  color: var(--theme-black);
+  font-size: 1.08em;
+  line-height: 15px;
+  text-align: center;
+  user-select: all;
+
+  &--short {
+    font-size: 1.1em;
+    line-height: 1em;
+  }
+
+  &--medium {
+    font-size: 0.9em;
+    line-height: 0.9em;
+  }
+
+  &--long {
+    font-size: 0.82em;
+    line-height: 0.9em;
+  }
+
+  &--extra-long {
+    font-size: 0.75em;
+    line-height: 0.9em;
+  }
+
+  @include desktop {
+    :where(.nominee-card:hover) & {
+      display: block;
+    }
+  }
+}
+
+.nominee-card__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 300;
+  padding: 2px 3px;
+  background: var(--nominee-info-background);
+  text-shadow: 1px 1px black;
+}
+
+.nominee-card__name {
+  text-align: center;
+  color: var(--theme-yellow);
+  font-size: 1.1em;
+  line-height: 1.1;
+}
+
+.nominee-card__subtitle {
+  margin-top: 0;
+  text-align: center;
+  color: var(--theme-white);
+  font-size: 0.7em;
+  line-height: 1.1;
+
+  a {
+    color: var(--nominee-link-color);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--nominee-link-hover-color);
+    }
+  }
+}

@@ -1,0 +1,121 @@
+@use 'mixins' as *;
+
+/* Chalkboard list of all awards (also used for navigation) */
+.awards-list {
+  position: relative;
+  margin-top: 120px;
+  margin-bottom: 30px;
+  padding: 40px 70px;
+  text-align: left;
+  background-image: var(--image-chalkboard);
+  background-size: 100% 100%;
+  color: white;
+  font-family: var(--font-chalk);
+}
+
+.awards-list__title {
+  @include reset-text;
+  position: relative;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 67px;
+
+  @media screen and (max-width: 500px) {
+    font-size: 46px;
+  }
+}
+
+.awards-list__remaining {
+  position: absolute;
+  top: 20px;
+  right: -30px;
+  width: 200px;
+  rotate: 20deg;
+  line-height: 1;
+  font-size: 0.45em;
+  text-transform: uppercase;
+
+  @media screen and (max-width: 798px) {
+    top: -4px;
+    right: -67px;
+  }
+
+  @media screen and (max-width: 500px) {
+    top: -8px;
+    right: -103px;
+  }
+}
+
+.awards-list__items {
+  column-count: 2;
+  list-style: none;
+  padding-left: 10px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  line-height: 1;
+
+  @media screen and (max-width: 700px) {
+    column-count: 1;
+  }
+
+  @media screen and (max-width: 500px) {
+    font-size: 18px;
+  }
+}
+
+.awards-list__item {
+  padding-bottom: 8px;
+}
+
+.awards-list__link {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-color: white;
+  }
+}
+
+.awards-list__name {
+  font-weight: bold;
+  color: white;
+
+  :where(.awards-list__link[data-voted]) & {
+    color: var(--theme-blue);
+  }
+
+  :where(.awards-list__link[aria-current="page"]) & {
+    color: var(--theme-yellow);
+  }
+}
+
+.awards-list__subtitle {
+  color: var(--awards-subtitle-color);
+}
+
+.awards-list__home {
+  margin: 30px 0 0;
+}
+
+.awards-list__home-link {
+  font-family: var(--font-hand);
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+.awards-list__hibiscus {
+  position: absolute;
+  top: -65px;
+  left: -36px;
+  z-index: 1;
+  width: 200px;
+  height: 150px;
+  background-image: var(--image-awards-decoration);
+  background-size: contain;
+  background-repeat: no-repeat;
+}

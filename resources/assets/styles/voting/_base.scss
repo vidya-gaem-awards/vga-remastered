@@ -1,0 +1,142 @@
+@use 'mixins' as *;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Jersey+10&display=swap");
+
+html {
+  overflow-x: hidden;
+}
+
+.voting-page {
+  overflow-x: hidden;
+  color: white;
+  padding-bottom: 30px;
+}
+
+/* Centred, max-width wrapper for each vertical section of the page */
+.page-section {
+  width: 1300px;
+  padding: 10px;
+  z-index: 20;
+  margin: 0 auto;
+  position: relative;
+
+  @media screen and (max-width: 1400px) {
+    width: 100%;
+  }
+}
+
+/* Postcard panel used by the award poster, ballot and start message */
+.poster {
+  background-size: 100% 100%;
+  background-image: var(--image-postcard);
+  padding: 30px;
+  position: relative;
+}
+
+.poster__inlay {
+  position: absolute;
+  inset: 0;
+  padding: 30px;
+  background-clip: content-box;
+  background-origin: content-box;
+
+  &--art {
+    background-image: var(--image-postcard-art);
+    background-size: cover;
+  }
+
+  &--white {
+    background-color: var(--poster-inlay-color);
+  }
+}
+
+/* Bamboo border drawn around a positioned element: left/right edges on ::before, top/bottom on ::after */
+.bamboo-frame {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &::before {
+    inset: 0;
+    background:
+      var(--image-bamboo-vertical) left top / 20px 300px repeat-y,
+      var(--image-bamboo-vertical) right top / 20px 300px repeat-y;
+  }
+
+  &::after {
+    top: -10px;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    background:
+      var(--image-bamboo) left top / 300px 20px repeat-x,
+      var(--image-bamboo) left bottom / 300px 20px repeat-x;
+  }
+}
+
+/* Zero-size anchors for reward CSS */
+.buddy-helper {
+  width: 0;
+  height: 0;
+}
+
+.reward-buddie {
+  position: fixed;
+  right: 5px;
+  bottom: 0;
+  z-index: 1000;
+  pointer-events: none;
+  transition: .5s ease-in;
+  max-height: 200px;
+}
+
+/* "PHONEPOSTER DETECTED" overlay injected by voting.blade.php on mobile */
+.mobile-meme {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 1;
+  height: fit-content;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: opacity 1.5s linear;
+
+  @media screen and (min-aspect-ratio: 485/273) {
+    width: auto;
+    height: 100vh;
+  }
+
+  &--fade {
+    opacity: 0;
+  }
+}
+
+.mobile-meme__image {
+  width: 100vw;
+  height: auto;
+  object-fit: contain;
+}
+
+.mobile-meme__caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font: 2rem Impact, sans-serif;
+  color: white;
+  text-shadow: 4px 4px 0 #000;
+  font-size: clamp(1.5rem, 4vw, 4rem);
+
+  &--top {
+    top: 0;
+  }
+
+  &--bottom {
+    bottom: 0;
+  }
+}
