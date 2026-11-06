@@ -92,7 +92,7 @@
     {{-- One .page-section per major piece of the page. --}}
     <div class="voting-layout">
         <div class="page-section page-section--header">
-            <x-voting.site-header :text="$voteText" />
+            <x-voting.site-header :text="$voteText" :logo-path="'generic-theme/vga-logo-placeholder.webp'" />
         </div>
 
         @if($award)
