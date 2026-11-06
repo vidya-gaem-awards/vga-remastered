@@ -89,11 +89,14 @@
         <img class="reward-buddie" data-js="reward-buddie" alt="" hidden>
     @endif
 
-    <div class="page-section">
-        <x-voting.site-header :text="$voteText" />
+    {{-- One .page-section per major piece of the page. --}}
+    <div class="voting-layout">
+        <div class="page-section page-section--header">
+            <x-voting.site-header :text="$voteText" />
+        </div>
 
-        <main class="voting-main">
-            @if($award)
+        @if($award)
+            <div class="page-section page-section--award">
                 <x-voting.award-poster
                     :award="$award"
                     :prev-award="$prevAward"
@@ -101,27 +104,35 @@
                     :voting-open="$votingOpen"
                     :voting-closed="$votingClosed"
                     :voting-style="$votingStyle" />
+            </div>
 
-                @if($votingOpen && $votingStyle !== 'legacy')
+            @if($votingOpen && $votingStyle !== 'legacy')
+                <div class="page-section page-section--ballot">
                     <x-voting.ballot :next-award="$nextAward" />
-                @endif
-            @else
+                </div>
+            @endif
+        @else
+            <div class="page-section page-section--start">
                 <x-voting.start-message
                     :voting-not-yet-open="$votingNotYetOpen"
                     :voting-open="$votingOpen"
                     :voting-closed="$votingClosed"
                     :first-award="$awards->first()" />
-            @endif
-        </main>
+            </div>
+        @endif
 
-        <x-voting.awards-list :awards="$awards" :current-award="$award" :all-votes="$allVotes" :voting-open="$votingOpen" />
+        <div class="page-section page-section--awards">
+            <x-voting.awards-list :awards="$awards" :current-award="$award" :all-votes="$allVotes" :voting-open="$votingOpen" />
+        </div>
+
+        @if($award)
+            <div class="page-section page-section--inventory">
+                <x-voting.inventory />
+            </div>
+        @endif
     </div>
 
     @if($award)
-        <div class="page-section">
-            <x-voting.inventory />
-        </div>
-
         <x-voting.loot-modal />
         <x-voting.no-music-modal />
     @endif

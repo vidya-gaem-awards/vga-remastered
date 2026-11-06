@@ -12,17 +12,33 @@ html {
   padding-bottom: 30px;
 }
 
-/* Centred, max-width wrapper for each vertical section of the page */
-.page-section {
-  width: 1300px;
-  padding: 10px;
-  z-index: 20;
-  margin: 0 auto;
+/*
+ * Wraps every .page-section. The single stacking context (z-index) keeps page content above reward
+ * decorations while still letting decorations on one section overlap its neighbours (e.g. the coconuts).
+ */
+.voting-layout {
   position: relative;
+  z-index: 20;
+  padding: 10px 0;
+}
+
+/*
+ * Centred, max-width column for each major piece of the page (header, award, ballot, awards list, inventory).
+ * Vertical spacing between pieces comes from the components' own margins.
+ */
+.page-section {
+  position: relative;
+  width: 1300px;
+  margin: 0 auto;
+  padding: 0 10px;
 
   @media screen and (max-width: 1400px) {
     width: 100%;
   }
+}
+
+.page-section--inventory {
+  padding-top: 20px;
 }
 
 /* Postcard panel used by the award poster, ballot and start message */
