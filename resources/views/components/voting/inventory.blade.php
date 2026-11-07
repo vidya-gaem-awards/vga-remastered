@@ -11,10 +11,10 @@
         </template>
 
         <div class="inventory__actions">
-            <button type="button" class="btn inventory__action" data-js="buy-lootbox">Force encounter (<span data-js="lootbox-cost"></span> gold)</button>
-            <button type="button" class="btn inventory__action" data-js="unequip-all">Unequip all items</button>
-            <button type="button" class="btn inventory__action" data-js="restore-drops" disabled>Restore drops</button>
-            <button type="button" class="btn inventory__action" data-js="mute-music" hidden>Mute music</button>
+            <button type="button" class="inventory__action" data-js="buy-lootbox">Force encounter (<span data-js="lootbox-cost"></span> gold)</button>
+            <button type="button" class="inventory__action" data-js="unequip-all">Unequip all items</button>
+            <button type="button" class="inventory__action" data-js="restore-drops" disabled>Restore drops</button>
+            <button type="button" class="inventory__action" data-js="mute-music" hidden>Mute music</button>
         </div>
     </div>
 </section>

@@ -8,7 +8,7 @@
   z-index: 100;
   width: 100vw;
   height: 100vh;
-  background-color: #00000080;
+  background-color: var(--voting-backdrop);
 }
 
 .leave-modal__dialog {
@@ -16,17 +16,25 @@
   width: 420px;
   margin: 30vh auto 0 auto;
   padding: 40px 50px;
-  background-image: var(--image-chalkboard);
-  background-size: 100% 100%;
-  color: white;
-  font-family: var(--font-hand);
+  background: var(--voting-surface);
+  border: 1px solid var(--voting-border);
+  border-radius: 6px;
+  box-shadow: var(--voting-dialog-shadow);
+  color: var(--voting-text);
+  font-family: var(--font-display);
   font-size: 20px;
   text-align: center;
+
+  @include mobile {
+    width: calc(100% - 32px);
+    max-width: 420px;
+    padding: 24px;
+  }
 }
 
 .leave-modal__title {
   @include reset-text;
-  font-family: var(--font-chalk);
+  font-family: var(--font-display);
   font-size: 2em;
 }
 
@@ -41,12 +49,12 @@
 
 .leave-modal__option {
   @include reset-button;
-  color: var(--theme-yellow);
+  color: var(--voting-text);
   text-decoration: underline;
   cursor: pointer;
 
   &:hover {
-    color: var(--theme-yellow);
+    color: var(--voting-accent);
     text-decoration: none;
   }
 }

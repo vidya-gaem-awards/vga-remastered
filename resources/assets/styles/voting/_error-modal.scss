@@ -11,12 +11,12 @@
 }
 
 .error-modal {
-  color: #333;
+  color: var(--voting-text-secondary);
 }
 
 .error-modal__window {
-  --button-box-shadow: inset -1px -1px 0 0 #777, inset -2px -2px 0 0 #aaa, inset 1px 1px 0 0 #ddd, inset 2px 2px 0 0 #fff;
-  --button-hover-bezel: 0 0 0 1px #aaa, 0 0 0 2px #ddd, 0 0 0 3px #000;
+  --button-box-shadow: var(--error-button-shadow);
+  --button-hover-bezel: var(--error-button-hover-bezel);
 
   position: relative;
   z-index: 99999998;
@@ -27,9 +27,9 @@
   min-height: 80px;
   margin: 10% auto;
   overflow: hidden;
-  border: 2px #dc5341 outset;
-  background: #ccc;
-  box-shadow: 1px 2px #111, inset 1px 1px 0 0 #fff, inset -1px -1px 0 0 #999;
+  border: 2px var(--error-border) outset;
+  background: var(--error-surface);
+  box-shadow: var(--error-window-shadow);
   font-family: "Charcoal", "Chicago", "Times New Roman", "Georgia", serif;
   font-size: 12px;
   font-weight: 400;
@@ -43,7 +43,7 @@
   min-height: 80px;
   margin: 2px 4px 4px;
   padding: 1em 1em 1em 100px;
-  background: #dddddd url("/2021images/alert_stop.png") no-repeat 20px 10px;
+  background: var(--error-body-surface) url("/2021images/alert_stop.png") no-repeat 20px 10px;
   text-align: left;
 }
 
@@ -58,18 +58,18 @@
 .error-modal__button {
   float: right;
   height: 22px;
-  border: 1px solid #000;
+  border: 1px solid var(--voting-black);
   border-radius: 3px;
-  background-color: #dedede;
+  background-color: var(--error-button-surface);
   box-shadow: var(--button-box-shadow);
   color: inherit;
   font-family: inherit;
   font-size: inherit;
 
   &:active {
-    background-color: #666;
-    box-shadow: var(--button-hover-bezel), inset -1px -1px 0 0 #888, inset -2px -2px 0 0 #777, inset 1px 1px 0 0 #444, inset 2px 2px 0 0 #555;
-    color: #fff;
+    background-color: var(--error-button-active-surface);
+    box-shadow: var(--button-hover-bezel), var(--error-button-active-shadow);
+    color: var(--voting-surface);
   }
 
   &:hover {
