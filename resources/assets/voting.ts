@@ -26,23 +26,26 @@ declare const rewards: Record<string, Item>;
 declare const lootboxTest: null | number;
 declare const lootboxItemUpdateUrl: string | undefined;
 
+// Elements used by this script are marked with data-js attributes.
+// Classes are for styling only and must not be used as JS selectors.
+
 if (lootboxTest) {
     const updateListenerExtension = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
-        $('#lootbox-editor-css-input').val(update.state.doc.toString());
-        $('#lootbox-editor-style').text(update.state.doc.toString());
+        $('[data-js="lootbox-css-input"]').val(update.state.doc.toString());
+        $('[data-js="lootbox-editor-style"]').text(update.state.doc.toString());
       }
     });
 
     let editor = new EditorView({
-        doc: $('#lootbox-editor-style').text().trim(),
+        doc: $('[data-js="lootbox-editor-style"]').text().trim(),
         extensions: [
             basicSetup,
             css(),
             EditorView.lineWrapping,
             updateListenerExtension
         ],
-        parent: document.querySelector("#lootbox-editor-css-codemirror"),
+        parent: $('[data-js="lootbox-css-editor"]')[0],
     });
 }
 
@@ -81,24 +84,6 @@ let usingWinamp: boolean = false;
 let inventory;
 let lootboxTestSlug: string | null = null;
 
-var val;
-$('#debugWidth').change(function () {
-    val = $(this).val();
-//                $('.nominee').css('width', val);
-});
-$('#debugHeight').change(function () {
-    val = $(this).val();
-    $('.nominee').css('height', val);
-});
-$('#debugTitle').change(function () {
-    val = $(this).val();
-    $('.nomineeName').css('fontSize', val);
-});
-$('#debugSubtitle').change(function () {
-    val = $(this).val();
-    $('.nomineeSubtitle').css('fontSize', val);
-});
-
 function onDumbShit(cb) {
     var input = '';
     var key = '38384040373937396665';
@@ -118,7 +103,7 @@ onDumbShit(function () {
     var audio = new Audio('/ogg/box-earned.ogg');
     audio.play();
 
-    $('#cheat-code').show();
+    $('[data-js="cheat-code"]').prop('hidden', false);
 });
 
 function getRandomInt(min, max) {
@@ -137,10 +122,10 @@ function resetCSS() {
         $html.removeClass('reward-' + $html.attr('data-css'));
         $html.removeAttr('data-css');
     }
-    $('.item-css').removeClass('active');
-    $('#lootbox-editor-css-status').addClass('bg-secondary').removeClass('bg-success');
-    $('#lootbox-editor-css-status input[type=checkbox]').prop('checked', false);
-    $('#lootbox-editor-css-status .label').text('Inactive');
+    $('[data-js="item-action"][data-type="css"]').attr('aria-pressed', 'false');
+    $('[data-js="lootbox-css-status"]').addClass('bg-secondary').removeClass('bg-success');
+    $('[data-js="lootbox-css-toggle"]').prop('checked', false);
+    $('[data-js="lootbox-css-status-label"]').text('Inactive');
 
     localStorageRemove('activeCSS');
 }
@@ -154,16 +139,16 @@ function resetMusic() {
         localStorageRemove('activeMusic');
     }
 
-    $('.item-music').removeClass('active');
+    $('[data-js="item-action"][data-type="music"]').attr('aria-pressed', 'false');
 }
 
 function resetBuddie() {
-    $('#reward-buddie').hide().removeAttr('src');
+    $('[data-js="reward-buddie"]').prop('hidden', true).removeAttr('src');
     if (localStorage.getItem('activeBuddie')) {
         localStorageRemove('activeBuddie');
     }
 
-    $('.item-buddie').removeClass('active');
+    $('[data-js="item-action"][data-type="buddie"]').attr('aria-pressed', 'false');
 }
 
 function resetRewards() {
@@ -296,25 +281,17 @@ jQuery(function () {
         // }
     }
 
-    if (votingEnabled && !localStorage.getItem('characterName')) {
-        $('#character').modal('show');
-    }
-
     const lootboxCost = lootboxTest ? 1 : lootboxSettings.cost;
 
-    $('#lootboxCostText').text(lootboxCost);
+    $('[data-js="lootbox-cost"]').text(lootboxCost);
 
     function updateInventory() {
         localStorageSet('inventory', JSON.stringify(inventory));
-        $('#shekelCount').find('.item-name').text(inventory['shekels'] + ' gold');
+        $('[data-js="gold-count"] [data-js="item-name"]').text(inventory['shekels'] + ' gold');
 
-        if (lootboxTest || inventory['shekels'] >= lootboxCost) {
-            $('#buy-lootbox').removeAttr('disabled');
-        } else {
-            $('#buy-lootbox').attr('disabled', 'disabled');
-        }
+        $('[data-js="buy-lootbox"]').prop('disabled', !(lootboxTest || inventory['shekels'] >= lootboxCost));
 
-        $('.kebab').remove();
+        $('[data-js="inventory-item"]').remove();
 
         for (var i = 0; i < inventory.unlockKeys.length; i++) {
             var reward = rewards[inventory.unlockKeys[i]];
@@ -322,64 +299,46 @@ jQuery(function () {
                 console.error('Reward is undefined!', i, inventory.unlockKeys[i]);
                 continue;
             }
-            var quantity = inventory.unlocks[reward.slug];
-            var element = $('#item-template').clone();
-            element.addClass('kebab');
+            const template = $('[data-js="inventory-item-template"]')[0] as HTMLTemplateElement;
+            var element = $(template.content.firstElementChild.cloneNode(true) as HTMLElement);
             element.attr('data-id', reward.id);
             element.attr('data-short-name', reward.slug);
-            element.find('img').attr('src', reward.image.url).attr('id', 'reward-image-' + reward.slug);
-            element.find('.item-name').text(reward.name);
-            element.find('.item-quantity').text('x ' + quantity);
-            element.find('.item-year').text(reward.year + ' item');
-            element.find('.item-button').show().attr('data-id', reward.slug);
+            element.find('[data-js="item-image"]').attr('src', reward.image.url);
+            element.find('[data-js="item-name"]').text(reward.name);
+            element.find('[data-js="item-action"]').attr('data-id', reward.slug);
 
             if (reward.slug === 'nothing') {
-                element.find('.item-buddie').text('Equip');
+                element.find('[data-js="item-action"][data-type="buddie"]').text('Equip');
             }
 
             if (!reward.music) {
-                element.find('.item-music').remove();
+                element.find('[data-js="item-action"][data-type="music"]').remove();
             }
 
             if (!reward.css) {
-                element.find('.item-css').remove();
+                element.find('[data-js="item-action"][data-type="css"]').remove();
             }
 
-            if (localStorage.getItem('activeCSS') === reward.slug) {
-                element.find('.item-css').addClass('active');
-            }
-
-            if (localStorage.getItem('activeMusic') === reward.slug) {
-                element.find('.item-music').addClass('active');
-            }
+            element.find('[data-js="item-action"][data-type="css"]').attr('aria-pressed', String(localStorage.getItem('activeCSS') === reward.slug));
+            element.find('[data-js="item-action"][data-type="music"]').attr('aria-pressed', String(localStorage.getItem('activeMusic') === reward.slug));
 
             if (lootboxTest) {
-                element.find('.item-buddie').toggleClass('active', lootboxTest === reward.id);
-            } else if (localStorage.getItem('activeBuddie') === reward.slug) {
-                element.find('.item-buddie').addClass('active');
-            }
-
-            var tier = lootboxTiers[reward.tier];
-            // element.css('borderColor', tier.color);
-            if (reward.slug === 'nothing') {
-                element.find('.item-buddie').text('Equip');
-                element.find('.item-tier').css('backgroundColor', 'black');
+                element.find('[data-js="item-action"][data-type="buddie"]').attr('aria-pressed', String(lootboxTest === reward.id));
             } else {
-                element.find('.item-tier').css('backgroundColor', tier.color);
+                element.find('[data-js="item-action"][data-type="buddie"]').attr('aria-pressed', String(localStorage.getItem('activeBuddie') === reward.slug));
             }
 
             if (reward.extra) {
-                element.addClass('encrypted');
+                element.attr('data-encrypted', '');
             }
 
-            element.show();
-            element.appendTo('#inventory .inventory-container');
+            element.appendTo($('[data-js="inventory-grid"]'));
         }
     }
 
     updateInventory();
 
-    $('#shekelCount').show();
+    $('[data-js="gold-count"]').prop('hidden', false);
 
     if (!lootboxTest && localStorage.getItem('activeCSS')) {
         activateCss(localStorage.getItem('activeCSS'));
@@ -391,7 +350,7 @@ jQuery(function () {
                 $(document).off('click', clickHandler);
 
                 const element = $(event.target);
-                if (element.hasClass('item-music') || element.parents('.item-music').length > 0) {
+                if (element.closest('[data-js="item-action"][data-type="music"]').length > 0) {
                     return;
                 }
 
@@ -403,7 +362,7 @@ jQuery(function () {
             $(document).on('click', clickHandler);
         });
 
-        $('.item-music[data-id=' + localStorage.getItem('activeMusic') + ']').addClass('active');
+        $(`[data-js="item-action"][data-type="music"][data-id="${localStorage.getItem('activeMusic')}"]`).attr('aria-pressed', 'true');
     }
 
     if (localStorage.getItem('activeMusic') && !localStorage.getItem('muteMusic') && !lootboxTest) {
@@ -416,11 +375,11 @@ jQuery(function () {
         activateBuddie(localStorage.getItem('activeBuddie'));
     }
 
-    $('#inventory').on('click', '.item-button', function () {
+    $('[data-js="inventory-grid"]').on('click', '[data-js="item-action"]', function () {
         var id = $(this).attr('data-id');
 
         const button = $(this).attr('data-type');
-        const alreadyActive = $(this).hasClass('active');
+        const alreadyActive = $(this).attr('aria-pressed') === 'true';
 
         if (id === undefined) {
             return;
@@ -470,7 +429,7 @@ jQuery(function () {
             if (alreadyActive) {
                 resetMusic();
             } else if (!canPlayAudio) {
-                $('#no-music').modal('show');
+                $('[data-js="no-music-modal"]').modal('show');
             } else {
                 activateMusic(id);
                 localStorageSet('activeMusic', id);
@@ -479,31 +438,31 @@ jQuery(function () {
         }
     });
 
-    $('#no-music').on('show.bs.modal', function () {
-        $('body').addClass("no-music-modal");
+    $('[data-js="no-music-modal"]').on('show.bs.modal', function () {
+        $('body').attr('data-modal', 'no-music');
     }).on('hide.bs.modal', function () {
-        $('body').removeClass("no-music-modal");
+        $('body').removeAttr('data-modal');
     });
 
-    $('#resetRewardsButton').click(function () {
+    $('[data-js="mute-music"]').on('click', function () {
         resetMusic();
 
-        $(this).hide();
+        $(this).prop('hidden', true);
     });
 
-    $('#cheat-code').submit(function (event) {
+    $('[data-js="cheat-code"]').on('submit', function (event) {
         event.preventDefault();
-        var code = String($('#cheat-code-input').val());
+        var code = String($('[data-js="cheat-code-input"]').val());
 
         processCheat(code);
     });
 
     function processCheat(code) {
-        $('#cheat-code-input').val('');
+        $('[data-js="cheat-code-input"]').val('');
         if (code === 'rosebud') {
             inventory['shekels'] += 1000;
             playCheatMusic(true);
-            $('#cheat-code-input').val('rosebud');
+            $('[data-js="cheat-code-input"]').val('rosebud');
         } else if (code === 'motherlode') {
             inventory['shekels'] += 50000;
             playCheatMusic(true);
@@ -547,7 +506,7 @@ jQuery(function () {
         }
 
         if (showButton) {
-            $('#resetRewardsButton').show();
+            $('[data-js="mute-music"]').prop('hidden', false);
         }
 
         music = new Audio(reward.musicFile.url);
@@ -557,18 +516,16 @@ jQuery(function () {
     }
 
     function activateBuddie(slug: string) {
-      const $buddie = $('#reward-buddie');
-        $buddie.attr('src', rewards[slug].image.url);
-        $buddie.show();
+        $('[data-js="reward-buddie"]').attr('src', rewards[slug].image.url).prop('hidden', false);
 
-        $('.item-buddie').removeClass('active');
-        $('.item-buddie[data-id=' + slug + ']').addClass('active');
+        $('[data-js="item-action"][data-type="buddie"]').attr('aria-pressed', 'false');
+        $(`[data-js="item-action"][data-type="buddie"][data-id="${slug}"]`).attr('aria-pressed', 'true');
     }
 
     function activateMusic(slug: string) {
         playMusic(slug, true).then(() => {
-            $('.item-music').removeClass('active');
-            $('.item-music[data-id=' + slug + ']').addClass('active');
+            $('[data-js="item-action"][data-type="music"]').attr('aria-pressed', 'false');
+            $(`[data-js="item-action"][data-type="music"][data-id="${slug}"]`).attr('aria-pressed', 'true');
         }).catch(e => {
             alert('Failed to play music: ' + e.name);
             console.log('Failed to play music', e.name);
@@ -583,17 +540,17 @@ jQuery(function () {
         $html.attr('data-css', slug);
         $html.addClass('reward-' + slug);
 
-        $('.item-css').removeClass('active');
-        $('.item-css[data-id=' + slug + ']').addClass('active');
+        $('[data-js="item-action"][data-type="css"]').attr('aria-pressed', 'false');
+        $(`[data-js="item-action"][data-type="css"][data-id="${slug}"]`).attr('aria-pressed', 'true');
 
         if (slug === lootboxTestSlug) {
-            $('#lootbox-editor-css-status').addClass('bg-success').removeClass('bg-secondary');
-            $('#lootbox-editor-css-status input[type=checkbox]').prop('checked', true);
-            $('#lootbox-editor-css-status .label').text('Active');
+            $('[data-js="lootbox-css-status"]').addClass('bg-success').removeClass('bg-secondary');
+            $('[data-js="lootbox-css-toggle"]').prop('checked', true);
+            $('[data-js="lootbox-css-status-label"]').text('Active');
         }
     }
 
-    $('#buy-lootbox').click(function () {
+    $('[data-js="buy-lootbox"]').on('click', function () {
         if (inventory['shekels'] < lootboxCost) {
             return;
         }
@@ -604,20 +561,20 @@ jQuery(function () {
     });
 
     if (localStorage.getItem('ignoreRewards') && !lootboxTest) {
-        $('#restoreDrops').removeAttr('disabled');
+        $('[data-js="restore-drops"]').prop('disabled', false);
     }
 
     if ((!localStorage.getItem('ignoreRewards') && lastVotes.length === 0) || lootboxTest) {
         showRewardsOnSubmit = true;
     }
 
-    $('#unequipAll').on('click', function (event) {
+    $('[data-js="unequip-all"]').on('click', function (event) {
         resetRewards();
     });
 
-    $('#restoreDrops').click(function (event) {
+    $('[data-js="restore-drops"]').on('click', function (event) {
         event.preventDefault();
-        $(this).attr('disabled', 'disabled');
+        $(this).prop('disabled', true);
         localStorageRemove('ignoreRewards');
         if (lastVotes.length === 0) {
             showRewardsOnSubmit = true;
@@ -628,45 +585,35 @@ jQuery(function () {
     var lootboxSound = new Audio("/ogg/box-opened.ogg");
 
     var showNewLoot = function showNewLoot(i) {
-        var lootbox = $($('#rewards .lootbox').get(i));
-        lootbox.removeClass('animate').addClass('animate-back');
-        lootbox.find('.lootbox-image').hide();
+        var lootbox = $('[data-js="loot-slot"]').eq(i);
+        lootbox.attr('data-animation', 'in');
+        lootbox.find('[data-js="loot-sprite"]').prop('hidden', true);
 
-        const $item = lootbox.find('.inventory-item');
-        $item.show();
+        const $item = lootbox.find('[data-js="loot-item"]');
+        $item.prop('hidden', false);
 
-        var title = $item.find('.item-name');
-        var image = $item.find('img');
-        var $tier = $item.find('.item-tier')
+        var title = $item.find('[data-js="item-name"]');
+        var image = $item.find('[data-js="item-image"]');
 
         var reward = pendingItems.pop();
 
-        $item.removeClass('encrypted');
+        $item.removeAttr('data-encrypted');
 
         if (reward.type === 'item') {
             var item = rewards[reward.item.slug];
 
             if (item.extra) {
-                $item.addClass('encrypted');
+                $item.attr('data-encrypted', '');
             }
 
-            var tier = lootboxTiers[item.tier];
             addRewardToInventory(item.slug);
             image.attr('src', item.image.url);
             title.text(item.name);
-            $tier.show();
-            $tier.text(tier.name);
-            $tier.css('color', 'black');
-            $tier.css('backgroundColor', tier.color);
         } else if (reward.type === 'shekels') {
             var shekelCount = reward.amount;
             inventory['shekels'] += shekelCount;
             image.attr('src', '/2023images/gold-bars.png');
             title.text(shekelCount + " gold");
-            $tier.show();
-            $tier.text('Special');
-            $tier.css('color', 'white');
-            $tier.css('backgroundColor', 'black');
         }
 
         updateInventory();
@@ -682,7 +629,7 @@ jQuery(function () {
         }
     }
 
-    $('#unboxButton').click(function () {
+    $('[data-js="unbox"]').on('click', function () {
         if (lootboxRevealAudio) {
             lootboxRevealAudio.pause();
             lootboxRevealAudio = null;
@@ -690,12 +637,12 @@ jQuery(function () {
         lootboxSound.volume = 0.25;
         lootboxSound.play();
 
-        $('.lootbox').addClass('animate');
+        $('[data-js="loot-slot"]').attr('data-animation', 'out');
 
-        $(this).hide();
+        $(this).prop('hidden', true);
 
         setTimeout(function () {
-            $('.lootbox').find('img').removeAttr('src');
+            $('[data-js="loot-slot"]').find('img').removeAttr('src');
         }, 1100);
 
         for (var i = 0; i < 3; i++) {
@@ -703,18 +650,14 @@ jQuery(function () {
         }
 
         setTimeout(function () {
-            $('#closeRewards').show();
+            $('[data-js="loot-collect"]').prop('hidden', false);
         }, 3600);
     });
 
-    $('#neverShowAgain').click(function () {
+    $('[data-js="never-show-again"]').on('click', function () {
         localStorageSet('ignoreRewards', 'true');
-        $('#rewards').modal('hide');
-        $('#restoreDrops').removeAttr('disabled');
-    })
-
-    $('#closeRewardsModal').click(function () {
-        $('#rewards').modal('hide');
+        $('[data-js="loot-modal"]').modal('hide');
+        $('[data-js="restore-drops"]').prop('disabled', false);
     });
 
     var pendingItems = [];
@@ -726,13 +669,11 @@ jQuery(function () {
             return;
         }
 
-        $('#unboxButton').show();
-        $('#closeRewards').hide();
-        $('.lootbox').removeClass('animate-back');
-        $('.lootbox').find('.inventory-item').hide();
-        $('.lootbox-title').text('');
-        $('.lootbox-tier').hide();
-        $('.lootbox-image').show();
+        $('[data-js="unbox"]').prop('hidden', false);
+        $('[data-js="loot-collect"]').prop('hidden', true);
+        $('[data-js="loot-slot"]').removeAttr('data-animation');
+        $('[data-js="loot-item"]').prop('hidden', true);
+        $('[data-js="loot-sprite"]').prop('hidden', false);
 
         var lootboxes = [
           ['mario.webp', 0, 2],
@@ -753,7 +694,7 @@ jQuery(function () {
           ['zelda.webp', -28, 0.5],
         ];
 
-        $('.lootbox-image').each(function () {
+        $('[data-js="loot-sprite"]').each(function () {
             let lootbox = lootboxes[getRandomInt(0, lootboxes.length)];
             $(this).attr('src', '/2025images/lootbox_sprites/' + lootbox[0]);
             $(this).css('translate', lootbox[1]);
@@ -767,15 +708,9 @@ jQuery(function () {
             `"Nothing like a good day on the water" *siiiip*`,
             `"They fear me."`
           ];
-        $('#loot-modal-flavor').text(prompts[getRandomInt(0, prompts.length)]);
+        $('[data-js="loot-flavor"]').text(prompts[getRandomInt(0, prompts.length)]);
 
-        if (getRandomInt(1,7) === 6) {
-            $('#youre').attr('src', '/2022images/youre-rewards.png');
-        } else {
-            $('#youre').attr('src', '/2022images/your-rewards.png');
-        }
-
-        $('#rewards').modal('show');
+        $('[data-js="loot-modal"]').modal('show');
 
         lootboxRevealAudio = new Audio('/ogg/box-earned.ogg');
         lootboxRevealAudio.volume = 0.10;
@@ -783,7 +718,7 @@ jQuery(function () {
 
         showRewardsOnSubmit = false;
 
-        $('#unboxButton').attr('disabled', 'disabled');
+        $('[data-js="unbox"]').prop('disabled', true);
 
         const url = lootboxTest ? '/inventory/purchase-lootbox?test=1' : '/inventory/purchase-lootbox';
 
@@ -798,51 +733,56 @@ jQuery(function () {
                 }
             }
         }).always(() => {
-            $('#unboxButton').removeAttr('disabled');
+            $('[data-js="unbox"]').prop('disabled', false);
         });
     }
 
     var votesChanged = false;
-    var nomineeCount = $('.voteGroup').length;
 
-    var resetButton = $('#btnResetVotes');
-    var submitButton = $('#btnLockVotes');
+    var resetButton = $('[data-js="vote-reset"]');
+    var submitButton = $('[data-js="vote-submit"]');
 
-    // Only used in the "drag from left to right" layout
-    var nomineeColumn = $('#nomineeColumn');
-    var voteColumn = $('#voteColumn');
-    var voteColumnBoxes = voteColumn.find('.voteBox');
+    // Only used in the "drag from left to right" (legacy) layout
+    var legacyBallot = $('[data-js="legacy-ballot"]');
+    var nomineeColumn = $('[data-js="legacy-pool"]');
+    var voteColumn = $('[data-js="legacy-votes"]');
+    var voteColumnBoxes = voteColumn.find('[data-js="legacy-slot"]');
     var dragged;
     var draggedFrom;
 
     // Only used in the "drag from top to bottom" layout
-    var topArea = $('#voteDropAreaTop');
-    var bottomArea = $('#voteDropAreaBottom');
-    var bottomAreaContainer = $('.your-votes-container');
+    var topArea = $('[data-js="pool"]');
+    var bottomArea = $('[data-js="ballot"]');
+    var bottomAreaContainer = $('[data-js="ballot-inner"]');
 
-    // Only used in the "click to choose number" layout
-    var numberPopup = $('#numberPopup');
-    var preferenceButtons = $('.preferenceButton');
+    function nomineeCard(id): JQuery<HTMLElement> {
+        return $('[data-js="nominee"]').filter(`[data-nominee="${id}"]`);
+    }
 
-    // Only used in the "type in your number" layout
-    var preferenceInputs = $('.preferenceInput');
+    function legacyNominee(id): JQuery<HTMLElement> {
+        return $('[data-js="legacy-nominee"]').filter(`[data-nominee="${id}"]`);
+    }
+
+    function legacyVoteSlot(slot): JQuery<HTMLElement> {
+        return voteColumnBoxes.filter(`[data-slot="${slot}"]`);
+    }
 
     var sortableOptions = {
         group: {
             name: 'omega',
             pull: false
         },
-        draggable: '.voteGroup',
-        handle: '.handle',
+        draggable: '[data-js="nominee"]',
+        handle: '[data-js="drag-handle"]',
         animation: 0,
         dataIdAttr: 'data-order',
         onStart: function (event) {
-            $("#dragLimit").addClass("dragActive");
-            $(event.item).find('.number').hide();
-            // $(event.item).find('.number').show().text('Drop this nominee in your preferred position');
+            bottomArea.attr('data-dragging', '');
+            $(event.item).attr('data-dragging', '');
         },
         onEnd: function (event) {
-            $("#dragLimit").removeClass("dragActive");
+            bottomArea.removeAttr('data-dragging');
+            $(event.item).removeAttr('data-dragging');
             updateNumbers();
             unlockVotes();
         },
@@ -851,16 +791,12 @@ jQuery(function () {
         scrollSpeed: 20
     };
 
-    var topSortableOptions = Object.assign({}, sortableOptions) as any;
-    topSortableOptions.sort = false;
-
     if (votingEnabled) {
         if (topArea.length > 0) {
-            // new Sortable(document.getElementById('voteDropAreaTop'), topSortableOptions);
-            new Sortable(document.getElementById('voteDropAreaBottom'), sortableOptions);
+            new Sortable(bottomArea[0], sortableOptions);
         }
 
-        $('.voteBox').click(function (event) {
+        $('[data-js="nominee"]').on('click', function (event) {
 
             let target = event.originalEvent.target as HTMLElement;
 
@@ -869,9 +805,9 @@ jQuery(function () {
             }
 
             if (!$.contains(topArea[0], this)) {
-                $(this).parent().detach().appendTo(topArea);
+                $(this).detach().appendTo(topArea);
             } else {
-                $(this).parent().detach().appendTo(bottomArea);
+                $(this).detach().appendTo(bottomArea);
             }
 
             updateNumbers();
@@ -886,27 +822,18 @@ jQuery(function () {
 
     nomineeColumn.height(voteColumn.height());
 
-    $(".aNominee").draggable({
-        containment: "#limitsDrag",
+    $('[data-js="legacy-nominee"]').draggable({
+        containment: '[data-js="legacy-ballot"]',
         distance: 20,
         opacity: 0.75,
         zIndex: 100,
         revert: "invalid",
         revertDuration: 200,
-        start: function (event, ui) {
-            voteColumnBoxes.addClass("dragging");
-        },
-        stop: function (event, ui) {
-            voteColumnBoxes.removeClass("dragging");
-        }
     })
         //when you start dragging, it puts the elements in variables
         .bind('dragstart', function (event) {
             dragged = $(this);
             draggedFrom = $(this).parent();
-
-            //put their margins to 0
-            //$(this).css("margin","0px 0px 0px 0px");
         });
 
     //be able to drop nominees in voteBoxes
@@ -916,7 +843,7 @@ jQuery(function () {
             var droppedOn = $(this);
 
             //if you're dropping the nominee exactly where you took it from, it cancels the drop
-            if (droppedOn.attr("id") === draggedFrom.attr("id")) {
+            if (droppedOn.attr("data-slot") === draggedFrom.attr("data-slot")) {
                 $(dragged).draggable("option", "revert", true);
                 return
             }
@@ -932,21 +859,18 @@ jQuery(function () {
             //put what you deleted back where your vote came from
             draggedFrom.append(stuffDeleted);
 
-            //put their margins back to normal
-            //$(stuffDeleted).css("margin","10px 0 0 10px");
-
             updateNumbers();
         }
     });
 
     //be able to drop nominees back in the original container
-    nomineeColumn.find(".voteBox").droppable({
+    nomineeColumn.find('[data-js="legacy-slot"]').droppable({
         drop: function (event, ui) {
             var dropped = ui.draggable;
             var droppedOn = $(this);
 
             //if you're dropping the nominee exactly where you took it from, it cancels the drop
-            if (droppedOn.attr("id") === draggedFrom.attr("id")) {
+            if (droppedOn.attr("data-slot") === draggedFrom.attr("data-slot")) {
                 $(dragged).draggable("option", "revert", true);
                 return;
             }
@@ -957,7 +881,7 @@ jQuery(function () {
             $(dropped).detach().css({top: 0, left: 0}).appendTo(droppedOn);
 
             //empty the number
-            dropped.find(".number").html("");
+            dropped.find('[data-js="nominee-rank"]').text("");
         }
     });
 
@@ -965,91 +889,51 @@ jQuery(function () {
 
     // Update interface to indicate that the votes have been succesfully submitted and changed.
     function lockVotes() {
-        $(".voteBox").addClass("locked");
-        $(".aNominee").addClass("locked");
-
-
-        bottomAreaContainer.addClass("locked");
-        bottomAreaContainer.find('.your-votes').text("Your Votes");
-        submitButton.addClass('iVoted').attr('title', 'Saved!');
-        // $('#submitReminder').text('Your votes have been submitted.');
+        bottomAreaContainer.add(legacyBallot).attr('data-locked', '');
+        $('[data-js="ballot-title"]').text("Your Votes");
+        submitButton.prop('hidden', true).attr('title', 'Saved!');
 
         previousLockExists = true;
         votesChanged = false;
-        $(".navigation").show();
     }
 
     // Update interface to indicate that there have been changes since the last submitted vote.
     function unlockVotes() {
-        $(".voteBox").removeClass("locked");
-        $(".aNominee").removeClass("locked");
-        // $('#submitReminder').text('Don\'t forget to click on "Submit" below to save your votes!');
-
-        bottomAreaContainer.removeClass("locked");
-        bottomAreaContainer.find('.your-votes').text("Your Votes (unsaved)");
-        submitButton.removeClass('iVoted').attr('title', 'Submit Votes');
+        bottomAreaContainer.add(legacyBallot).removeAttr('data-locked');
+        $('[data-js="ballot-title"]').text("Your Votes (unsaved)");
+        submitButton.prop('hidden', false).attr('title', 'Submit Votes');
         votesChanged = true;
-    }
-
-    // Checks for duplicate preferences, and marks any duplicates as invalid.
-    // Only used in the "type in your number" layout.
-    function checkForDuplicates() {
-        var allNumbers = {};
-        preferenceInputs.each(function () {
-            var element = $(this);
-            var number = element.val() as string | number;
-
-            element.removeClass('invalid');
-            if (number === "") {
-                return;
-            }
-            if (!allNumbers[number]) {
-                allNumbers[number] = [];
-            }
-            allNumbers[number].push(element);
-        });
-
-        $.each(allNumbers, function (index, elements: Array<JQuery<HTMLElement>>) {
-            if (elements.length > 1) {
-                $.each(elements, function (index, element: JQuery<HTMLElement>) {
-                    element.addClass('invalid');
-                });
-            }
-        });
     }
 
     function getOrdinal(number) {
         return number + (['st', 'nd', 'rd'][((number+90) % 100 - 10) % 10 - 1] || 'th');
     }
 
-    // Updates the preference numbers displayed on each nominee in the bottom pane.
-    // Only used in the "drag and drop" layout.
+    // Syncs each nominee card's data-zone with the area it's in, and updates the preference numbers.
     function updateNumbers() {
-        bottomArea.find(".voteGroup").each(function (index) {
-            index = index + 1;
-            var text = '#' + index;
-            $(this).find(".number").show().html(text);
+        topArea.find('[data-js="nominee"]').attr('data-zone', 'pool');
+
+        const ballotCards = bottomArea.find('[data-js="nominee"]');
+        ballotCards.each(function (index) {
+            $(this).attr('data-zone', 'ballot');
+            $(this).find('[data-js="nominee-rank"]').text('#' + (index + 1));
         });
 
-        var boxesInBottom = bottomArea.find(".voteGroup").length;
-        $('.nextPreference').text(getOrdinal(boxesInBottom + 1));
+        $('[data-js="next-preference"]').text(getOrdinal(ballotCards.length + 1));
 
         voteColumnBoxes.each(function () {
-            var onlyTheNumber = $(this).attr("id").replace(/[^0-9]/g, '');
-            $(this).find(".number").html("#" + onlyTheNumber);
+            $(this).find('[data-js="nominee-rank"]').text("#" + $(this).attr("data-slot"));
         });
-
-        topArea.find(".number").hide();
     }
 
     // Resets all nominees back to the user's last submitted vote.
     // If there is no last submitted vote, or if resetAll is set to true, will move all nominees back into the top pane.
     function moveNomineesBack(resetAll) {
         if (votingStyle === 'legacy') {
-            var voteBoxes = $("#nomineeColumn").find(".voteBox");
+            var voteBoxes = nomineeColumn.find('[data-js="legacy-slot"]');
             if (resetAll || lastVotes.length === 0) {
                 var allNominees = [];
-                $('.aNominee').each(function () {
+                $('[data-js="legacy-nominee"]').each(function () {
                     allNominees.push($(this).detach());
                 });
 
@@ -1059,11 +943,11 @@ jQuery(function () {
             } else {
                 var haveVotedFor = [];
                 for (i = 1; i < lastVotes.length; i++) {
-                    haveVotedFor.push($("#nominee-" + lastVotes[i]).detach());
+                    haveVotedFor.push(legacyNominee(lastVotes[i]).detach());
                 }
-                var theRest = $(".aNominee").detach();
+                var theRest = $('[data-js="legacy-nominee"]').detach();
                 for (i = 0; i < lastVotes.length; i++) {
-                    $("#voteBox" + (i + 1)).append(haveVotedFor[i]);
+                    legacyVoteSlot(i + 1).append(haveVotedFor[i]);
                 }
                 for (i = 0; i < theRest.length; i++) {
                     $(voteBoxes[i + lastVotes.length - 1]).append(theRest[i]);
@@ -1072,14 +956,14 @@ jQuery(function () {
             resetLeftSide();
 
         } else {
-            bottomArea.find('.voteGroup').each(function () {
+            bottomArea.find('[data-js="nominee"]').each(function () {
                 var element = $(this);
                 element.detach().appendTo(topArea);
             });
 
             if (!resetAll) {
                 for (var i = 1; i < lastVotes.length; i++) {
-                    var element = $("#nominee-" + lastVotes[i]);
+                    var element = nomineeCard(lastVotes[i]);
                     element.detach().appendTo(bottomArea);
                 }
             }
@@ -1094,7 +978,7 @@ jQuery(function () {
     }
 
     function resetLeftSide() {
-        var muhNominees = nomineeColumn.find(".aNominee").detach();
+        var muhNominees = nomineeColumn.find('[data-js="legacy-nominee"]').detach();
 
         muhNominees = ($(muhNominees) as any).sort(function (a, b) {
             var contentA = parseInt($(a).attr('data-order'));
@@ -1102,7 +986,7 @@ jQuery(function () {
             return (contentA < contentB) ? -1 : (contentA > contentB) ? 1 : 0;
         });
 
-        var voteBoxes = nomineeColumn.find('.voteBox');
+        var voteBoxes = nomineeColumn.find('[data-js="legacy-slot"]');
 
         for (var i = 0; i < muhNominees.length; i++) {
             $(voteBoxes[i]).append(muhNominees[i]);
@@ -1118,7 +1002,7 @@ jQuery(function () {
         voteColumnBoxes.each(function () {
             currentVoteBox++;
 
-            if ($(this).contents().attr("id") !== undefined) {
+            if ($(this).find('[data-js="legacy-nominee"]').length > 0) {
                 listVoteBox.push($(this).contents().detach());
             }
         });
@@ -1126,7 +1010,7 @@ jQuery(function () {
         //put the votes back in the voteBoxes
         for (var i = 0; i < currentVoteBox; i++) {
             if (listVoteBox[i]) { //if it exists
-                listVoteBox[i].appendTo($("#voteBox" + (i + 1)));
+                listVoteBox[i].appendTo(legacyVoteSlot(i + 1));
             }
         }
     }
@@ -1134,7 +1018,7 @@ jQuery(function () {
     // Resets the top nominee pane to its original configuration.
     // Only used in the "drag and drop" layout.
     function resetTopArea() {
-        var nominees = topArea.find(".voteGroup").detach();
+        var nominees = topArea.find('[data-js="nominee"]').detach();
 
         nominees = ($(nominees) as any).sort(function (a, b) {
             var contentA = parseInt($(a).attr('data-order'));
@@ -1145,78 +1029,23 @@ jQuery(function () {
         topArea.append(nominees);
     }
 
-    // Checks for invalid preferences when an input is unfocused.
-    // Only used in the "type in your preference" layout.
-    preferenceInputs.blur(function () {
-        var element = $(this);
-        var number = element.val();
-
-        if (number > nomineeCount) {
-            element.addClass('static');
-            element.val('');
-            setTimeout(function () {
-                element.val(nomineeCount);
-                element.removeClass('static');
-                checkForDuplicates();
-            }, 300);
-        } else if (element.is(':invalid')) {
-            element.addClass('static');
-            element.val('');
-            setTimeout(function () {
-                element.removeClass('static');
-                checkForDuplicates();
-            }, 300);
-        }
-    });
-
-    // Checks for duplicate preferences when an input is changed.
-    // Only used in the "type in your preference" layout.
-    preferenceInputs.change(function () {
-        checkForDuplicates();
-    });
-
-    // Shows the number popup upon clicking the preference square.
-    // Only used in the "click to choose number" layout.
-    preferenceButtons.click(function () {
-        var element = $(this);
-
-        numberPopup.show();
-        numberPopup.attr('data-nominee', element.parent('.voteGroup').attr('data-nominee'));
-        numberPopup.css('left', element.offset().left);
-        numberPopup.css('top', element.offset().top - element.outerHeight());
-    });
-
-    // Handle the selection of a preference from the popup dialog.
-    // Only used in the "click to choose number" layout.
-    numberPopup.find('button').click(function () {
-        var element = $(this);
-        var nominee = numberPopup.attr('data-nominee');
-        var button = $('#nominee-' + nominee).find('.preferenceButton');
-        var value = element.attr('data-value');
-
-        var currentSelection = button.attr('data-value');
-        if (currentSelection !== undefined) {
-            $('#numberButton' + currentSelection).removeAttr('disabled');
-        }
-
-        button.text(value);
-        button.attr('data-value', value);
-        element.attr('disabled', 'disabled');
-        numberPopup.hide();
-    });
-
     // Reset Votes
-    resetButton.click(function () {
+    resetButton.on('click', function () {
         moveNomineesBack(true);
         resetTopArea();
         resetLeftSide();
         unlockVotes();
 
-        $('.voteDropArea').addClass('flash');
+        const voteAreas = topArea.add(bottomArea);
+        voteAreas.attr('data-flash', '');
         setTimeout(function () {
-            $('.voteDropArea').removeClass('flash');
+            voteAreas.removeAttr('data-flash');
         }, 200);
     });
+
+    function markCurrentAwardVoted() {
+        $('[data-js="award-link"]').filter(`[data-award="${currentAward}"]`).attr('data-voted', '');
+    }
 
     // Submit Votes
     submitButton.on('click', function () {
@@ -1234,14 +1063,14 @@ jQuery(function () {
 
         if (votingStyle === 'legacy') {
             voteColumnBoxes.each(function () {
-                var onlyTheNumber = $(this).attr("id").replace(/[^0-9]/g, '');
-                var nomineeID = $(this).find(".aNominee").attr("data-nominee");
+                var slot = $(this).attr("data-slot");
+                var nomineeID = $(this).find('[data-js="legacy-nominee"]').attr("data-nominee");
                 if (nomineeID !== undefined) {
-                    preferences[onlyTheNumber] = nomineeID;
+                    preferences[slot] = nomineeID;
                 }
             });
         } else {
-            bottomArea.find('.voteGroup').each(function (index) {
+            bottomArea.find('[data-js="nominee"]').each(function (index) {
                 preferences[index + 1] = $(this).attr('data-nominee');
             });
         }
@@ -1249,13 +1078,13 @@ jQuery(function () {
         lastVotes = preferences;
 
         if (lootboxTest) {
-          $('#' + currentAward).addClass('complete');
+          markCurrentAwardVoted();
         } else {
           $.post(postURL, {preferences: preferences}, function (data) {
             if (data.error) {
               alert("An error occurred:\n" + data.error + "\nYour vote has not been saved.");
             } else {
-              $('#' + currentAward).addClass('complete');
+              markCurrentAwardVoted();
             }
           }, 'json');
         }
@@ -1264,27 +1093,25 @@ jQuery(function () {
     });
 
     if (lootboxTest) {
-      $('#lootbox-editor-hide').on('click', function () {
-        $('#lootbox-editor').addClass('d-none');
+      const lootboxEditor = $('[data-js="lootbox-editor"]');
+
+      $('[data-js="lootbox-editor-opacity"]').on('change', function () {
+        lootboxEditor.css('opacity', $(this).val());
       });
 
-      $('#lootbox-editor-opacity').on('change', function () {
-        $('#lootbox-editor').css('opacity', $(this).val());
+      $('[data-js="lootbox-editor-details"]').on('show.bs.collapse', function () {
+        $('[data-js="lootbox-editor-details-toggle"]').find('i').removeClass('fa-chevrons-down').addClass('fa-chevrons-up');
       });
 
-      $('#lootbox-editor-collapse').on('show.bs.collapse', function () {
-        $('#lootbox-editor-collapse-toggle i').removeClass('fa-chevrons-down').addClass('fa-chevrons-up');
+      $('[data-js="lootbox-editor-details"]').on('hide.bs.collapse', function () {
+        $('[data-js="lootbox-editor-details-toggle"]').find('i').removeClass('fa-chevrons-up').addClass('fa-chevrons-down');
       });
 
-      $('#lootbox-editor-collapse').on('hide.bs.collapse', function () {
-        $('#lootbox-editor-collapse-toggle i').removeClass('fa-chevrons-up').addClass('fa-chevrons-down');
+      lootboxEditor.draggable({
+          handle: '[data-js="lootbox-editor-handle"]',
       });
 
-      $('#lootbox-editor').draggable({
-          handle: '.card-header',
-      });
-
-      $('#lootbox-editor-css-status input[type=checkbox]').on('change', function () {
+      $('[data-js="lootbox-css-toggle"]').on('change', function () {
           if (!$(this).is(':checked')) {
               resetCSS();
           } else {
@@ -1294,7 +1121,7 @@ jQuery(function () {
 
       let currentlySubmitting = false;
 
-      $('#lootbox-editor form').on('submit', function (event) {
+      $('[data-js="lootbox-editor-form"]').on('submit', function (event) {
         event.preventDefault();
 
         if (currentlySubmitting) {
@@ -1303,7 +1130,7 @@ jQuery(function () {
         currentlySubmitting = true;
 
         // Show the "please wait" message and disable the submit button
-        $('#lootbox-editor').find("button[type=submit]").attr("disabled", "disabled");
+        lootboxEditor.find("button[type=submit]").prop("disabled", true);
         // $("#dialog-edit-error").parent().slideUp()
 
         var formData = new FormData(this);
@@ -1315,12 +1142,12 @@ jQuery(function () {
           processData: false
         }).done(function (response) {
           if (response.success) {
-            $('#lootbox-editor-submit-icon').show().fadeOut(5000);
+            $('[data-js="lootbox-editor-saved"]').prop('hidden', false).stop(true, true).show().fadeOut(5000);
           } else {
             alert('Error: ' + response.error);
           }
         }, "json").always(() => {
-          $('#lootbox-editor').find("button[type=submit]").removeAttr("disabled");
+          lootboxEditor.find("button[type=submit]").prop("disabled", false);
           currentlySubmitting = false;
         });
       })
@@ -1339,7 +1166,7 @@ jQuery(function () {
 
         // Toggle buddie
         if (e.code === 'KeyB') {
-          if ($('#reward-buddie').attr('src')) {
+          if ($('[data-js="reward-buddie"]').attr('src')) {
             resetBuddie();
           } else {
             activateBuddie(lootboxTestSlug);
@@ -1368,15 +1195,15 @@ jQuery(function () {
 
         // Toggle editor
         if (e.code === 'KeyE') {
-            $('#lootbox-editor').toggleClass('d-none');
+            lootboxEditor.prop('hidden', !lootboxEditor.prop('hidden'));
             return;
         }
 
         // Reset all
         if (e.code === 'KeyR') {
           resetRewards();
-          $('#lootbox-editor')
-              .removeClass('d-none')
+          lootboxEditor
+              .prop('hidden', false)
               .css('opacity', 1)
               .css('left', '5px')
               .css('top', '5px');
@@ -1397,7 +1224,7 @@ jQuery(function () {
         'Jump the shark with the',
         '/v/GA regrettably presents',
     ];
-    $('#title-decoration').html(titleDeco[getRandomInt(0, titleDeco.length)]);
+    $('[data-js="title-tagline"]').html(titleDeco[getRandomInt(0, titleDeco.length)]);
 
     // prompt user if they leave without saving
     {
@@ -1408,18 +1235,23 @@ jQuery(function () {
             }
         });
         
-        const leaveModal : HTMLElement = document.querySelector('#leave-modal') as HTMLElement;
-        const continueEl : HTMLAnchorElement = leaveModal.querySelector("#leave-continue") as HTMLAnchorElement;
-        const cancelEl : HTMLAnchorElement = leaveModal.querySelector("#leave-cancel") as HTMLAnchorElement;
+        // The leave modal is only rendered while voting is open.
+        const leaveModal = document.querySelector<HTMLElement>('[data-js="leave-modal"]');
+        const continueEl = leaveModal?.querySelector('[data-js="leave-continue"]') as HTMLAnchorElement;
+        const cancelEl = leaveModal?.querySelector('[data-js="leave-cancel"]') as HTMLElement;
 
         function hideLeaveDialog() {
-            leaveModal.classList.add("hidden");
+            leaveModal.hidden = true;
         }
-        cancelEl.onclick = hideLeaveDialog;
-        leaveModal.onclick = hideLeaveDialog;
+
+        if (leaveModal) {
+            cancelEl.onclick = hideLeaveDialog;
+            leaveModal.onclick = hideLeaveDialog;
+        }
 
         // intercept page leaves via anchor tags, show confirmation modal
         document.addEventListener('click', (e: MouseEvent) => {
+            if(!leaveModal) return;
             if(!votesChanged) return;
 
             const target = e.target as Element; 
@@ -1432,7 +1264,7 @@ jQuery(function () {
             const link = target.closest('a');
             if (link && link.href) {
                 continueEl.href = link.href;
-                leaveModal.classList.remove("hidden");
+                leaveModal.hidden = false;
                 e.preventDefault(); 
             }
         });

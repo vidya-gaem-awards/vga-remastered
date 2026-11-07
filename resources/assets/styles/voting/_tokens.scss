@@ -1,0 +1,49 @@
+// Design tokens for the voting page.
+//
+// Rewards can reskin the page by overriding these on the root element, e.g.
+//   html.reward-spooky { --font-display: "Creepster", sans-serif; --image-postcard: url(/rewards/spooky.webp); }
+// The palette colours (--theme-red, --theme-yellow, ...) live in public/css/theme.css and can be overridden the same way.
+
+:root {
+  // Fonts
+  --font-display: "Voting Title", sans-serif;
+  --font-display-filled: "Voting Title Filled", sans-serif;
+  --font-script: "Cursive Decoration", cursive, sans-serif;
+  --font-hand: "Handwritten", sans-serif;
+  --font-chalk: "Chalk", sans-serif;
+  --font-pixel: "NES Pixel", monospace;
+
+  // Panel backgrounds
+  --image-postcard: url("/2025images/blank-postcard.webp");
+  --image-postcard-art: url("/2025images/postcard-art.webp");
+  --image-header-sign: url("/2025images/surfboard.webp");
+  --image-chalkboard: url("/2025images/chalkboard.webp");
+  --image-bamboo: url("/2025images/bamboo-loop.webp");
+  --image-bamboo-vertical: url("/2025images/bamboo-loop-vert.webp");
+  --image-inventory-border: url("/2025images/rattan-border.webp");
+  --image-inventory-background: url("/2025images/wicker-seamless.webp");
+  --image-item-card: url("/2023images/parchment.jpg");
+  --image-item-card-gold: url("/2022images/orangebg-no-rivet.png");
+  --image-loot-water: url("/2025images/Water.gif");
+  --image-start-logo: url("/2025images/vga_logo.webp");
+
+  // Decorations
+  --image-award-arrow: url("/2025images/wave-arrow.svg");
+  --image-ballot-decoration: url("/2025images/coconuts-1.svg");
+  --image-awards-decoration: url("/2025images/hibiscus 2.svg");
+
+  // Colours
+  --poster-inlay-color: #ffffffa3;
+  --header-text-color: #310707;
+  --nominee-card-background: #2C2B31;
+  --nominee-info-background: rgba(50, 50, 50, 0.7);
+  --nominee-link-color: #93a7f5;
+  --nominee-link-hover-color: #fec544;
+  --nominee-grip-color: #F0961F;
+  --awards-subtitle-color: #e1e1e1;
+  --item-card-color: #D6BD97;
+  --item-action-background: #42302E;
+  --item-action-hover-background: #7A5C49;
+  --item-action-border: #160B09;
+  --item-action-active-background: #F8E98E;
+}

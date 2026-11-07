@@ -1,0 +1,52 @@
+@use 'mixins' as *;
+
+/* Confirmation shown when following a link with unsubmitted votes */
+.leave-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000080;
+}
+
+.leave-modal__dialog {
+  position: relative;
+  width: 420px;
+  margin: 30vh auto 0 auto;
+  padding: 40px 50px;
+  background-image: var(--image-chalkboard);
+  background-size: 100% 100%;
+  color: white;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  text-align: center;
+}
+
+.leave-modal__title {
+  @include reset-text;
+  font-family: var(--font-chalk);
+  font-size: 2em;
+}
+
+.leave-modal__text {
+  margin: 0 0 1rem;
+}
+
+.leave-modal__options {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.leave-modal__option {
+  @include reset-button;
+  color: var(--theme-yellow);
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--theme-yellow);
+    text-decoration: none;
+  }
+}

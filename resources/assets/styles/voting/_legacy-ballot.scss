@@ -1,0 +1,138 @@
+@use 'mixins' as *;
+
+/* Old (2016) two-column drag and drop layout, enabled with ?legacy=1 */
+.legacy-ballot {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding-left: 14px;
+  margin-bottom: 15px;
+  overflow: hidden;
+
+}
+
+.legacy-ballot__column {
+  position: relative;
+  width: 473px;
+}
+
+.legacy-ballot__heading--votes {
+  margin-left: 160px;
+}
+
+.legacy-ballot__slot {
+  clear: both;
+  float: left;
+  position: relative;
+  width: 100%;
+  height: 126px;
+  margin-bottom: 4px;
+  background: rgba(246, 231, 190, 0.5) url("/2016images/votebox_background.png");
+
+  :where(.legacy-ballot--votable) & {
+    cursor: pointer;
+  }
+}
+
+.legacy-nominee {
+  position: relative;
+  background: white;
+
+  :where(.legacy-ballot--votable) & {
+    cursor: move;
+  }
+}
+
+.legacy-nominee__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 41;
+
+  &--locked {
+    display: none;
+
+    :where(.legacy-ballot[data-locked]) & {
+      display: block;
+    }
+  }
+}
+
+.legacy-nominee__image {
+  width: 473px;
+  height: 126px;
+}
+
+.legacy-nominee__flavor {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: 100%;
+  padding: 5px;
+  background-color: var(--theme-white);
+  color: var(--theme-black);
+  font-size: 1.08em;
+  line-height: 15px;
+  text-align: center;
+  user-select: all;
+
+  @include desktop {
+    :where(.legacy-ballot__slot:hover) & {
+      display: block;
+    }
+  }
+}
+
+.legacy-nominee__info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 300;
+  padding: 2px 3px;
+  background: rgba(50, 50, 50, 0.7);
+  text-shadow: 1px 1px black;
+}
+
+.legacy-nominee__name {
+  text-align: center;
+  color: var(--theme-yellow);
+  font-size: 1.1em;
+  line-height: 1.1;
+}
+
+.legacy-nominee__subtitle {
+  text-align: center;
+  color: var(--theme-white);
+  font-size: 0.7em;
+  line-height: 1.1;
+
+  a {
+    color: #93a7f5;
+    text-decoration: underline;
+
+    &:hover {
+      color: #fec544;
+    }
+  }
+}
+
+/* Preference number, only shown in the votes column */
+.legacy-nominee__rank {
+  display: none;
+
+  :where(.legacy-ballot__column--votes) & {
+    display: block;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 7px;
+    border-radius: 20px;
+    background-color: rgb(251, 68, 7);
+    color: white;
+    font-size: 1.8em;
+    line-height: 1em;
+  }
+}

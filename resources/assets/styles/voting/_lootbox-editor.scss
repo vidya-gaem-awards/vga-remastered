@@ -1,0 +1,33 @@
+/* Draggable CSS editor shown to admins previewing a lootbox item (?lootbox=ID) */
+.lootbox-editor {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 2000;
+}
+
+.lootbox-editor__header {
+  cursor: grab;
+}
+
+.lootbox-editor__name,
+.lootbox-editor__details {
+  max-width: 300px;
+}
+
+.lootbox-editor__status {
+  cursor: pointer;
+}
+
+.lootbox-editor__code {
+  width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
+  resize: both;
+  border: 1px solid #ced4da;
+  font-size: 10px;
+}
+
+.lootbox-editor__saved {
+  font-size: 30px;
+}

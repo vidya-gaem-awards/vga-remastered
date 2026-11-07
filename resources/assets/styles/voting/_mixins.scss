@@ -1,0 +1,34 @@
+$mobile: 768px;
+
+// Neutralises Bootstrap/theme heading and paragraph defaults so semantic tags can be styled from scratch.
+@mixin reset-text {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+@mixin reset-button {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+}
+
+@mixin mobile {
+  @media (max-width: $mobile) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $mobile + 1) {
+    @content;
+  }
+}
