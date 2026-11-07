@@ -1,11 +1,11 @@
 @props(['awards', 'currentAward', 'allVotes', 'votingOpen'])
 
-<aside class="awards-list bamboo-frame">
+<div class="awards-list">
+    @if($votingOpen)
+        <span class="awards-list__remaining">{{ $awards->filter(fn ($a) => !$allVotes[$a->id])->count() }} left</span>
+    @endif
     <h2 class="awards-list__title">
         AWARDS
-        @if($votingOpen)
-            <span class="awards-list__remaining">{{ $awards->filter(fn ($a) => !$allVotes[$a->id])->count() }} left</span>
-        @endif
     </h2>
 
     <ul class="awards-list__items">
@@ -31,4 +31,5 @@
     @endauth
 
     <div class="awards-list__hibiscus"></div>
-</aside>
+</div>
+

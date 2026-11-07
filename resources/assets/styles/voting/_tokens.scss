@@ -3,47 +3,71 @@
 // Rewards can reskin the page by overriding these on the root element, e.g.
 //   html.reward-spooky { --font-display: "Creepster", sans-serif; --image-postcard: url(/rewards/spooky.webp); }
 // The palette colours (--theme-red, --theme-yellow, ...) live in public/css/theme.css and can be overridden the same way.
+// Keep voting colour literals here; components use these shared tokens.
 
 :root {
   // Fonts
-  --font-display: "Voting Title", sans-serif;
-  --font-display-filled: "Voting Title Filled", sans-serif;
-  --font-script: "Cursive Decoration", cursive, sans-serif;
-  --font-hand: "Handwritten", sans-serif;
-  --font-chalk: "Chalk", sans-serif;
+  --font-display: Arial, Helvetica, sans-serif;
+  --font-display-filled: Arial, Helvetica, sans-serif;
+  --font-script: Arial, Helvetica, sans-serif;
+  --font-hand: Arial, Helvetica, sans-serif;
+  --font-chalk: Arial, Helvetica, sans-serif;
   --font-pixel: "NES Pixel", monospace;
 
-  // Panel backgrounds
-  --image-postcard: url("/2025images/blank-postcard.webp");
-  --image-postcard-art: url("/2025images/postcard-art.webp");
-  --image-header-sign: url("/2025images/surfboard.webp");
-  --image-chalkboard: url("/2025images/chalkboard.webp");
-  --image-bamboo: url("/2025images/bamboo-loop.webp");
-  --image-bamboo-vertical: url("/2025images/bamboo-loop-vert.webp");
-  --image-inventory-border: url("/2025images/rattan-border.webp");
-  --image-inventory-background: url("/2025images/wicker-seamless.webp");
-  --image-item-card: url("/2023images/parchment.jpg");
-  --image-item-card-gold: url("/2022images/orangebg-no-rivet.png");
-  --image-loot-water: url("/2025images/Water.gif");
-  --image-start-logo: url("/2025images/vga_logo.webp");
+  // Resources
+  --image-logo: url("/generic-theme/vga-logo-placeholder.webp");
 
-  // Decorations
-  --image-award-arrow: url("/2025images/wave-arrow.svg");
-  --image-ballot-decoration: url("/2025images/coconuts-1.svg");
-  --image-awards-decoration: url("/2025images/hibiscus 2.svg");
+  // Shared palette
+  --voting-background: #FEFFEF;
+  --voting-surface: #fff;
+  --voting-surface-muted: #f1f3f5;
+  --voting-surface-action: #f8f9fa;
+  --voting-surface-hover: #e9ecef;
+  --voting-text: #212529;
+  --voting-text-muted: #6c757d;
+  --voting-text-secondary: #333;
+  --voting-border: #dee2e6;
+  --voting-border-input: #ced4da;
+  --voting-border-action: #adb5bd;
+  --voting-accent: #F0961F;
+  --voting-accent-dark: #8a4b08;
+  --voting-accent-selected: #ffe08a;
+  --voting-link-visited: #286082;
+  --voting-black: #000;
 
-  // Colours
-  --poster-inlay-color: #ffffffa3;
-  --header-text-color: #310707;
+  // Overlays and shadows
+  --voting-backdrop: #00000080;
+  --voting-overlay-dark: rgba(0, 0, 0, 0.2);
+  --voting-overlay-light: rgba(255, 255, 255, 0.5);
+  --voting-heading-color: rgba(0, 0, 0, 0.8);
+  --voting-panel-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.08);
+  --voting-dialog-shadow: 0 8px 24px var(--voting-overlay-dark);
+  --voting-item-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+  // Component colours (retained as reward override hooks)
+  --poster-inlay-color: rgba(255, 255, 255, 0.9);
+  --header-text-color: var(--voting-text);
   --nominee-card-background: #2C2B31;
   --nominee-info-background: rgba(50, 50, 50, 0.7);
-  --nominee-link-color: #93a7f5;
-  --nominee-link-hover-color: #fec544;
-  --nominee-grip-color: #F0961F;
-  --awards-subtitle-color: #e1e1e1;
-  --item-card-color: #D6BD97;
-  --item-action-background: #42302E;
-  --item-action-hover-background: #7A5C49;
-  --item-action-border: #160B09;
-  --item-action-active-background: #F8E98E;
+  --nominee-image-shadow-color: rgb(11, 9, 9);
+  --nominee-link-color: #fec544;
+  --nominee-link-hover-color: var(--voting-accent);
+  --nominee-grip-color: var(--voting-accent);
+  --awards-subtitle-color: var(--voting-text-muted);
+  --item-card-color: var(--voting-surface);
+  --item-action-background: var(--voting-surface-action);
+  --item-action-hover-background: var(--voting-surface-hover);
+  --item-action-border: var(--voting-border-action);
+  --item-action-active-background: var(--voting-accent-selected);
+
+  // Classic Mac OS alert
+  --error-border: #dc5341;
+  --error-surface: #ccc;
+  --error-body-surface: #ddd;
+  --error-button-surface: #dedede;
+  --error-button-active-surface: #666;
+  --error-window-shadow: 1px 2px #111, inset 1px 1px 0 0 var(--voting-surface), inset -1px -1px 0 0 #999;
+  --error-button-shadow: inset -1px -1px 0 0 #777, inset -2px -2px 0 0 #aaa, inset 1px 1px 0 0 var(--error-body-surface), inset 2px 2px 0 0 var(--voting-surface);
+  --error-button-hover-bezel: 0 0 0 1px #aaa, 0 0 0 2px var(--error-body-surface), 0 0 0 3px var(--voting-black);
+  --error-button-active-shadow: inset -1px -1px 0 0 #888, inset -2px -2px 0 0 #777, inset 1px 1px 0 0 #444, inset 2px 2px 0 0 #555;
 }

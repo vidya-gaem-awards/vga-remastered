@@ -6,7 +6,6 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  padding: 5px;
   min-height: 350px;
   transition: 0.2s all;
 
@@ -17,7 +16,7 @@
   }
 
   &--pool:empty {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--voting-overlay-dark);
   }
 
   &--ballot {
@@ -33,15 +32,22 @@
       color: var(--theme-black);
       font-family: var(--font-hand);
       font-size: 1.5em;
+
+      @include mobile {
+        width: 100%;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-size: 1rem;
+      }
     }
   }
 
   &[data-dragging] {
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--voting-overlay-light);
   }
 
   :where(&[data-flash]) .nominee-card {
-    background: white;
+    background: var(--voting-surface);
   }
 
   :where(&[data-flash]) .nominee-card__body {
@@ -72,6 +78,8 @@
   @include mobile {
     width: 100%;
     flex-basis: 100%;
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 5px;
   }
 
@@ -97,12 +105,12 @@
 .nominee-card__image {
   /* Fixed aspect ratio: padding-top percentages are relative to the width. */
   padding-top: calc(300 / 548 * 100%);
-  box-shadow: inset 0 0 15px rgb(11, 9, 9);
+  box-shadow: inset 0 0 15px var(--nominee-image-shadow-color);
   background-image: var(--nominee-image);
   background-size: 100% 100%;
 
   :where(.nominee-card[data-zone="ballot"]) & {
-    box-shadow: 0 0 8px rgb(11, 9, 9);
+    box-shadow: 0 0 8px var(--nominee-image-shadow-color);
   }
 
   @include mobile {
@@ -153,7 +161,7 @@
   top: 5px;
   z-index: 1;
   color: var(--theme-white);
-  text-shadow: 2px 2px black;
+  text-shadow: 2px 2px var(--voting-black);
   font-family: var(--font-script);
   font-size: 30px;
 
@@ -178,11 +186,15 @@
     font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     letter-spacing: unset;
-    color: black;
+    color: var(--voting-black);
     text-shadow: unset;
 
     &::after {
       content: ' - tap to remove or drag handle to reorder';
+    }
+
+    :where(.nominee-card[data-zone="pool"]) & {
+      display: none;
     }
   }
 }
@@ -203,6 +215,7 @@
   line-height: 1em;
 
   @include desktop {
+
     :where(.nominee-card[data-zone="pool"]:hover) &--add,
     :where(.nominee-card[data-zone="ballot"]:hover) &--remove {
       display: flex;
@@ -264,7 +277,7 @@
   z-index: 300;
   padding: 2px 3px;
   background: var(--nominee-info-background);
-  text-shadow: 1px 1px black;
+  text-shadow: 1px 1px var(--voting-black);
 }
 
 .nominee-card__name {

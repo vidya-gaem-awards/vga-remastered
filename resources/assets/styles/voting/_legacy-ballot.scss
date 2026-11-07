@@ -27,7 +27,9 @@
   width: 100%;
   height: 126px;
   margin-bottom: 4px;
-  background: rgba(246, 231, 190, 0.5) url("/2016images/votebox_background.png");
+  background: var(--voting-surface);
+  border: 1px solid var(--voting-border);
+  border-radius: 4px;
 
   :where(.legacy-ballot--votable) & {
     cursor: pointer;
@@ -36,7 +38,7 @@
 
 .legacy-nominee {
   position: relative;
-  background: white;
+  background: var(--voting-surface);
 
   :where(.legacy-ballot--votable) & {
     cursor: move;
@@ -92,8 +94,8 @@
   width: 100%;
   z-index: 300;
   padding: 2px 3px;
-  background: rgba(50, 50, 50, 0.7);
-  text-shadow: 1px 1px black;
+  background: var(--nominee-info-background);
+  text-shadow: 1px 1px var(--voting-black);
 }
 
 .legacy-nominee__name {
@@ -110,11 +112,11 @@
   line-height: 1.1;
 
   a {
-    color: #93a7f5;
+    color: var(--nominee-link-color);
     text-decoration: underline;
 
     &:hover {
-      color: #fec544;
+      color: var(--nominee-link-hover-color);
     }
   }
 }
@@ -130,8 +132,8 @@
     right: 5px;
     padding: 7px;
     border-radius: 20px;
-    background-color: rgb(251, 68, 7);
-    color: white;
+    background-color: var(--voting-accent);
+    color: var(--voting-surface);
     font-size: 1.8em;
     line-height: 1em;
   }

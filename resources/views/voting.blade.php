@@ -110,6 +110,14 @@
                 <div class="page-section page-section--ballot">
                     <x-voting.ballot :next-award="$nextAward" />
                 </div>
+
+                <div class="next-award">
+                    <a href="{{ route('voting', $nextAward) }}" class="next-award__link" data-js="award-nav" title="Next award">
+                        <img class="next-award__sign" src="{{ asset('2024images/right-sign.png') }}" alt="">
+                        {{ $nextAward->name }}
+                    </a>
+                </div>
+
             @endif
         @else
             <div class="page-section page-section--start">
